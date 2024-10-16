@@ -4,7 +4,7 @@ import { RootFolder } from "./VirtualFileSystem";
 import { getIcon } from "./Icon";
 
 export interface File {
-  type: vscode.FileType;
+  type: "file" | "folder";
   path: string;
 
   name: string;
@@ -15,7 +15,7 @@ export interface File {
 }
 
 export interface Folder {
-  type: vscode.FileType;
+  type: "file" | "folder";
   path: string;
 
   name: string;
@@ -29,20 +29,18 @@ export class FileNestingProvider implements vscode.TreeDataProvider<Entry> {
     console.log("FileNestingProvider:getTreeItem Entry", element);
 
     const treeItem = new vscode.TreeItem(element.name);
+    treeItem.contextValue = element.type === "folder" ? "folder" : "file";
+    treeItem.resourceUri = vscode.Uri.file(element.path);
 
-    if (element.type === vscode.FileType.Directory) {
+    if (element.type === "folder") {
       treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
     }
 
-    if (element.type === vscode.FileType.File && (element as File).isNesting) {
+    if (element.type === "file" && (element as File).isNesting) {
       treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
 
       treeItem.iconPath = getIcon((element as File).extension);
     }
-
-    treeItem.contextValue =
-      element.type === vscode.FileType.Directory ? "folder" : "file";
-    treeItem.resourceUri = vscode.Uri.file(element.path);
 
     console.log("FileNestingProvider:getTreeItem TreeItem", treeItem);
     return treeItem;
