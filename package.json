@@ -17,7 +17,15 @@
         "command": "file-nesting-explorer.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "fileNestingExplorer",
+          "name": "File Nesting Explorer"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

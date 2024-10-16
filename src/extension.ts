@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 
+import { FileNestingProvider } from "./FileNestingExplorer";
+
 export function activate(context: vscode.ExtensionContext) {
   console.log(
     'Congratulations, your extension "file-nesting-explorer" is now active!'
@@ -13,8 +15,13 @@ export function activate(context: vscode.ExtensionContext) {
       );
     }
   );
-
   context.subscriptions.push(disposable);
+
+  const fileNestingProvider = new FileNestingProvider();
+  vscode.window.registerTreeDataProvider(
+    "fileNestingExplorer",
+    fileNestingProvider
+  );
 }
 
 // This method is called when your extension is deactivated
