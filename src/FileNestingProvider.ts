@@ -1,24 +1,22 @@
 import * as vscode from "vscode";
 
-import { Entry, File } from "./Entry";
-import { RootFolder } from "./VirtualFileSystem";
+import { Entry, File, FNSEntry } from "./Entry";
+import { fileNestingSystem } from "./FileNestingSystem";
 import { getIcon } from "./Icon";
 
-export class FileNestingProvider implements vscode.TreeDataProvider<Entry> {
-  getChildren(element?: Entry): Thenable<Entry[]> {
+export class FileNestingProvider implements vscode.TreeDataProvider<FNSEntry> {
+  getChildren(element?: FNSEntry): Thenable<FNSEntry[]> {
     console.log("FileNestingProvider:getChildren", element);
 
     if (!element) {
-      return Promise.resolve([...RootFolder.entries.values()]);
+      return Promise.resolve(fileNestingSystem.roots);
     }
 
-    return Promise.resolve(
-      element.entries ? [...element.entries.values()] : []
-    );
+    return Promise.resolve(fileNestingSystem.getChildren(element.path));
   }
 
-  getTreeItem(element: Entry): vscode.TreeItem {
-    console.log("FileNestingProvider:getTreeItem Entry", element);
+  getTreeItem(element: FNSEntry): vscode.TreeItem {
+    console.log("FileNestingProvider:getTreeItem FNSEntry", element);
 
     const treeItem = new vscode.TreeItem(element.name);
     treeItem.contextValue = element.type === "folder" ? "folder" : "file";

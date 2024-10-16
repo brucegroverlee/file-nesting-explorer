@@ -18,3 +18,11 @@ export interface Folder {
 }
 
 export type Entry = File | Folder;
+
+export interface FNSEntry {
+  type: "file" | "folder";
+  path: string;
+  name: string;
+  extension?: string;
+  isNesting?: boolean;
+}
