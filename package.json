@@ -16,6 +16,26 @@
       {
         "command": "file-nesting-explorer.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "fileNestingExplorer.newFile",
+        "title": "New File...",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "fileNestingExplorer.newFolder",
+        "title": "New Folder...",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "fileNestingExplorer.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "fileNestingExplorer.collapse",
+        "title": "Collapse Folders in Explorer",
+        "icon": "$(collapse-all)"
       }
     ],
     "views": {
@@ -23,6 +43,30 @@
         {
           "id": "fileNestingExplorer",
           "name": "File Nesting Explorer"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "fileNestingExplorer.newFile",
+          "when": "view == fileNestingExplorer",
+          "group": "navigation@1"
+        },
+        {
+          "command": "fileNestingExplorer.newFolder",
+          "when": "view == fileNestingExplorer",
+          "group": "navigation@1"
+        },
+        {
+          "command": "fileNestingExplorer.refresh",
+          "when": "view == fileNestingExplorer",
+          "group": "navigation@1"
+        },
+        {
+          "command": "fileNestingExplorer.collapse",
+          "when": "view == fileNestingExplorer",
+          "group": "navigation@2"
         }
       ]
     }
