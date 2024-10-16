@@ -43,8 +43,12 @@ class FileNestingSystem {
             name: file.name,
           };
 
-          if (!file.isDirectory()) {
-            entry.extension = path.extname(file.name).slice(1);
+          if (entry.type === "file") {
+            entry.extension = path.extname(entry.name).slice(1);
+          }
+
+          if (entry.type === "file" && this.isNestingFile(entry.name, files)) {
+            entry.isNesting = true;
           }
 
           entries.push(entry);
@@ -91,6 +95,17 @@ class FileNestingSystem {
         (f.name === `${basename(folderName)}.ts` ||
           f.name === `${basename(folderName)}.tsx`) &&
         (f.name.endsWith(".ts") || f.name.endsWith(".tsx"))
+    );
+  }
+
+  private isNestingFile(fileName: string, files: fs.Dirent[]): boolean {
+    // remove the extension
+    fileName = fileName.slice(0, fileName.lastIndexOf("."));
+    return files.some(
+      (f) =>
+        f.isDirectory() &&
+        f.name.startsWith("@") &&
+        f.name.slice(1) === fileName
     );
   }
 }

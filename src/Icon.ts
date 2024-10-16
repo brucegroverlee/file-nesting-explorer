@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 
-export function getIcon(extension: string) {
+export function getIcon(extension?: string) {
   switch (extension) {
     case "js":
       return {

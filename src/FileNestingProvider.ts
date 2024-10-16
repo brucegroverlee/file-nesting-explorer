@@ -26,10 +26,10 @@ export class FileNestingProvider implements vscode.TreeDataProvider<FNSEntry> {
       treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
     }
 
-    if (element.type === "file" && (element as File).isNesting) {
+    if (element.type === "file" && element.isNesting) {
       treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
 
-      treeItem.iconPath = getIcon((element as File).extension);
+      treeItem.iconPath = getIcon(element.extension);
 
       treeItem.command = {
         command: "fileNestingExplorer.openEditor",
