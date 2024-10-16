@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import { File, Folder } from "./FileNestingExplorer";
+import { File, Folder } from "./Entry";
 
 const now = Date.now();
 
