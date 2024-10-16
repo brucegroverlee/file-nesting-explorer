@@ -36,6 +36,10 @@
         "command": "fileNestingExplorer.collapse",
         "title": "Collapse Folders in Explorer",
         "icon": "$(collapse-all)"
+      },
+      {
+        "command": "fileNestingExplorer.openEditor",
+        "title": "Open Editor"
       }
     ],
     "views": {
