@@ -3,7 +3,7 @@ import { basename, dirname, join } from "path";
 import * as fs from "fs";
 import * as path from "path";
 
-import { FNSEntry } from "./Entry";
+import { Entry } from "./Entry";
 
 class FileNestingSystem {
   private workspaceRoot: string | undefined;
@@ -17,7 +17,7 @@ class FileNestingSystem {
     }
   }
 
-  public getChildren(uri: string): Thenable<FNSEntry[]> {
+  public getChildrenFromFolder(uri: string): Thenable<Entry[]> {
     return new Promise((resolve, reject) => {
       fs.readdir(uri, { withFileTypes: true }, (err, files) => {
         if (err) {
@@ -26,7 +26,7 @@ class FileNestingSystem {
 
         console.log("FileNestingSystem:getChildren files", { uri, files });
 
-        const entries: FNSEntry[] = [];
+        const entries: Entry[] = [];
 
         files.forEach((file) => {
           if (
@@ -34,10 +34,11 @@ class FileNestingSystem {
             file.name.startsWith("@") &&
             this.isFileContainerFolder(file.name, files)
           ) {
+            // do not show the folder if it is a file container folder
             return;
           }
 
-          const entry: FNSEntry = {
+          const entry: Entry = {
             type: file.isDirectory() ? "folder" : "file",
             path: join(uri, file.name),
             name: file.name,
@@ -61,15 +62,22 @@ class FileNestingSystem {
     });
   }
 
-  public get roots(): Thenable<FNSEntry[]> {
+  public getChildrenFromNestingFile(file: Entry): Thenable<Entry[]> {
+    const fileName = file.name.slice(0, file.name.lastIndexOf("."));
+    const folderPath = join(dirname(file.path), `@${fileName}`);
+
+    return this.getChildrenFromFolder(folderPath);
+  }
+
+  public get roots(): Thenable<Entry[]> {
     if (!this.workspaceRoot) {
       return Promise.resolve([]);
     }
 
-    return this.getChildren(this.workspaceRoot);
+    return this.getChildrenFromFolder(this.workspaceRoot);
   }
 
-  private sortEntries(entries: FNSEntry[]): FNSEntry[] {
+  private sortEntries(entries: Entry[]): Entry[] {
     return entries.sort((a, b) => {
       if (a.type === b.type) {
         return a.name.localeCompare(b.name);

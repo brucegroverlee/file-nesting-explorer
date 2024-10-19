@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import { File } from "./Entry";
+import { Entry } from "./Entry";
 
 let lastClickTime = 0;
 let lastClickedPath: string | undefined;
@@ -43,7 +43,7 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.openEditor",
-      async (element: File) => {
+      async (element: Entry) => {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastClickTime;
 
