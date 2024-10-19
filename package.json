@@ -38,6 +38,30 @@
         "icon": "$(collapse-all)"
       },
       {
+        "command": "fileNestingExplorer.cut",
+        "title": "Cut"
+      },
+      {
+        "command": "fileNestingExplorer.copy",
+        "title": "Copy"
+      },
+      {
+        "command": "fileNestingExplorer.copyPath",
+        "title": "Copy path"
+      },
+      {
+        "command": "fileNestingExplorer.copyRelativePath",
+        "title": "Copy relative path"
+      },
+      {
+        "command": "fileNestingExplorer.rename",
+        "title": "Rename"
+      },
+      {
+        "command": "fileNestingExplorer.delete",
+        "title": "Delete"
+      },
+      {
         "command": "fileNestingExplorer.openEditor",
         "title": "Open Editor"
       }
@@ -71,6 +95,32 @@
           "command": "fileNestingExplorer.collapse",
           "when": "view == fileNestingExplorer",
           "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "fileNestingExplorer.cut",
+          "when": "view == fileNestingExplorer"
+        },
+        {
+          "command": "fileNestingExplorer.copy",
+          "when": "view == fileNestingExplorer"
+        },
+        {
+          "command": "fileNestingExplorer.copyPath",
+          "when": "view == fileNestingExplorer"
+        },
+        {
+          "command": "fileNestingExplorer.copyRelativePath",
+          "when": "view == fileNestingExplorer"
+        },
+        {
+          "command": "fileNestingExplorer.rename",
+          "when": "view == fileNestingExplorer"
+        },
+        {
+          "command": "fileNestingExplorer.delete",
+          "when": "view == fileNestingExplorer"
         }
       ]
     }
