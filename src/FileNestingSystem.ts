@@ -141,9 +141,11 @@ class FileNestingSystem {
       });
 
       if (this.isFileContainerFolder(parentName, parentSiblingFiles)) {
+        const parentFileName = `${parentName.slice(1)}.tsx`; // TODO: get the extension from the file
+
         parent.type = "file";
-        // TODO replace the path from @Component to Component.tsx
-        parent.name = `${parentName.slice(1)}.tsx`; // TODO: get the extension from the file
+        parent.path = join(dirname(parentPath), parentFileName);
+        parent.name = parentFileName;
         parent.extension = "tsx"; // TODO: get the extension from the file
         parent.isNesting = true;
       }
