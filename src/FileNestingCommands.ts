@@ -18,42 +18,49 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.newFile", () => {
+      // TODO
       vscode.window.showInformationMessage("New file!");
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.newFolder", () => {
+      // TODO
       vscode.window.showInformationMessage("New folder!");
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.refresh", () => {
+      // TODO
       vscode.window.showInformationMessage("Refreshing!");
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.collapse", () => {
+      // TODO
       vscode.window.showInformationMessage("Collapsing!");
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.cut", () => {
+      // TODO
       vscode.window.showInformationMessage("Cut!");
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.copy", () => {
+      // TODO
       vscode.window.showInformationMessage("Copy!");
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.copyPath", () => {
+      // TODO
       vscode.window.showInformationMessage("Copy path!");
     })
   );
@@ -62,6 +69,7 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "fileNestingExplorer.copyRelativePath",
       () => {
+        // TODO
         vscode.window.showInformationMessage("Copy relative path!");
       }
     )
@@ -69,12 +77,14 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.rename", () => {
+      // TODO
       vscode.window.showInformationMessage("Rename!");
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.delete", () => {
+      // TODO
       vscode.window.showInformationMessage("Delete!");
     })
   );

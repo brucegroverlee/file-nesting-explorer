@@ -116,6 +116,43 @@ class FileNestingSystem {
         f.name.slice(1) === fileName
     );
   }
+
+  public getParent(entry: Entry): Entry | null {
+    console.log("FileNestingSystem:getParent entry", entry);
+
+    const parentPath = dirname(entry.path);
+
+    if (parentPath === this.workspaceRoot) {
+      console.log("FileNestingSystem:getParent is root");
+      return null;
+    }
+
+    const parentName = basename(parentPath);
+
+    let parent: Entry = {
+      type: "folder",
+      path: parentPath,
+      name: parentName,
+    };
+
+    if (parentName.startsWith("@")) {
+      const parentSiblingFiles = fs.readdirSync(dirname(parentPath), {
+        withFileTypes: true,
+      });
+
+      if (this.isFileContainerFolder(parentName, parentSiblingFiles)) {
+        parent.type = "file";
+        // TODO replace the path from @Component to Component.tsx
+        parent.name = `${parentName.slice(1)}.tsx`; // TODO: get the extension from the file
+        parent.extension = "tsx"; // TODO: get the extension from the file
+        parent.isNesting = true;
+      }
+    }
+
+    console.log("FileNestingSystem:getParent parent", parent);
+
+    return parent;
+  }
 }
 
 export const fileNestingSystem = new FileNestingSystem();

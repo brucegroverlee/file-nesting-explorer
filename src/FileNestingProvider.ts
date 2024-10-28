@@ -4,7 +4,14 @@ import { Entry } from "./Entry";
 import { fileNestingSystem } from "./FileNestingSystem";
 import { getIcon } from "./Icon";
 
-export class FileNestingProvider implements vscode.TreeDataProvider<Entry> {
+export class FileNestingProvider
+  implements
+    vscode.TreeDataProvider<Entry>,
+    vscode.TreeDragAndDropController<Entry>
+{
+  dropMimeTypes = ["application/vnd.code.tree.fileNestingExplorer"];
+  dragMimeTypes = ["text/uri-list"];
+
   getChildren(element?: Entry): Thenable<Entry[]> {
     console.log("FileNestingProvider:getChildren", element);
 
@@ -24,7 +31,7 @@ export class FileNestingProvider implements vscode.TreeDataProvider<Entry> {
   }
 
   getTreeItem(element: Entry): vscode.TreeItem {
-    console.log("FileNestingProvider:getTreeItem FNSEntry", element);
+    console.log("FileNestingProvider:getTreeItem entry", element);
 
     const treeItem = new vscode.TreeItem(element.name);
     treeItem.contextValue = element.type === "folder" ? "folder" : "file";
@@ -50,6 +57,41 @@ export class FileNestingProvider implements vscode.TreeDataProvider<Entry> {
 
     console.log("FileNestingProvider:getTreeItem TreeItem", treeItem);
     return treeItem;
+  }
+
+  public async getParent(entry: Entry): Promise<Entry | null> {
+    console.log("FileNestingProvider:getParent entry", entry);
+
+    return fileNestingSystem.getParent(entry);
+  }
+
+  public async handleDrag(
+    source: Entry[],
+    treeDataTransfer: vscode.DataTransfer,
+    token: vscode.CancellationToken
+  ): Promise<void> {
+    treeDataTransfer.set(
+      "application/vnd.code.tree.testViewDragAndDrop",
+      new vscode.DataTransferItem(source)
+    );
+  }
+
+  public async handleDrop(
+    target: Entry | undefined,
+    sources: vscode.DataTransfer,
+    token: vscode.CancellationToken
+  ): Promise<void> {
+    const transferItem = sources.get(
+      "application/vnd.code.tree.testViewDragAndDrop"
+    );
+
+    if (!transferItem) {
+      return;
+    }
+
+    const treeItems: Entry[] = transferItem.value;
+
+    // TODO
   }
 }
 
