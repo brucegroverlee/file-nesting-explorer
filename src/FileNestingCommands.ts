@@ -38,13 +38,6 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.collapse", () => {
-      // TODO
-      vscode.window.showInformationMessage("Collapsing!");
-    })
-  );
-
-  context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.cut", () => {
       // TODO
       vscode.window.showInformationMessage("Cut!");
