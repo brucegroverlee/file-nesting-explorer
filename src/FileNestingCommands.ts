@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 
 import { Entry } from "./Entry";
+import { refreshView } from "./commands/refreshView";
+import { renameEntry } from "./commands/renameEntry";
 
 let lastClickTime = 0;
 let lastClickedPath: string | undefined;
@@ -31,10 +33,7 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.refresh", () => {
-      // TODO
-      vscode.window.showInformationMessage("Refreshing!");
-    })
+    vscode.commands.registerCommand("fileNestingExplorer.refresh", refreshView)
   );
 
   context.subscriptions.push(
@@ -69,10 +68,7 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.rename", () => {
-      // TODO
-      vscode.window.showInformationMessage("Rename!");
-    })
+    vscode.commands.registerCommand("fileNestingExplorer.rename", renameEntry)
   );
 
   context.subscriptions.push(

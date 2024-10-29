@@ -9,8 +9,17 @@ export class FileNestingProvider
     vscode.TreeDataProvider<Entry>,
     vscode.TreeDragAndDropController<Entry>
 {
+  private _onDidChangeTreeData: vscode.EventEmitter<Entry | undefined | void> =
+    new vscode.EventEmitter<Entry | undefined | void>();
+  readonly onDidChangeTreeData: vscode.Event<Entry | undefined | void> =
+    this._onDidChangeTreeData.event;
+
   dropMimeTypes = ["application/vnd.code.tree.fileNestingExplorer"];
   dragMimeTypes = ["text/uri-list"];
+
+  public refresh(): void {
+    this._onDidChangeTreeData.fire();
+  }
 
   getChildren(element?: Entry): Thenable<Entry[]> {
     console.log("FileNestingProvider:getChildren", element);

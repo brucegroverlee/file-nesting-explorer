@@ -155,6 +155,30 @@ class FileNestingSystem {
 
     return parent;
   }
+
+  public async renameEntry(entry: Entry, newName: string): Promise<void> {
+    console.log("FileNestingSystem:renameEntry", { entry, newName });
+
+    const newPath = join(dirname(entry.path), newName);
+
+    await fs.promises.rename(entry.path, newPath);
+
+    entry.path = newPath;
+    entry.name = newName;
+
+    /* if (entry.type === "folder") {
+      const folderPath = join(dirname(entry.path), `@${newName}`);
+
+      try {
+        await fs.promises.rename(
+          join(dirname(entry.path), `@${entry.name}`),
+          folderPath
+        );
+      } catch (error) {
+        // ignore error
+      }
+    } */
+  }
 }
 
 export const fileNestingSystem = new FileNestingSystem();
