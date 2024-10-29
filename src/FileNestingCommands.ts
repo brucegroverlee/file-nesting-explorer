@@ -1,15 +1,8 @@
 import * as vscode from "vscode";
 
-import { Entry } from "./Entry";
 import { refreshView } from "./commands/refreshView";
 import { renameEntry } from "./commands/renameEntry";
-
-let lastClickTime = 0;
-let lastClickedPath: string | undefined;
-
-function sanitizeFileName(name: string): string {
-  return name.replace(/[\\/:*?"<>|]/g, "_");
-}
+import { openEditor } from "./commands/openEditor";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -81,49 +74,7 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.openEditor",
-      async (element: Entry) => {
-        /* const currentTime = new Date().getTime();
-        const timeDiff = currentTime - lastClickTime;
-
-        let isDoubleClick = false;
-
-        if (
-          lastClickedPath &&
-          lastClickedPath === element.path &&
-          timeDiff < 500
-        ) {
-          isDoubleClick = true;
-        }
-
-        lastClickTime = currentTime;
-        lastClickedPath = element.path;
-        console.log({
-          currentTime,
-          lastClickTime,
-          timeDiff,
-          isDoubleClick,
-        }); */
-
-        // Lógica para abrir el editor con el nombre y contenido especificados
-        // const sanitizedName = sanitizeFileName(element.name);
-        // const uri = vscode.Uri.parse(`untitled:${sanitizedName}`);
-
-        // const document = await vscode.workspace.openTextDocument(uri);
-        const uri = vscode.Uri.file(element.path);
-
-        console.log("fileNestingExplorer.openEditor", { element, uri });
-
-        const editor = await vscode.window.showTextDocument(uri, {
-          // preview: !isDoubleClick,
-        });
-
-        /* await editor.edit((editBuilder) => {
-          editBuilder.replace(
-            new vscode.Position(0, 0),
-            "console.log('Holiiiiii')"
-          );
-        }); */
-      }
+      openEditor
     )
   );
 }
