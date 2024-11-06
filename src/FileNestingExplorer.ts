@@ -7,7 +7,7 @@ import { fileNestingProvider } from "./FileNestingProvider";
 export class FileNestingExplorer {
   private viewExplorer: vscode.TreeView<Entry>;
 
-  constructor(context: vscode.ExtensionContext) {
+  constructor() {
     this.viewExplorer = vscode.window.createTreeView("fileNestingExplorer", {
       treeDataProvider: fileNestingProvider,
       showCollapseAll: true,
@@ -15,11 +15,13 @@ export class FileNestingExplorer {
       dragAndDropController: fileNestingProvider,
     });
 
-    context.subscriptions.push(this.viewExplorer);
-
     vscode.window.onDidChangeActiveTextEditor(() =>
       this.onActiveEditorChanged()
     );
+  }
+
+  public setContext(context: vscode.ExtensionContext) {
+    context.subscriptions.push(this.viewExplorer);
   }
 
   private async onActiveEditorChanged(): Promise<void> {
@@ -31,15 +33,25 @@ export class FileNestingExplorer {
           activeTextEditor,
         });
 
-        await this.viewExplorer.reveal(
-          {
-            type: "file",
-            path: activeTextEditor.document.fileName,
-            name: basename(activeTextEditor.document.fileName),
-          },
-          { focus: false, select: true, expand: false }
+        await this.revealFile(
+          activeTextEditor.document.fileName,
+          basename(activeTextEditor.document.fileName)
         );
       }
     }
   }
+
+  // the idea of this method is to provide a way to reveal a file in the newFile command, but it's not being used
+  public async revealFile(path: string, name: string) {
+    await this.viewExplorer.reveal(
+      {
+        type: "file",
+        path,
+        name,
+      },
+      { focus: false, select: true, expand: false }
+    );
+  }
 }
+
+export const fileNestingExplorer = new FileNestingExplorer();

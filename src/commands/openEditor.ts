@@ -5,10 +5,6 @@ import { Entry } from "../Entry";
 let lastClickTime = 0;
 let lastClickedPath: string | undefined;
 
-function sanitizeFileName(name: string): string {
-  return name.replace(/[\\/:*?"<>|]/g, "_");
-}
-
 function isDoubleClick(element: Entry) {
   const currentTime = new Date().getTime();
   const timeDiff = currentTime - lastClickTime;

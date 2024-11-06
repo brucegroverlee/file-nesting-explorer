@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { basename, dirname, join } from "path";
 import * as fs from "fs";
+// TODO there is two path imports
 import * as path from "path";
 
 import { Entry } from "./Entry";

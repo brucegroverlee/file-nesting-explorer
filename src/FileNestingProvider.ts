@@ -58,9 +58,12 @@ export class FileNestingProvider
       };
     }
 
+    if (element.type === "file" && element.extension === "tsx") {
+      treeItem.contextValue = "file_tsx";
+    }
+
     if (element.type === "file" && element.isNesting) {
       treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-
       treeItem.iconPath = getIcon(element.extension);
     }
 

@@ -89,20 +89,34 @@
       ],
       "view/item/context": [
         {
+          "command": "fileNestingExplorer.newFile",
+          "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == file_tsx)",
+          "group": "edifilet"
+        },
+        {
+          "command": "fileNestingExplorer.newFolder",
+          "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == file_tsx)",
+          "group": "edifilet"
+        },
+        {
           "command": "fileNestingExplorer.cut",
-          "when": "view == fileNestingExplorer"
+          "when": "view == fileNestingExplorer",
+          "group": "edit"
         },
         {
           "command": "fileNestingExplorer.copy",
-          "when": "view == fileNestingExplorer"
+          "when": "view == fileNestingExplorer",
+          "group": "edit"
         },
         {
           "command": "fileNestingExplorer.copyPath",
-          "when": "view == fileNestingExplorer"
+          "when": "view == fileNestingExplorer",
+          "group": "path"
         },
         {
           "command": "fileNestingExplorer.copyRelativePath",
-          "when": "view == fileNestingExplorer"
+          "when": "view == fileNestingExplorer",
+          "group": "path"
         },
         {
           "command": "fileNestingExplorer.rename",

@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 
-import { fileNestingProvider } from "./FileNestingProvider";
-import { FileNestingExplorer } from "./FileNestingExplorer";
+import { fileNestingExplorer } from "./FileNestingExplorer";
 import { createFileNestingCommands } from "./FileNestingCommands";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -9,7 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
     'Congratulations, your extension "file-nesting-explorer" is now active!'
   );
 
-  new FileNestingExplorer(context);
+  fileNestingExplorer.setContext(context);
 
   createFileNestingCommands(context);
 }
