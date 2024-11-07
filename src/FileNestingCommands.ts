@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 
 import { newFile } from "./commands/newFile";
+import { newFolder } from "./commands/newFolder";
 import { refreshView } from "./commands/refreshView";
 import { renameEntry } from "./commands/renameEntry";
 import { openEditor } from "./commands/openEditor";
@@ -17,10 +18,7 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.newFolder", () => {
-      // TODO
-      vscode.window.showInformationMessage("New folder!");
-    })
+    vscode.commands.registerCommand("fileNestingExplorer.newFolder", newFolder)
   );
 
   context.subscriptions.push(

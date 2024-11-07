@@ -18,38 +18,34 @@ const getBasepath = (entry?: Entry) => {
   throw new Error("No workspace folder found");
 };
 
-export const newFile = async (entry: Entry) => {
-  console.log("fileNestingExplorer.newFile", entry);
+export const newFolder = async (entry: Entry) => {
+  console.log("fileNestingExplorer.newFolder", entry);
 
-  const fileName = await vscode.window.showInputBox({
-    placeHolder: "Enter file name",
+  const folderName = await vscode.window.showInputBox({
+    placeHolder: "Enter folder name",
   });
 
-  if (!fileName) {
+  if (!folderName) {
     return;
   }
 
   const basepath = getBasepath(entry);
 
-  const path = `${basepath}/${fileName}`;
+  const path = `${basepath}/${folderName}`;
 
-  const fileExists = await vscode.workspace.fs.stat(vscode.Uri.file(path)).then(
-    () => true,
-    () => false
-  );
+  const folderExists = await vscode.workspace.fs
+    .stat(vscode.Uri.file(path))
+    .then(
+      () => true,
+      () => false
+    );
 
-  if (fileExists) {
-    vscode.window.showErrorMessage("File already exists!");
+  if (folderExists) {
+    vscode.window.showErrorMessage("Folder already exists!");
     return;
   }
 
-  await vscode.workspace.fs.writeFile(vscode.Uri.file(path), new Uint8Array(0));
+  await vscode.workspace.fs.createDirectory(vscode.Uri.file(path));
 
   fileNestingProvider.refresh();
-
-  vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
-    type: "file",
-    path,
-    name: fileName,
-  });
 };
