@@ -4,6 +4,7 @@ import { newFile } from "./commands/newFile";
 import { newFolder } from "./commands/newFolder";
 import { refreshView } from "./commands/refreshView";
 import { renameEntry } from "./commands/renameEntry";
+import { deleteEntry } from "./commands/deleteEntry";
 import { openEditor } from "./commands/openEditor";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
@@ -61,10 +62,7 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.delete", () => {
-      // TODO
-      vscode.window.showInformationMessage("Delete!");
-    })
+    vscode.commands.registerCommand("fileNestingExplorer.delete", deleteEntry)
   );
 
   context.subscriptions.push(

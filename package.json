@@ -90,33 +90,33 @@
       "view/item/context": [
         {
           "command": "fileNestingExplorer.newFile",
-          "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == file_tsx)",
-          "group": "edifilet"
+          "when": "view == fileNestingExplorer && viewItem == folder",
+          "group": "group1"
         },
         {
           "command": "fileNestingExplorer.newFolder",
-          "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == file_tsx)",
-          "group": "edifilet"
+          "when": "view == fileNestingExplorer && viewItem == folder",
+          "group": "group1"
         },
         {
           "command": "fileNestingExplorer.cut",
           "when": "view == fileNestingExplorer",
-          "group": "edit"
+          "group": "group2"
         },
         {
           "command": "fileNestingExplorer.copy",
           "when": "view == fileNestingExplorer",
-          "group": "edit"
+          "group": "group2"
         },
         {
           "command": "fileNestingExplorer.copyPath",
           "when": "view == fileNestingExplorer",
-          "group": "path"
+          "group": "group3"
         },
         {
           "command": "fileNestingExplorer.copyRelativePath",
           "when": "view == fileNestingExplorer",
-          "group": "path"
+          "group": "group3"
         },
         {
           "command": "fileNestingExplorer.rename",
