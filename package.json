@@ -41,6 +41,10 @@
         "title": "Copy"
       },
       {
+        "command": "fileNestingExplorer.paste",
+        "title": "Paste"
+      },
+      {
         "command": "fileNestingExplorer.copyPath",
         "title": "Copy path"
       },
@@ -105,6 +109,11 @@
         },
         {
           "command": "fileNestingExplorer.copy",
+          "when": "view == fileNestingExplorer",
+          "group": "group2"
+        },
+        {
+          "command": "fileNestingExplorer.paste",
           "when": "view == fileNestingExplorer",
           "group": "group2"
         },

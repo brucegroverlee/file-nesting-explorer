@@ -3,6 +3,8 @@ import * as vscode from "vscode";
 import { newFile } from "./commands/newFile";
 import { newFolder } from "./commands/newFolder";
 import { refreshView } from "./commands/refreshView";
+import { copyEntry } from "./commands/copyEntry";
+import { pasteEntry } from "./commands/pasteEntry";
 import { renameEntry } from "./commands/renameEntry";
 import { deleteEntry } from "./commands/deleteEntry";
 import { openEditor } from "./commands/openEditor";
@@ -34,10 +36,11 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.copy", () => {
-      // TODO
-      vscode.window.showInformationMessage("Copy!");
-    })
+    vscode.commands.registerCommand("fileNestingExplorer.copy", copyEntry)
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("fileNestingExplorer.paste", pasteEntry)
   );
 
   context.subscriptions.push(
