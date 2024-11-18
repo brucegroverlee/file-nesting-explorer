@@ -27,31 +27,63 @@ export class FileNestingExplorer {
   private async onActiveEditorChanged(): Promise<void> {
     const { activeTextEditor } = vscode.window;
 
-    if (activeTextEditor) {
-      if (activeTextEditor.document.uri.scheme === "file") {
-        console.log("FileNestingExplorer:onActiveEditorChanged", {
-          activeTextEditor,
-        });
-
-        await this.revealFile(
-          activeTextEditor.document.fileName,
-          basename(activeTextEditor.document.fileName)
-        );
-      }
+    if (!activeTextEditor || activeTextEditor.document.uri.scheme !== "file") {
+      return;
     }
+
+    const selection = this.viewExplorer.selection;
+
+    const focus =
+      selection.length > 0 &&
+      selection[0].path === activeTextEditor.document.fileName;
+
+    console.log("FileNestingExplorer:onActiveEditorChanged", {
+      activeTextEditor,
+      selection,
+      focus,
+    });
+
+    await this.viewExplorer.reveal(
+      {
+        type: "file",
+        path: activeTextEditor.document.fileName,
+        name: basename(activeTextEditor.document.fileName),
+      },
+      {
+        // focus: true,
+        select: true,
+        expand: false,
+      }
+    );
+
+    /* if (
+      selection.length > 0 &&
+      selection[0].path !== activeTextEditor.document.fileName
+    ) {
+      console.log("FileNestingExplorer:onActiveEditorChanged revealFile");
+
+      await this.revealFile(
+        activeTextEditor.document.fileName,
+        basename(activeTextEditor.document.fileName)
+      );
+    } */
   }
 
   // the idea of this method is to provide a way to reveal a file in the newFile command, but it's not being used
-  public async revealFile(path: string, name: string) {
+  /* public async revealFile(path: string, name: string) {
     await this.viewExplorer.reveal(
       {
         type: "file",
         path,
         name,
       },
-      { focus: false, select: true, expand: false }
+      {
+        // focus: true,
+        select: true,
+        expand: false,
+      }
     );
-  }
+  } */
 }
 
 export const fileNestingExplorer = new FileNestingExplorer();

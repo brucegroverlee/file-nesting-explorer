@@ -11,11 +11,18 @@ export class FileNestingProvider
 {
   private _onDidChangeTreeData: vscode.EventEmitter<Entry | undefined | void> =
     new vscode.EventEmitter<Entry | undefined | void>();
+
   readonly onDidChangeTreeData: vscode.Event<Entry | undefined | void> =
     this._onDidChangeTreeData.event;
 
   dropMimeTypes = ["application/vnd.code.tree.fileNestingExplorer"];
   dragMimeTypes = ["text/uri-list"];
+
+  private context: vscode.ExtensionContext | null = null;
+
+  public setContext(context: vscode.ExtensionContext) {
+    this.context = context;
+  }
 
   public refresh(): void {
     this._onDidChangeTreeData.fire();
@@ -42,9 +49,15 @@ export class FileNestingProvider
   getTreeItem(element: Entry): vscode.TreeItem {
     console.log("FileNestingProvider:getTreeItem entry", element);
 
+    const cutEntryPath = this.context?.globalState.get<string>("cutEntryPath");
+
     const treeItem = new vscode.TreeItem(element.name);
     treeItem.contextValue = element.type === "folder" ? "folder" : "file";
     treeItem.resourceUri = vscode.Uri.file(element.path);
+
+    if (cutEntryPath && cutEntryPath === element.path) {
+      treeItem.description = "cut";
+    }
 
     if (element.type === "folder") {
       treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;

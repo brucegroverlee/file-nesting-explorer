@@ -4,6 +4,7 @@ import { newFile } from "./commands/newFile";
 import { newFolder } from "./commands/newFolder";
 import { refreshView } from "./commands/refreshView";
 import { copyEntry } from "./commands/copyEntry";
+import { cutEntry } from "./commands/cutEntry";
 import { pasteEntry } from "./commands/pasteEntry";
 import { renameEntry } from "./commands/renameEntry";
 import { deleteEntry } from "./commands/deleteEntry";
@@ -29,18 +30,24 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.cut", () => {
-      // TODO
-      vscode.window.showInformationMessage("Cut!");
-    })
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.cut",
+      cutEntry(context)
+    )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.copy", copyEntry)
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.copy",
+      copyEntry(context)
+    )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.paste", pasteEntry)
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.paste",
+      pasteEntry(context)
+    )
   );
 
   context.subscriptions.push(

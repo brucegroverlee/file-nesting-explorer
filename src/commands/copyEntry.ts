@@ -1,9 +1,15 @@
 import * as vscode from "vscode";
 
 import { Entry } from "../Entry";
+import { fileNestingProvider } from "../FileNestingProvider";
 
-export const copyEntry = async (entry: Entry) => {
-  console.log("fileNestingExplorer.copy", entry);
+export const copyEntry =
+  (context: vscode.ExtensionContext) => async (entry: Entry) => {
+    console.log("fileNestingExplorer.copy", entry);
 
-  vscode.env.clipboard.writeText(entry.path);
-};
+    context.globalState.update("cutEntryPath", null);
+
+    vscode.env.clipboard.writeText(entry.path);
+
+    fileNestingProvider.refresh();
+  };
