@@ -3,6 +3,8 @@ import * as vscode from "vscode";
 import { newFile } from "./commands/newFile";
 import { newFolder } from "./commands/newFolder";
 import { refreshView } from "./commands/refreshView";
+import { newNestedFile } from "./commands/newNestedFile";
+import { newNestedFolder } from "./commands/newNestedFolder";
 import { copyEntry } from "./commands/copyEntry";
 import { cutEntry } from "./commands/cutEntry";
 import { pasteEntry } from "./commands/pasteEntry";
@@ -14,12 +16,6 @@ import { openEditor } from "./commands/openEditor";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("file-nesting-explorer.helloWorld", () => {
-      vscode.window.showInformationMessage("Hello World from File Nesting! V2");
-    })
-  );
-
-  context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.newFile", newFile)
   );
 
@@ -29,6 +25,20 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fileNestingExplorer.refresh", refreshView)
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.newNestedFile",
+      newNestedFile
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.newNestedFolder",
+      newNestedFolder
+    )
   );
 
   context.subscriptions.push(

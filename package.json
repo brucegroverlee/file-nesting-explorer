@@ -14,10 +14,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "file-nesting-explorer.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "fileNestingExplorer.newFile",
         "title": "New File...",
         "icon": "$(new-file)"
@@ -31,6 +27,16 @@
         "command": "fileNestingExplorer.refresh",
         "title": "Refresh",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "fileNestingExplorer.newNestedFile",
+        "title": "New Nested File...",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "fileNestingExplorer.newNestedFolder",
+        "title": "New Nested Folder...",
+        "icon": "$(new-folder)"
       },
       {
         "command": "fileNestingExplorer.cut",
@@ -100,6 +106,16 @@
         {
           "command": "fileNestingExplorer.newFolder",
           "when": "view == fileNestingExplorer && viewItem == folder",
+          "group": "group1"
+        },
+        {
+          "command": "fileNestingExplorer.newNestedFile",
+          "when": "view == fileNestingExplorer && viewItem == file_tsx",
+          "group": "group1"
+        },
+        {
+          "command": "fileNestingExplorer.newNestedFolder",
+          "when": "view == fileNestingExplorer && viewItem == file_tsx",
           "group": "group1"
         },
         {
