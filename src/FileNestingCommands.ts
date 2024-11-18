@@ -6,6 +6,8 @@ import { refreshView } from "./commands/refreshView";
 import { copyEntry } from "./commands/copyEntry";
 import { cutEntry } from "./commands/cutEntry";
 import { pasteEntry } from "./commands/pasteEntry";
+import { copyEntryPath } from "./commands/copyEntryPath";
+import { copyEntryRelativePath } from "./commands/copyEntryRelativePath";
 import { renameEntry } from "./commands/renameEntry";
 import { deleteEntry } from "./commands/deleteEntry";
 import { openEditor } from "./commands/openEditor";
@@ -51,19 +53,16 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.copyPath", () => {
-      // TODO
-      vscode.window.showInformationMessage("Copy path!");
-    })
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.copyPath",
+      copyEntryPath(context)
+    )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.copyRelativePath",
-      () => {
-        // TODO
-        vscode.window.showInformationMessage("Copy relative path!");
-      }
+      copyEntryRelativePath(context)
     )
   );
 
