@@ -27,6 +27,7 @@ export const openEditor = async (element: Entry) => {
   console.log("fileNestingExplorer.openEditor", { element, uri });
 
   const editor = await vscode.window.showTextDocument(uri, {
+    preserveFocus: true,
     preview: !isDoubleClick(element),
   });
 };
