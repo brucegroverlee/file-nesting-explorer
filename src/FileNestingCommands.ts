@@ -12,6 +12,7 @@ import { copyEntryPath } from "./commands/copyEntryPath";
 import { copyEntryRelativePath } from "./commands/copyEntryRelativePath";
 import { renameEntry } from "./commands/renameEntry";
 import { deleteEntry } from "./commands/deleteEntry";
+import { deleteFileNestingContainer } from "./commands/deleteFileNestingContainer";
 import { openEditor } from "./commands/openEditor";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
@@ -38,6 +39,13 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "fileNestingExplorer.newNestedFolder",
       newNestedFolder
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.deleteFileNestingContainer",
+      deleteFileNestingContainer
     )
   );
 

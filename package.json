@@ -39,6 +39,11 @@
         "icon": "$(new-folder)"
       },
       {
+        "command": "fileNestingExplorer.deleteFileNestingContainer",
+        "title": "Delete File Nesting Container",
+        "icon": "$(trash)"
+      },
+      {
         "command": "fileNestingExplorer.cut",
         "title": "Cut"
       },
@@ -52,11 +57,11 @@
       },
       {
         "command": "fileNestingExplorer.copyPath",
-        "title": "Copy path"
+        "title": "Copy Path"
       },
       {
         "command": "fileNestingExplorer.copyRelativePath",
-        "title": "Copy relative path"
+        "title": "Copy Relative Path"
       },
       {
         "command": "fileNestingExplorer.rename",
@@ -150,6 +155,10 @@
         {
           "command": "fileNestingExplorer.delete",
           "when": "view == fileNestingExplorer"
+        },
+        {
+          "command": "fileNestingExplorer.deleteFileNestingContainer",
+          "when": "view == fileNestingExplorer && viewItem == file_tsx"
         }
       ]
     }
