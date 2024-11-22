@@ -1,64 +1,114 @@
 import * as vscode from "vscode";
-import { basename, dirname, join } from "path";
+import { basename, dirname, extname, join } from "path";
 
-import { Entry } from "../Entry";
+import { Entry, getName } from "../Entry";
 import { fileNestingProvider } from "../FileNestingProvider";
+import { fileNestingExplorer } from "../FileNestingExplorer";
+import { validateExist, validateFiles } from "../FileSystem";
+
+const paste = async (
+  pathToBePasted: string,
+  selectedEntries: readonly Entry[],
+  targetEntry?: Entry
+) => {
+  const selectedEntry = selectedEntries[0];
+  const targetPath = selectedEntry.path;
+
+  if (pathToBePasted === targetPath) {
+    const newPath = join(
+      dirname(targetPath),
+      `${getName(targetPath)}(copy)${extname(targetPath)}`
+    );
+
+    return await vscode.workspace.fs.copy(
+      vscode.Uri.file(pathToBePasted),
+      vscode.Uri.file(newPath)
+    );
+  }
+
+  /* let location = dirname(targetPath);
+
+  if (targetEntry) {
+    location =
+      targetEntry.type === "folder"
+        ? targetEntry.path
+        : dirname(targetEntry.path);
+  } */
+  let location =
+    selectedEntry.type === "folder"
+      ? selectedEntry.path
+      : dirname(selectedEntry.path);
+
+  if (selectedEntries.length > 1) {
+    location = dirname(selectedEntry.path);
+  }
+
+  const newName = basename(pathToBePasted);
+  let newPath = join(location, newName);
+
+  const fileExists = await validateExist(newPath);
+
+  if (fileExists) {
+    newPath = join(
+      location,
+      `${getName(pathToBePasted)}(copy)${extname(pathToBePasted)}`
+    );
+  }
+
+  await vscode.workspace.fs.copy(
+    vscode.Uri.file(pathToBePasted),
+    vscode.Uri.file(newPath)
+  );
+};
 
 export const pasteEntry =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
-    const cutEntryPath = context.globalState.get<string>("cutEntryPath");
+    const selectedEntries = fileNestingExplorer.getSelection();
 
-    const copiedPath = await vscode.env.clipboard.readText();
+    const cutEntryPaths = context.globalState.get<string[]>("cutEntryPaths");
+    const copiedEntryPaths =
+      context.globalState.get<string[]>("copiedEntryPaths");
+
+    const clipboard = await vscode.env.clipboard.readText(); // ===========>
 
     console.log("fileNestingExplorer.paste", {
       entry,
-      cutEntryPath,
-      copiedPath,
+      selectedEntries,
+      cutEntryPaths,
+      copiedEntryPaths,
+      clipboard,
     });
 
-    if (!copiedPath) {
-      return;
-    }
+    let pathsToBePasted = cutEntryPaths || copiedEntryPaths;
 
-    if (cutEntryPath && cutEntryPath !== copiedPath) {
-      return;
-    }
+    if (!pathsToBePasted) {
+      const clipboardParts = clipboard.split(" ");
 
-    if (copiedPath === entry.path) {
-      // paste into the same folder with  the suffix " - Copy"
-      const newPath = `${entry.path}(copy)`;
-
-      await vscode.workspace.fs.copy(
-        vscode.Uri.file(copiedPath),
-        vscode.Uri.file(newPath)
-      );
-    } else {
-      const location =
-        entry.type === "folder" ? entry.path : dirname(entry.path);
-      const newName = basename(cutEntryPath || copiedPath);
-      let newPath = join(location, newName);
-
-      const fileExists = await vscode.workspace.fs
-        .stat(vscode.Uri.file(newPath))
-        .then(
-          () => true,
-          () => false
-        );
-
-      if (fileExists) {
-        newPath = `${newPath}(copy)`;
+      if (clipboardParts.length === 0 || clipboardParts.length > 5) {
+        return;
       }
 
-      await vscode.workspace.fs.copy(
-        vscode.Uri.file(cutEntryPath || copiedPath),
-        vscode.Uri.file(newPath)
-      );
+      const areFiles = validateFiles(clipboardParts);
+
+      if (!areFiles) {
+        return;
+      }
+
+      pathsToBePasted = clipboardParts;
     }
 
-    if (cutEntryPath) {
-      context.globalState.update("cutEntryPath", null);
+    await Promise.all(
+      pathsToBePasted.map((path) => paste(path, selectedEntries, entry))
+    );
 
-      await vscode.workspace.fs.delete(vscode.Uri.file(cutEntryPath));
+    if (cutEntryPaths) {
+      context.globalState.update("cutEntryPaths", null);
+
+      await Promise.all(
+        cutEntryPaths.map((path) =>
+          vscode.workspace.fs.delete(vscode.Uri.file(path))
+        )
+      );
     }
 
     fileNestingProvider.refresh();

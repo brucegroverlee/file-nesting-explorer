@@ -46,38 +46,39 @@ export class FileNestingProvider
     );
   }
 
-  getTreeItem(element: Entry): vscode.TreeItem {
-    console.log("FileNestingProvider:getTreeItem entry", element);
+  getTreeItem(entry: Entry): vscode.TreeItem {
+    console.log("FileNestingProvider:getTreeItem entry", entry);
 
-    const cutEntryPath = this.context?.globalState.get<string>("cutEntryPath");
+    const cutEntryPaths =
+      this.context?.globalState.get<string[]>("cutEntryPaths");
 
-    const treeItem = new vscode.TreeItem(element.name);
-    treeItem.contextValue = element.type === "folder" ? "folder" : "file";
-    treeItem.resourceUri = vscode.Uri.file(element.path);
+    const treeItem = new vscode.TreeItem(entry.name);
+    treeItem.contextValue = entry.type === "folder" ? "folder" : "file";
+    treeItem.resourceUri = vscode.Uri.file(entry.path);
 
-    if (cutEntryPath && cutEntryPath === element.path) {
+    if (cutEntryPaths && cutEntryPaths.includes(entry.path)) {
       treeItem.description = "cut";
     }
 
-    if (element.type === "folder") {
+    if (entry.type === "folder") {
       treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
     }
 
-    if (element.type === "file") {
+    if (entry.type === "file") {
       treeItem.command = {
         command: "fileNestingExplorer.openEditor",
         title: "Open Editor",
-        arguments: [element],
+        arguments: [entry],
       };
     }
 
-    if (element.type === "file" && element.extension === "tsx") {
+    if (entry.type === "file" && entry.extension === "tsx") {
       treeItem.contextValue = "file_tsx";
     }
 
-    if (element.type === "file" && element.isNesting) {
+    if (entry.type === "file" && entry.isNesting) {
       treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-      treeItem.iconPath = getIcon(element.extension);
+      treeItem.iconPath = getIcon(entry.extension);
     }
 
     console.log("FileNestingProvider:getTreeItem TreeItem", treeItem);

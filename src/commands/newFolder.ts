@@ -3,6 +3,7 @@ import { dirname } from "path";
 
 import { Entry } from "../Entry";
 import { fileNestingProvider } from "../FileNestingProvider";
+import { validateExist } from "../FileSystem";
 
 // TODO make this a utility function
 const getBasepath = (entry?: Entry) => {
@@ -33,12 +34,7 @@ export const newFolder = async (entry: Entry) => {
 
   const path = `${basepath}/${folderName}`;
 
-  const folderExists = await vscode.workspace.fs
-    .stat(vscode.Uri.file(path))
-    .then(
-      () => true,
-      () => false
-    );
+  const folderExists = await validateExist(path);
 
   if (folderExists) {
     vscode.window.showErrorMessage("Folder already exists!");

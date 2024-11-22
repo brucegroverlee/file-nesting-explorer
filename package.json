@@ -1,15 +1,38 @@
 {
   "name": "file-nesting-explorer",
-  "displayName": "File nesting explorer",
-  "description": "",
-  "version": "0.0.1",
+  "displayName": "React File Nesting Explorer: Make React Projects simple and minimalistic",
+  "description": "Create and manage React components with ease. File Nesting Explorer helps you to create and manage React components in a simple and minimalistic way.",
+  "author": "Grover Lee",
+  "version": "0.0.0-beta",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.94.0"
   },
   "categories": [
+    "Visualization",
+    "Programming Languages",
     "Other"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "react",
+    "nextjs",
+    "refactor",
+    "components",
+    "javascript",
+    "typescript",
+    "ui components",
+    "frontend tools",
+    "file",
+    "nesting",
+    "explorer",
+    "file nesting",
+    "file nesting explorer",
+    "react file nesting"
+  ],
+  "activationEvents": [
+    "onLanguage:javascriptreact",
+    "onLanguage:typescriptreact"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -161,7 +184,45 @@
           "when": "view == fileNestingExplorer && viewItem == file_tsx"
         }
       ]
-    }
+    },
+    "keybindings": [
+      {
+        "command": "fileNestingExplorer.cut",
+        "key": "ctrl+x",
+        "mac": "cmd+x",
+        "when": "fileNestingExplorer"
+      },
+      {
+        "command": "fileNestingExplorer.copy",
+        "key": "ctrl+c",
+        "mac": "cmd+c",
+        "when": "fileNestingExplorer"
+      },
+      {
+        "command": "fileNestingExplorer.paste",
+        "key": "ctrl+v",
+        "mac": "cmd+v",
+        "when": "fileNestingExplorer"
+      },
+      {
+        "command": "fileNestingExplorer.copyPath",
+        "key": "ctrl+shift+c",
+        "mac": "alt+cmd+c",
+        "when": "fileNestingExplorer"
+      },
+      {
+        "command": "fileNestingExplorer.copyRelativePath",
+        "key": "ctrl+alt+c",
+        "mac": "alt+shift+cmd+c",
+        "when": "fileNestingExplorer"
+      },
+      {
+        "command": "fileNestingExplorer.delete",
+        "key": "ctrl+delete",
+        "mac": "cmd+backspace",
+        "when": "fileNestingExplorer"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

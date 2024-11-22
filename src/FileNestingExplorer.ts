@@ -24,6 +24,10 @@ export class FileNestingExplorer {
     context.subscriptions.push(this.viewExplorer);
   }
 
+  public getSelection(): readonly Entry[] {
+    return this.viewExplorer.selection;
+  }
+
   private async onActiveEditorChanged(): Promise<void> {
     const { activeTextEditor } = vscode.window;
 
@@ -50,40 +54,11 @@ export class FileNestingExplorer {
         name: basename(activeTextEditor.document.fileName),
       },
       {
-        // focus: true,
         select: true,
         expand: false,
       }
     );
-
-    /* if (
-      selection.length > 0 &&
-      selection[0].path !== activeTextEditor.document.fileName
-    ) {
-      console.log("FileNestingExplorer:onActiveEditorChanged revealFile");
-
-      await this.revealFile(
-        activeTextEditor.document.fileName,
-        basename(activeTextEditor.document.fileName)
-      );
-    } */
   }
-
-  // the idea of this method is to provide a way to reveal a file in the newFile command, but it's not being used
-  /* public async revealFile(path: string, name: string) {
-    await this.viewExplorer.reveal(
-      {
-        type: "file",
-        path,
-        name,
-      },
-      {
-        // focus: true,
-        select: true,
-        expand: false,
-      }
-    );
-  } */
 }
 
 export const fileNestingExplorer = new FileNestingExplorer();

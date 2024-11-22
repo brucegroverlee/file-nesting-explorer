@@ -25,7 +25,10 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.refresh", refreshView)
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.refresh",
+      refreshView(context)
+    )
   );
 
   context.subscriptions.push(
@@ -89,7 +92,10 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.delete", deleteEntry)
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.delete",
+      deleteEntry(context)
+    )
   );
 
   context.subscriptions.push(

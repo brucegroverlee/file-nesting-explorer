@@ -1,10 +1,8 @@
 import * as vscode from "vscode";
 import { basename, dirname, join } from "path";
 import * as fs from "fs";
-// TODO there is two path imports
-import * as path from "path";
 
-import { Entry } from "./Entry";
+import { Entry, getName, getExtension } from "./Entry";
 
 class FileNestingSystem {
   private workspaceRoot: string | undefined;
@@ -46,7 +44,7 @@ class FileNestingSystem {
           };
 
           if (entry.type === "file") {
-            entry.extension = path.extname(entry.name).slice(1);
+            entry.extension = getExtension(entry.name);
           }
 
           if (entry.type === "file" && this.isNestingFile(entry.name, files)) {
@@ -64,7 +62,7 @@ class FileNestingSystem {
   }
 
   public getChildrenFromNestingFile(file: Entry): Thenable<Entry[]> {
-    const fileName = file.name.slice(0, file.name.lastIndexOf("."));
+    const fileName = getName(file.name);
     const folderPath = join(dirname(file.path), `@${fileName}`);
 
     return this.getChildrenFromFolder(folderPath);
@@ -108,13 +106,11 @@ class FileNestingSystem {
   }
 
   private isNestingFile(fileName: string, files: fs.Dirent[]): boolean {
-    // remove the extension
-    fileName = fileName.slice(0, fileName.lastIndexOf("."));
+    const name = getName(fileName);
+
     return files.some(
       (f) =>
-        f.isDirectory() &&
-        f.name.startsWith("@") &&
-        f.name.slice(1) === fileName
+        f.isDirectory() && f.name.startsWith("@") && f.name.slice(1) === name
     );
   }
 
