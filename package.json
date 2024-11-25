@@ -35,6 +35,26 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "File Nesting Explorer",
+      "properties": {
+        "fileNestingExplorer.fileNestingExtensions": {
+          "type": "array",
+          "default": [
+            "tsx",
+            "ts",
+            "js",
+            "jsx"
+          ],
+          "description": "File extensions that are allowed to be nested."
+        },
+        "fileNestingExplorer.fileNestingPrefix": {
+          "type": "string",
+          "default": "@",
+          "description": "Prefix for the nesting folder container."
+        }
+      }
+    },
     "commands": [
       {
         "command": "fileNestingExplorer.newFile",
@@ -138,12 +158,12 @@
         },
         {
           "command": "fileNestingExplorer.newNestedFile",
-          "when": "view == fileNestingExplorer && viewItem == file_tsx",
+          "when": "view == fileNestingExplorer && viewItem == file_with_nesting_extension",
           "group": "group1"
         },
         {
           "command": "fileNestingExplorer.newNestedFolder",
-          "when": "view == fileNestingExplorer && viewItem == file_tsx",
+          "when": "view == fileNestingExplorer && viewItem == file_with_nesting_extension",
           "group": "group1"
         },
         {
@@ -181,7 +201,7 @@
         },
         {
           "command": "fileNestingExplorer.deleteFileNestingContainer",
-          "when": "view == fileNestingExplorer && viewItem == file_tsx"
+          "when": "view == fileNestingExplorer && viewItem == file_with_nesting_extension"
         }
       ]
     },

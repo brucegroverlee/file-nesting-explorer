@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 
+import { config } from "./config";
 import { Entry } from "./Entry";
 import { fileNestingSystem } from "./FileNestingSystem";
 import { getIcon } from "./Icon";
@@ -72,8 +73,11 @@ export class FileNestingProvider
       };
     }
 
-    if (entry.type === "file" && entry.extension === "tsx") {
-      treeItem.contextValue = "file_tsx";
+    if (
+      entry.type === "file" &&
+      config.fileNestingExtensions.includes(entry.extension || "")
+    ) {
+      treeItem.contextValue = "file_with_nesting_extension";
     }
 
     if (entry.type === "file" && entry.isNesting) {

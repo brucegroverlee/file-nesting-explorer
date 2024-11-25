@@ -29,6 +29,10 @@ export class FileNestingExplorer {
   }
 
   private async onActiveEditorChanged(): Promise<void> {
+    if (!this.viewExplorer.visible) {
+      return;
+    }
+
     const { activeTextEditor } = vscode.window;
 
     if (!activeTextEditor || activeTextEditor.document.uri.scheme !== "file") {

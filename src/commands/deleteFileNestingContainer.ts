@@ -1,20 +1,20 @@
 import * as vscode from "vscode";
 import { dirname, parse, join } from "path";
 
+import { config } from "../config";
 import { Entry } from "../Entry";
 import { fileNestingProvider } from "../FileNestingProvider";
+import { validateExist } from "../FileSystem";
 
 export const deleteFileNestingContainer = async (entry: Entry) => {
   console.log("fileNestingExplorer.deleteFileNestingContainer", entry);
 
-  const containerPath = join(dirname(entry.path), `@${parse(entry.name).name}`);
+  const containerPath = join(
+    dirname(entry.path),
+    `${config.fileNestingPrefix}${parse(entry.name).name}`
+  );
 
-  const containerExists = await vscode.workspace.fs
-    .stat(vscode.Uri.file(containerPath))
-    .then(
-      () => true,
-      () => false
-    );
+  const containerExists = await validateExist(containerPath);
 
   if (!containerExists) {
     return;

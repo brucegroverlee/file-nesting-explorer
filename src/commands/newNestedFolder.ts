@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
 import { dirname, parse, join } from "path";
 
+import { config } from "../config";
 import { Entry } from "../Entry";
 import { fileNestingProvider } from "../FileNestingProvider";
+import { validateExist } from "../FileSystem";
 
 export const newNestedFolder = async (entry: Entry) => {
   console.log("fileNestingExplorer.newNestedFolder", entry);
@@ -15,14 +17,12 @@ export const newNestedFolder = async (entry: Entry) => {
     return;
   }
 
-  const basepath = join(dirname(entry.path), `@${parse(entry.name).name}`);
+  const basepath = join(
+    dirname(entry.path),
+    `${config.fileNestingPrefix}${parse(entry.name).name}`
+  );
 
-  const containerExists = await vscode.workspace.fs
-    .stat(vscode.Uri.file(basepath))
-    .then(
-      () => true,
-      () => false
-    );
+  const containerExists = await validateExist(basepath);
 
   if (!containerExists) {
     await vscode.workspace.fs.createDirectory(vscode.Uri.file(basepath));
@@ -30,12 +30,7 @@ export const newNestedFolder = async (entry: Entry) => {
 
   const newPath = join(basepath, folderName);
 
-  const folderExists = await vscode.workspace.fs
-    .stat(vscode.Uri.file(newPath))
-    .then(
-      () => true,
-      () => false
-    );
+  const folderExists = await validateExist(newPath);
 
   if (folderExists) {
     vscode.window.showErrorMessage("Folder already exists!");

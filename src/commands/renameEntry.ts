@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
+import { dirname, join } from "path";
 
 import { Entry } from "../Entry";
 import { fileNestingProvider } from "../FileNestingProvider";
-import { fileNestingSystem } from "../FileNestingSystem";
 
 export const renameEntry = async (entry: Entry) => {
   console.log("fileNestingExplorer.rename", entry);
@@ -13,7 +13,15 @@ export const renameEntry = async (entry: Entry) => {
     return;
   }
 
-  fileNestingSystem.renameEntry(entry, newName);
+  const newPath = join(dirname(entry.path), newName);
+
+  await vscode.workspace.fs.rename(
+    vscode.Uri.file(entry.path),
+    vscode.Uri.file(newPath)
+  );
+
+  entry.path = newPath;
+  entry.name = newName;
 
   fileNestingProvider.refresh();
 };

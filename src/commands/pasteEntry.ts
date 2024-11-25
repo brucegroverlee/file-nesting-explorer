@@ -26,14 +26,6 @@ const paste = async (
     );
   }
 
-  /* let location = dirname(targetPath);
-
-  if (targetEntry) {
-    location =
-      targetEntry.type === "folder"
-        ? targetEntry.path
-        : dirname(targetEntry.path);
-  } */
   let location =
     selectedEntry.type === "folder"
       ? selectedEntry.path
@@ -69,7 +61,7 @@ export const pasteEntry =
     const copiedEntryPaths =
       context.globalState.get<string[]>("copiedEntryPaths");
 
-    const clipboard = await vscode.env.clipboard.readText(); // ===========>
+    const clipboard = await vscode.env.clipboard.readText();
 
     console.log("fileNestingExplorer.paste", {
       entry,

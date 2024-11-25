@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { basename, dirname, join } from "path";
 import * as fs from "fs";
 
+import { config } from "./config";
 import { Entry, getName, getExtension } from "./Entry";
 
 class FileNestingSystem {
@@ -30,7 +31,7 @@ class FileNestingSystem {
         files.forEach((file) => {
           if (
             file.isDirectory() &&
-            file.name.startsWith("@") &&
+            file.name.startsWith(config.fileNestingPrefix) &&
             this.isFileContainerFolder(file.name, files)
           ) {
             // do not show the folder if it is a file container folder
@@ -63,7 +64,10 @@ class FileNestingSystem {
 
   public getChildrenFromNestingFile(file: Entry): Thenable<Entry[]> {
     const fileName = getName(file.name);
-    const folderPath = join(dirname(file.path), `@${fileName}`);
+    const folderPath = join(
+      dirname(file.path),
+      `${config.fileNestingPrefix}${fileName}`
+    );
 
     return this.getChildrenFromFolder(folderPath);
   }
@@ -87,22 +91,30 @@ class FileNestingSystem {
   }
 
   // if it is a directory, starts with @, and there is a file with the same name and extension .tsx or .ts
-  // return true
-  // for example: /src/@App and there is a file /src/App.tsx
+  // returns the file name
+  // for example: /src/@App and there is a file /src/App.tsx, it returns App.tsx
   private isFileContainerFolder(
     folderName: string,
     files: fs.Dirent[]
-  ): boolean {
+  ): string | null {
     // remove the @ symbol
-    folderName = folderName.slice(1);
+    const parsedFolderName = folderName.slice(1);
 
-    return files.some(
-      (f) =>
-        f.isFile() &&
-        (f.name === `${basename(folderName)}.ts` ||
-          f.name === `${basename(folderName)}.tsx`) &&
-        (f.name.endsWith(".ts") || f.name.endsWith(".tsx"))
-    );
+    const nestingFile = files.find((file) => {
+      if (file.isDirectory()) {
+        return false;
+      }
+
+      if (!config.fileNestingExtensions.includes(getExtension(file.name))) {
+        return false;
+      }
+
+      return config.fileNestingExtensions
+        .map((extension) => `${parsedFolderName}.${extension}`)
+        .includes(file.name);
+    });
+
+    return nestingFile ? nestingFile.name : null;
   }
 
   private isNestingFile(fileName: string, files: fs.Dirent[]): boolean {
@@ -110,7 +122,9 @@ class FileNestingSystem {
 
     return files.some(
       (f) =>
-        f.isDirectory() && f.name.startsWith("@") && f.name.slice(1) === name
+        f.isDirectory() &&
+        f.name.startsWith(config.fileNestingPrefix) &&
+        f.name.slice(1) === name
     );
   }
 
@@ -132,18 +146,21 @@ class FileNestingSystem {
       name: parentName,
     };
 
-    if (parentName.startsWith("@")) {
+    if (parentName.startsWith(config.fileNestingPrefix)) {
       const parentSiblingFiles = fs.readdirSync(dirname(parentPath), {
         withFileTypes: true,
       });
 
-      if (this.isFileContainerFolder(parentName, parentSiblingFiles)) {
-        const parentFileName = `${parentName.slice(1)}.tsx`; // TODO: get the extension from the file
+      const parentNestingFile = this.isFileContainerFolder(
+        parentName,
+        parentSiblingFiles
+      );
 
+      if (parentNestingFile) {
         parent.type = "file";
-        parent.path = join(dirname(parentPath), parentFileName);
-        parent.name = parentFileName;
-        parent.extension = "tsx"; // TODO: get the extension from the file
+        parent.path = join(dirname(parentPath), parentNestingFile);
+        parent.name = parentNestingFile;
+        parent.extension = getExtension(parentNestingFile);
         parent.isNesting = true;
       }
     }
@@ -151,30 +168,6 @@ class FileNestingSystem {
     console.log("FileNestingSystem:getParent parent", parent);
 
     return parent;
-  }
-
-  public async renameEntry(entry: Entry, newName: string): Promise<void> {
-    console.log("FileNestingSystem:renameEntry", { entry, newName });
-
-    const newPath = join(dirname(entry.path), newName);
-
-    await fs.promises.rename(entry.path, newPath);
-
-    entry.path = newPath;
-    entry.name = newName;
-
-    /* if (entry.type === "folder") {
-      const folderPath = join(dirname(entry.path), `@${newName}`);
-
-      try {
-        await fs.promises.rename(
-          join(dirname(entry.path), `@${entry.name}`),
-          folderPath
-        );
-      } catch (error) {
-        // ignore error
-      }
-    } */
   }
 }
 
