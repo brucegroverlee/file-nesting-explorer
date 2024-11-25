@@ -17,43 +17,66 @@ class FileNestingSystem {
     }
   }
 
-  public getChildrenFromFolder(uri: string): Thenable<Entry[]> {
+  public getChildrenFromFolder(parentPath: string): Thenable<Entry[]> {
+    const excludeConfig = vscode.workspace
+      .getConfiguration("files")
+      .get<{ [pattern: string]: boolean }>("exclude", {});
+
+    const excludedPatterns = Object.keys(excludeConfig).filter(
+      (pattern) => excludeConfig[pattern]
+    );
+    const excludedRegexes = excludedPatterns.map(
+      (pattern) =>
+        new RegExp(pattern.replace(/\*\*/g, ".*").replace(/\*/g, "[^/]*"))
+    );
+
     return new Promise((resolve, reject) => {
-      fs.readdir(uri, { withFileTypes: true }, (err, files) => {
+      fs.readdir(parentPath, { withFileTypes: true }, (err, files) => {
         if (err) {
           return reject(err);
         }
 
-        console.log("FileNestingSystem:getChildren files", { uri, files });
+        console.log("FileNestingSystem:getChildren files", {
+          uri: parentPath,
+          files,
+        });
 
         const entries: Entry[] = [];
 
-        files.forEach((file) => {
-          if (
-            file.isDirectory() &&
-            file.name.startsWith(config.fileNestingPrefix) &&
-            this.isFileContainerFolder(file.name, files)
-          ) {
-            // do not show the folder if it is a file container folder
-            return;
-          }
+        files
+          .filter(({ name }) => {
+            const filePath = join(parentPath, name);
+            return !excludedRegexes.some((regex) => regex.test(filePath));
+          })
+          .forEach((file) => {
+            if (
+              file.isDirectory() &&
+              file.name.startsWith(config.fileNestingPrefix) &&
+              this.isFileContainerFolder(file.name, files)
+            ) {
+              // do not show the folder if it is a file container folder
+              return;
+            }
 
-          const entry: Entry = {
-            type: file.isDirectory() ? "folder" : "file",
-            path: join(uri, file.name),
-            name: file.name,
-          };
+            const entry: Entry = {
+              type: file.isDirectory() ? "folder" : "file",
+              path: join(parentPath, file.name),
+              name: file.name,
+            };
 
-          if (entry.type === "file") {
-            entry.extension = getExtension(entry.name);
-          }
+            if (entry.type === "file") {
+              entry.extension = getExtension(entry.name);
+            }
 
-          if (entry.type === "file" && this.isNestingFile(entry.name, files)) {
-            entry.isNesting = true;
-          }
+            if (
+              entry.type === "file" &&
+              this.isNestingFile(entry.name, files)
+            ) {
+              entry.isNesting = true;
+            }
 
-          entries.push(entry);
-        });
+            entries.push(entry);
+          });
 
         const sortedEntries = this.sortEntries(entries);
 
