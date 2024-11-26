@@ -33,18 +33,14 @@ export class FileNestingProvider
     console.log("FileNestingProvider:getChildren", element);
 
     if (!element) {
-      return Promise.resolve(fileNestingSystem.roots);
+      return fileNestingSystem.roots;
     }
 
     if (element.type === "file" && element.isNesting) {
-      return Promise.resolve(
-        fileNestingSystem.getChildrenFromNestingFile(element)
-      );
+      return fileNestingSystem.getChildrenFromNestingFile(element);
     }
 
-    return Promise.resolve(
-      fileNestingSystem.getChildrenFromFolder(element.path)
-    );
+    return fileNestingSystem.getChildrenFromFolder(element.path);
   }
 
   getTreeItem(entry: Entry): vscode.TreeItem {
