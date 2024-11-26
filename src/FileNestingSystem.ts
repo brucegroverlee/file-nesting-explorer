@@ -5,6 +5,8 @@ import * as fs from "fs";
 import { config } from "./config";
 import { Entry, getName, getExtension } from "./Entry";
 
+type DirectoryEntry = [string, vscode.FileType];
+
 class FileNestingSystem {
   private workspaceRoot: string | undefined;
 
@@ -17,72 +19,62 @@ class FileNestingSystem {
     }
   }
 
-  public getChildrenFromFolder(parentPath: string): Thenable<Entry[]> {
-    const excludeConfig = vscode.workspace
-      .getConfiguration("files")
-      .get<{ [pattern: string]: boolean }>("exclude", {});
+  public async getChildrenFromFolder(parentPath: string): Promise<Entry[]> {
+    const excludedPathPatterns = this.getExcludedPathPatterns();
 
-    const excludedPatterns = Object.keys(excludeConfig).filter(
-      (pattern) => excludeConfig[pattern]
-    );
-    const excludedRegexes = excludedPatterns.map(
-      (pattern) =>
-        new RegExp(pattern.replace(/\*\*/g, ".*").replace(/\*/g, "[^/]*"))
+    const files = await vscode.workspace.fs.readDirectory(
+      vscode.Uri.file(parentPath)
     );
 
-    return new Promise((resolve, reject) => {
-      fs.readdir(parentPath, { withFileTypes: true }, (err, files) => {
-        if (err) {
-          return reject(err);
+    console.log("FileNestingSystem:getChildren files", {
+      uri: parentPath,
+      files,
+    });
+
+    const filteredFiles = files
+      .filter(([name]) => {
+        const filePath = join(parentPath, name);
+
+        return !excludedPathPatterns.some((regex) => regex.test(filePath));
+      })
+      .filter(([name, type]) => {
+        if (
+          type === vscode.FileType.Directory &&
+          name.startsWith(config.fileNestingPrefix) &&
+          this.isFileContainerFolder(name, files)
+        ) {
+          // do not show the folder if it is a file container folder
+          return false;
         }
 
-        console.log("FileNestingSystem:getChildren files", {
-          uri: parentPath,
-          files,
-        });
+        return true;
+      })
+      .map(([name, type]) => {
+        const entry: Entry = {
+          type: type === vscode.FileType.Directory ? "folder" : "file",
+          path: join(parentPath, name),
+          name,
+        };
 
-        const entries: Entry[] = [];
+        if (entry.type === "file") {
+          entry.extension = getExtension(entry.name);
+        }
 
-        files
-          .filter(({ name }) => {
-            const filePath = join(parentPath, name);
-            return !excludedRegexes.some((regex) => regex.test(filePath));
-          })
-          .forEach((file) => {
-            if (
-              file.isDirectory() &&
-              file.name.startsWith(config.fileNestingPrefix) &&
-              this.isFileContainerFolder(file.name, files)
-            ) {
-              // do not show the folder if it is a file container folder
-              return;
-            }
+        if (entry.type === "file" && this.isNestingFile(entry.name, files)) {
+          entry.isNesting = true;
+        }
 
-            const entry: Entry = {
-              type: file.isDirectory() ? "folder" : "file",
-              path: join(parentPath, file.name),
-              name: file.name,
-            };
+        return entry;
+      })
+      .sort((a, b) => {
+        if (a.type === b.type) {
+          return a.name.localeCompare(b.name);
+        }
 
-            if (entry.type === "file") {
-              entry.extension = getExtension(entry.name);
-            }
-
-            if (
-              entry.type === "file" &&
-              this.isNestingFile(entry.name, files)
-            ) {
-              entry.isNesting = true;
-            }
-
-            entries.push(entry);
-          });
-
-        const sortedEntries = this.sortEntries(entries);
-
-        resolve(sortedEntries);
+        return a.type === "folder" ? -1 : 1;
       });
-    });
+
+    return filteredFiles;
   }
 
   public getChildrenFromNestingFile(file: Entry): Thenable<Entry[]> {
@@ -103,55 +95,7 @@ class FileNestingSystem {
     return this.getChildrenFromFolder(this.workspaceRoot);
   }
 
-  private sortEntries(entries: Entry[]): Entry[] {
-    return entries.sort((a, b) => {
-      if (a.type === b.type) {
-        return a.name.localeCompare(b.name);
-      }
-
-      return a.type === "folder" ? -1 : 1;
-    });
-  }
-
-  // if it is a directory, starts with @, and there is a file with the same name and extension .tsx or .ts
-  // returns the file name
-  // for example: /src/@App and there is a file /src/App.tsx, it returns App.tsx
-  private isFileContainerFolder(
-    folderName: string,
-    files: fs.Dirent[]
-  ): string | null {
-    // remove the @ symbol
-    const parsedFolderName = folderName.slice(1);
-
-    const nestingFile = files.find((file) => {
-      if (file.isDirectory()) {
-        return false;
-      }
-
-      if (!config.fileNestingExtensions.includes(getExtension(file.name))) {
-        return false;
-      }
-
-      return config.fileNestingExtensions
-        .map((extension) => `${parsedFolderName}.${extension}`)
-        .includes(file.name);
-    });
-
-    return nestingFile ? nestingFile.name : null;
-  }
-
-  private isNestingFile(fileName: string, files: fs.Dirent[]): boolean {
-    const name = getName(fileName);
-
-    return files.some(
-      (f) =>
-        f.isDirectory() &&
-        f.name.startsWith(config.fileNestingPrefix) &&
-        f.name.slice(1) === name
-    );
-  }
-
-  public getParent(entry: Entry): Entry | null {
+  public async getParent(entry: Entry): Promise<Entry | null> {
     console.log("FileNestingSystem:getParent entry", entry);
 
     const parentPath = dirname(entry.path);
@@ -170,9 +114,9 @@ class FileNestingSystem {
     };
 
     if (parentName.startsWith(config.fileNestingPrefix)) {
-      const parentSiblingFiles = fs.readdirSync(dirname(parentPath), {
-        withFileTypes: true,
-      });
+      const parentSiblingFiles = await vscode.workspace.fs.readDirectory(
+        vscode.Uri.file(dirname(parentPath))
+      );
 
       const parentNestingFile = this.isFileContainerFolder(
         parentName,
@@ -191,6 +135,61 @@ class FileNestingSystem {
     console.log("FileNestingSystem:getParent parent", parent);
 
     return parent;
+  }
+
+  private getExcludedPathPatterns(): RegExp[] {
+    const excludeConfig = vscode.workspace
+      .getConfiguration("files")
+      .get<{ [pattern: string]: boolean }>("exclude", {});
+
+    const excludedPatterns = Object.keys(excludeConfig).filter(
+      (pattern) => excludeConfig[pattern]
+    );
+
+    const excludedPathPatterns = excludedPatterns.map(
+      (pattern) =>
+        new RegExp(pattern.replace(/\*\*/g, ".*").replace(/\*/g, "[^/]*"))
+    );
+
+    return excludedPathPatterns;
+  }
+
+  // if it is a directory, starts with @, and there is a file with the same name and extension .tsx or .ts
+  // returns the file name
+  // for example: /src/@App and there is a file /src/App.tsx, it returns App.tsx
+  private isFileContainerFolder(
+    folderName: string,
+    files: DirectoryEntry[]
+  ): string | null {
+    // remove the @ symbol
+    const parsedFolderName = folderName.slice(1);
+
+    const nestingFile = files.find(([filename, type]) => {
+      if (type === vscode.FileType.File) {
+        return false;
+      }
+
+      if (!config.fileNestingExtensions.includes(getExtension(filename))) {
+        return false;
+      }
+
+      return config.fileNestingExtensions
+        .map((extension) => `${parsedFolderName}.${extension}`)
+        .includes(filename);
+    });
+
+    return nestingFile ? nestingFile[0] : null;
+  }
+
+  private isNestingFile(fileName: string, files: DirectoryEntry[]): boolean {
+    const name = getName(fileName);
+
+    return files.some(
+      ([filename, type]) =>
+        type === vscode.FileType.Directory &&
+        filename.startsWith(config.fileNestingPrefix) &&
+        filename.slice(1) === name
+    );
   }
 }
 
