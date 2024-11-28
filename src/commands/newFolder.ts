@@ -3,10 +3,11 @@ import { dirname } from "path";
 
 import { Entry } from "../Entry";
 import { fileNestingProvider } from "../FileNestingProvider";
+import { fileNestingExplorer } from "../FileNestingExplorer";
 import { validateExist } from "../FileSystem";
 
 // TODO make this a utility function
-const getBasepath = (entry?: Entry) => {
+const getBasepath = (entry?: Entry | null) => {
   if (entry) {
     return entry.type === "folder" ? entry.path : dirname(entry.path);
   } else if (
@@ -20,7 +21,9 @@ const getBasepath = (entry?: Entry) => {
 };
 
 export const newFolder = async (entry: Entry) => {
-  console.log("fileNestingExplorer.newFolder", entry);
+  const selectedEntries = fileNestingExplorer.getSelection();
+
+  console.log("fileNestingExplorer.newFolder", { entry, selectedEntries });
 
   const folderName = await vscode.window.showInputBox({
     placeHolder: "Enter folder name",
@@ -30,7 +33,9 @@ export const newFolder = async (entry: Entry) => {
     return;
   }
 
-  const basepath = getBasepath(entry);
+  const targetEntry = selectedEntries.length === 0 ? null : entry;
+
+  const basepath = getBasepath(targetEntry);
 
   const path = `${basepath}/${folderName}`;
 
