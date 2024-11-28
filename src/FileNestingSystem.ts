@@ -33,9 +33,7 @@ class FileNestingSystem {
 
     const filteredFiles = files
       .filter(([name]) => {
-        const filePath = join(parentPath, name);
-
-        return !excludedPathPatterns.some((regex) => regex.test(filePath));
+        return !excludedPathPatterns.some((pattern) => pattern === name);
       })
       .filter(([name, type]) => {
         if (
@@ -137,7 +135,7 @@ class FileNestingSystem {
     return parent;
   }
 
-  private getExcludedPathPatterns(): RegExp[] {
+  private getExcludedPathPatterns(): string[] {
     const excludeConfig = vscode.workspace
       .getConfiguration("files")
       .get<{ [pattern: string]: boolean }>("exclude", {});
@@ -146,9 +144,13 @@ class FileNestingSystem {
       (pattern) => excludeConfig[pattern]
     );
 
-    const excludedPathPatterns = excludedPatterns.map(
-      (pattern) =>
-        new RegExp(pattern.replace(/\*\*/g, ".*").replace(/\*/g, "[^/]*"))
+    // TODO: it has a bug. for the pattern **/.git, it should only exclude the .git folder. but it is excluding all folders that start with .git for example .gitignore
+    //const excludedPathPatterns = excludedPatterns.map(
+    //  (pattern) =>
+    //    new RegExp(pattern.replace(/\*\*/g, ".*").replace(/\*/g, "[^/]*"))
+    //);
+    const excludedPathPatterns = excludedPatterns.map((pattern) =>
+      pattern.replace("**/", "")
     );
 
     return excludedPathPatterns;
