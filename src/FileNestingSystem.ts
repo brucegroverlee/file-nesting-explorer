@@ -167,7 +167,7 @@ class FileNestingSystem {
     const parsedFolderName = folderName.slice(1);
 
     const nestingFile = files.find(([filename, type]) => {
-      if (type === vscode.FileType.File) {
+      if (type === vscode.FileType.Directory) {
         return false;
       }
 
