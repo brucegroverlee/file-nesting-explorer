@@ -5,6 +5,24 @@
   "author": "Grover Lee",
   "version": "0.0.0-beta",
   "license": "MIT",
+  "galleryBanner": {
+    "color": "#100f11",
+    "theme": "dark"
+  },
+  "badges": [
+    {
+      "url": "https://img.shields.io/github/stars/brucegroverlee/file-nesting-explorer",
+      "description": "File Nesting Explorer on Github",
+      "href": "https://github.com/brucegroverlee/file-nesting-explorer"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brucegroverlee/file-nesting-explorer"
+  },
+  "bugs": {
+    "url": "https://github.com/brucegroverlee/file-nesting-explorer/issues"
+  },
   "engines": {
     "vscode": "^1.94.0"
   },
@@ -27,7 +45,8 @@
     "explorer",
     "file nesting",
     "file nesting explorer",
-    "react file nesting"
+    "react file nesting",
+    "clean code"
   ],
   "activationEvents": [
     "onLanguage:javascriptreact",
