@@ -8,7 +8,7 @@ Build large React applications with ease by organizing your files in a minimalis
 
 ## Learn more about React File Nesting Design Pattern
 
-Post on Medium coming soon. Meanwhile, you can check out the post that inspired the concept behind this extension [Fractal — A react app structure for infinite scale](https://medium.com/hackernoon/fractal-a-react-app-structure-for-infinite-scale-4dab943092af).
+Read [React file nesting design pattern](https://medium.com/@brucegroverlee/react-file-nesting-design-pattern-74fe6edba127) on Medium.
 
 ## Features
 
@@ -32,7 +32,9 @@ Post on Medium coming soon. Meanwhile, you can check out the post that inspired 
 
 ## How does it work?
 
-Coming soon.
+In the File system, the extension creates a Folder Container with the basename of the React file with the prefix @ (at) every time the user creates a nested file/folder related to the React file. On top of that, the extension creates a Virtual File System that hides the Folder Container and shows the nested files/folders under the React file. In this way, the Explorer Panel shows a more intuitive and organized view of the React file structure.
+
+![Virtual File System](./docs/virtual-file-system.gif)
 
 ## Known Issues
 
