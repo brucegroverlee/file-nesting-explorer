@@ -10,6 +10,10 @@ Build large React applications with ease by organizing your files in a minimalis
 
 Read [React file nesting design pattern](https://medium.com/@brucegroverlee/react-file-nesting-design-pattern-74fe6edba127) on Medium.
 
+## Pre-requisites
+
+- Install [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme). To get the best experience, make sure to use the Material Icon Theme.
+
 ## Features
 
 - **New Nested File**: Create a new file and nest it under the currently selected file.
@@ -43,6 +47,8 @@ Below are the known issues with the extension that are in the process of being f
 - **Paste file/folder from other vscode project**: When copying a file or folder from another vscode project and pasting it into the current project, the user gets an error message. [Issue #1](https://github.com/brucegroverlee/file-nesting-explorer/issues/1#issue-2716404277)
 
 - **Copy and Paste a nesting file doesn't copy the folder container**: When copying a file and pasting it into another file, the folder container is not copied. [Issue #2](https://github.com/brucegroverlee/file-nesting-explorer/issues/2)
+
+- **In the Panel's empty space, the Context Menu doesn't open**: This is a limitation of the VSCode API. The context menu only opens when you right-click on a View Item.
 
 - **None of the `File nesting explorer` items can be editable**: Due to the VSCode API limitations, the items in the `File nesting explorer` are not editable. Instead, any time you need to rename a file or folder, or you have to create a new file or folder, you'll see the `InputBox` dialog at the top/center of the screen.
 
