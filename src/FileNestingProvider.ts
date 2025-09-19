@@ -20,9 +20,50 @@ export class FileNestingProvider
   dragMimeTypes = ["text/uri-list"];
 
   private context: vscode.ExtensionContext | null = null;
+  private fileSystemWatcher: vscode.FileSystemWatcher | null = null;
 
   public setContext(context: vscode.ExtensionContext) {
     this.context = context;
+    this.setupFileSystemWatcher(context);
+  }
+
+  private setupFileSystemWatcher(context: vscode.ExtensionContext) {
+    // Create a file system watcher for all files and directories in the workspace
+    this.fileSystemWatcher = vscode.workspace.createFileSystemWatcher(
+      "**/*",
+      false, // Don't ignore create events
+      false, // Don't ignore change events  
+      false  // Don't ignore delete events
+    );
+
+    // Listen for file/folder creation
+    this.fileSystemWatcher.onDidCreate((uri) => {
+      console.log("FileNestingProvider: File created", uri.fsPath);
+      this.refresh();
+    });
+
+    // Listen for file/folder deletion
+    this.fileSystemWatcher.onDidDelete((uri) => {
+      console.log("FileNestingProvider: File deleted", uri.fsPath);
+      this.refresh();
+    });
+
+    // Listen for file/folder changes (like renames)
+    this.fileSystemWatcher.onDidChange((uri) => {
+      console.log("FileNestingProvider: File changed", uri.fsPath);
+      // Only refresh on directory changes to avoid excessive refreshes on file content changes
+      vscode.workspace.fs.stat(uri).then((stat) => {
+        if (stat.type === vscode.FileType.Directory) {
+          this.refresh();
+        }
+      }, () => {
+        // File might have been deleted, refresh anyway
+        this.refresh();
+      });
+    });
+
+    // Dispose the watcher when the extension is deactivated
+    context.subscriptions.push(this.fileSystemWatcher);
   }
 
   public refresh(): void {
