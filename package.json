@@ -4,7 +4,7 @@
   "displayName": "React File Nesting Explorer: Make React Projects simple and minimalistic",
   "description": "Create and manage React components with ease. File Nesting Explorer helps you to create and manage React components in a simple and minimalistic way.",
   "author": "Grover Lee",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "MIT",
   "galleryBanner": {
     "color": "#100f11",
