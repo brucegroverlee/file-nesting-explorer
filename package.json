@@ -27,6 +27,9 @@
   "engines": {
     "vscode": "^1.94.0"
   },
+  "extensionDependencies": [
+    "PKief.material-icon-theme"
+  ],
   "categories": [
     "Visualization",
     "Programming Languages",
