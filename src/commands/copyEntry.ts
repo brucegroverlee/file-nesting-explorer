@@ -9,7 +9,7 @@ export const copyEntry =
     const selectedEntries = fileNestingExplorer.getSelection();
     const paths = selectedEntries.map((entry) => entry.path);
 
-    console.log("fileNestingExplorer.copy", { entry, paths });
+    /* console.log("fileNestingExplorer.copy", { entry, paths }); */
 
     context.globalState.update("cutEntryPaths", null);
     context.globalState.update("copiedEntryPaths", paths);

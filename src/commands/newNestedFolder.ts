@@ -7,7 +7,7 @@ import { fileNestingProvider } from "../FileNestingProvider";
 import { validateExist } from "../FileSystem";
 
 export const newNestedFolder = async (entry: Entry) => {
-  console.log("fileNestingExplorer.newNestedFolder", entry);
+  /* console.log("fileNestingExplorer.newNestedFolder", entry); */
 
   const folderName = await vscode.window.showInputBox({
     placeHolder: "Enter folder name",

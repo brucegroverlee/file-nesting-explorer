@@ -24,7 +24,7 @@ function isDoubleClick(element: Entry) {
 export const openEditor = async (element: Entry) => {
   const uri = vscode.Uri.file(element.path);
 
-  console.log("fileNestingExplorer.openEditor", { element, uri });
+  /* console.log("fileNestingExplorer.openEditor", { element, uri }); */
 
   const editor = await vscode.window.showTextDocument(uri, {
     preserveFocus: true,

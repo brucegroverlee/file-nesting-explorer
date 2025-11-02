@@ -7,7 +7,7 @@ import { fileNestingProvider } from "../FileNestingProvider";
 import { validateExist } from "../FileSystem";
 
 export const deleteFileNestingContainer = async (entry: Entry) => {
-  console.log("fileNestingExplorer.deleteFileNestingContainer", entry);
+  /* console.log("fileNestingExplorer.deleteFileNestingContainer", entry); */
 
   const containerPath = join(
     dirname(entry.path),

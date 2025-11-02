@@ -5,7 +5,7 @@ import { Entry } from "../Entry";
 import { fileNestingProvider } from "../FileNestingProvider";
 
 export const renameEntry = async (entry: Entry) => {
-  console.log("fileNestingExplorer.rename", entry);
+  /* console.log("fileNestingExplorer.rename", entry); */
 
   const newName = await vscode.window.showInputBox({ value: entry.name });
 

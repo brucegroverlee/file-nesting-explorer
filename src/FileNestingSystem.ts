@@ -26,10 +26,10 @@ class FileNestingSystem {
       vscode.Uri.file(parentPath)
     );
 
-    console.log("FileNestingSystem:getChildren files", {
+    /* console.log("FileNestingSystem:getChildren files", {
       uri: parentPath,
       files,
-    });
+    }); */
 
     const filteredFiles = files
       .filter(([name]) => {
@@ -94,12 +94,12 @@ class FileNestingSystem {
   }
 
   public async getParent(entry: Entry): Promise<Entry | null> {
-    console.log("FileNestingSystem:getParent entry", entry);
+    /* console.log("FileNestingSystem:getParent entry", entry); */
 
     const parentPath = dirname(entry.path);
 
     if (parentPath === this.workspaceRoot) {
-      console.log("FileNestingSystem:getParent is root");
+      /* console.log("FileNestingSystem:getParent is root"); */
       return null;
     }
 
@@ -130,7 +130,7 @@ class FileNestingSystem {
       }
     }
 
-    console.log("FileNestingSystem:getParent parent", parent);
+    /* console.log("FileNestingSystem:getParent parent", parent); */
 
     return parent;
   }

@@ -23,7 +23,7 @@ const getBasepath = (entry?: Entry | null) => {
 export const newFile = async (entry: Entry) => {
   const selectedEntries = fileNestingExplorer.getSelection();
 
-  console.log("fileNestingExplorer.newFile", { entry, selectedEntries });
+  /* console.log("fileNestingExplorer.newFile", { entry, selectedEntries }); */
 
   const fileName = await vscode.window.showInputBox({
     placeHolder: "Enter file name",

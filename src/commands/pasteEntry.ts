@@ -63,13 +63,13 @@ export const pasteEntry =
 
     const clipboard = await vscode.env.clipboard.readText();
 
-    console.log("fileNestingExplorer.paste", {
+    /* console.log("fileNestingExplorer.paste", {
       entry,
       selectedEntries,
       cutEntryPaths,
       copiedEntryPaths,
       clipboard,
-    });
+    }); */
 
     let pathsToBePasted = cutEntryPaths || copiedEntryPaths;
 

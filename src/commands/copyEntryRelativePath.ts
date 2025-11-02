@@ -11,7 +11,7 @@ export const copyEntryRelativePath =
       vscode.workspace.asRelativePath(entry.path, false)
     );
 
-    console.log("fileNestingExplorer.copyEntryRelativePath", { entry, paths });
+    /* console.log("fileNestingExplorer.copyEntryRelativePath", { entry, paths }); */
 
     context.globalState.update("cutEntryPaths", null);
     context.globalState.update("copiedEntryPaths", null);

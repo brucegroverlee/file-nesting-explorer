@@ -32,34 +32,37 @@ export class FileNestingProvider
     this.fileSystemWatcher = vscode.workspace.createFileSystemWatcher(
       "**/*",
       false, // Don't ignore create events
-      false, // Don't ignore change events  
-      false  // Don't ignore delete events
+      false, // Don't ignore change events
+      false // Don't ignore delete events
     );
 
     // Listen for file/folder creation
     this.fileSystemWatcher.onDidCreate((uri) => {
-      console.log("FileNestingProvider: File created", uri.fsPath);
+      /* console.log("FileNestingProvider: File created", uri.fsPath); */
       this.refresh();
     });
 
     // Listen for file/folder deletion
     this.fileSystemWatcher.onDidDelete((uri) => {
-      console.log("FileNestingProvider: File deleted", uri.fsPath);
+      /* console.log("FileNestingProvider: File deleted", uri.fsPath); */
       this.refresh();
     });
 
     // Listen for file/folder changes (like renames)
     this.fileSystemWatcher.onDidChange((uri) => {
-      console.log("FileNestingProvider: File changed", uri.fsPath);
+      /* console.log("FileNestingProvider: File changed", uri.fsPath); */
       // Only refresh on directory changes to avoid excessive refreshes on file content changes
-      vscode.workspace.fs.stat(uri).then((stat) => {
-        if (stat.type === vscode.FileType.Directory) {
+      vscode.workspace.fs.stat(uri).then(
+        (stat) => {
+          if (stat.type === vscode.FileType.Directory) {
+            this.refresh();
+          }
+        },
+        () => {
+          // File might have been deleted, refresh anyway
           this.refresh();
         }
-      }, () => {
-        // File might have been deleted, refresh anyway
-        this.refresh();
-      });
+      );
     });
 
     // Dispose the watcher when the extension is deactivated
@@ -71,7 +74,7 @@ export class FileNestingProvider
   }
 
   getChildren(element?: Entry): Thenable<Entry[]> {
-    console.log("FileNestingProvider:getChildren", element);
+    /* console.log("FileNestingProvider:getChildren", element); */
 
     if (!element) {
       return fileNestingSystem.roots;
@@ -85,7 +88,7 @@ export class FileNestingProvider
   }
 
   getTreeItem(entry: Entry): vscode.TreeItem {
-    console.log("FileNestingProvider:getTreeItem entry", entry);
+    /* console.log("FileNestingProvider:getTreeItem entry", entry); */
 
     const cutEntryPaths =
       this.context?.globalState.get<string[]>("cutEntryPaths");
@@ -122,12 +125,12 @@ export class FileNestingProvider
       treeItem.iconPath = getIcon(entry.extension);
     }
 
-    console.log("FileNestingProvider:getTreeItem TreeItem", treeItem);
+    /* console.log("FileNestingProvider:getTreeItem TreeItem", treeItem); */
     return treeItem;
   }
 
   public async getParent(entry: Entry): Promise<Entry | null> {
-    console.log("FileNestingProvider:getParent entry", entry);
+    /* console.log("FileNestingProvider:getParent entry", entry); */
 
     return fileNestingSystem.getParent(entry);
   }

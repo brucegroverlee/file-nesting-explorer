@@ -45,11 +45,11 @@ export class FileNestingExplorer {
       selection.length > 0 &&
       selection[0].path === activeTextEditor.document.fileName;
 
-    console.log("FileNestingExplorer:onActiveEditorChanged", {
+    /* console.log("FileNestingExplorer:onActiveEditorChanged", {
       activeTextEditor,
       selection,
       focus,
-    });
+    }); */
 
     await this.viewExplorer.reveal(
       {

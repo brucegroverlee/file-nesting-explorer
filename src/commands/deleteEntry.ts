@@ -8,7 +8,7 @@ export const deleteEntry =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
     const selectedEntries = fileNestingExplorer.getSelection();
 
-    console.log("fileNestingExplorer.delete", { entry, selectedEntries });
+    /* console.log("fileNestingExplorer.delete", { entry, selectedEntries }); */
 
     const message =
       selectedEntries.length > 1
