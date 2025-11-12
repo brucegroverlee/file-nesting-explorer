@@ -10,10 +10,6 @@ Build large React applications with ease by organizing your files in a minimalis
 
 Read [React file nesting design pattern](https://medium.com/@brucegroverlee/react-file-nesting-design-pattern-74fe6edba127) on Medium.
 
-## Pre-requisites
-
-- Install [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme). To get the best experience, make sure to use the Material Icon Theme.
-
 ## Features
 
 - **New Nested File**: Create a new file and nest it under the currently selected file.
