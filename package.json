@@ -279,7 +279,7 @@
       },
       {
         "command": "fileNestingExplorer.delete",
-        "key": "ctrl+delete",
+        "key": "delete",
         "mac": "cmd+backspace",
         "when": "fileNestingExplorer"
       }
