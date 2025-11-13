@@ -3,6 +3,7 @@ import { basename } from "path";
 
 import { Entry } from "./Entry";
 import { fileNestingProvider } from "./FileNestingProvider";
+import { dragAndDropController } from "./DragAndDropController";
 
 export class FileNestingExplorer {
   private viewExplorer: vscode.TreeView<Entry>;
@@ -12,7 +13,7 @@ export class FileNestingExplorer {
       treeDataProvider: fileNestingProvider,
       showCollapseAll: true,
       canSelectMany: true,
-      dragAndDropController: fileNestingProvider,
+      dragAndDropController: dragAndDropController,
     });
 
     vscode.window.onDidChangeActiveTextEditor(() =>

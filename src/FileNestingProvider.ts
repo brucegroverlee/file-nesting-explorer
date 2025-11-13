@@ -6,18 +6,13 @@ import { fileNestingSystem } from "./FileNestingSystem";
 import { getIcon } from "./Icon";
 
 export class FileNestingProvider
-  implements
-    vscode.TreeDataProvider<Entry>,
-    vscode.TreeDragAndDropController<Entry>
+  implements vscode.TreeDataProvider<Entry>
 {
   private _onDidChangeTreeData: vscode.EventEmitter<Entry | undefined | void> =
     new vscode.EventEmitter<Entry | undefined | void>();
 
   readonly onDidChangeTreeData: vscode.Event<Entry | undefined | void> =
     this._onDidChangeTreeData.event;
-
-  dropMimeTypes = ["application/vnd.code.tree.fileNestingExplorer"];
-  dragMimeTypes = ["text/uri-list"];
 
   private context: vscode.ExtensionContext | null = null;
   private fileSystemWatcher: vscode.FileSystemWatcher | null = null;
@@ -133,35 +128,6 @@ export class FileNestingProvider
     /* console.log("FileNestingProvider:getParent entry", entry); */
 
     return fileNestingSystem.getParent(entry);
-  }
-
-  public async handleDrag(
-    source: Entry[],
-    treeDataTransfer: vscode.DataTransfer,
-    token: vscode.CancellationToken
-  ): Promise<void> {
-    treeDataTransfer.set(
-      "application/vnd.code.tree.testViewDragAndDrop",
-      new vscode.DataTransferItem(source)
-    );
-  }
-
-  public async handleDrop(
-    target: Entry | undefined,
-    sources: vscode.DataTransfer,
-    token: vscode.CancellationToken
-  ): Promise<void> {
-    const transferItem = sources.get(
-      "application/vnd.code.tree.testViewDragAndDrop"
-    );
-
-    if (!transferItem) {
-      return;
-    }
-
-    const treeItems: Entry[] = transferItem.value;
-
-    // TODO
   }
 }
 
