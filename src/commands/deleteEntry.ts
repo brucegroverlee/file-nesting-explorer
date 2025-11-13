@@ -30,11 +30,14 @@ export const deleteEntry =
       return;
     }
 
+    // useTrash is not supported on remote file systems (e.g., WSL, SSH)
+    const isRemote = vscode.env.remoteName !== undefined;
+
     await Promise.all(
       selectedEntries.map((entry) =>
         vscode.workspace.fs.delete(vscode.Uri.file(entry.path), {
           recursive: entry.type === "folder",
-          useTrash: true,
+          useTrash: !isRemote,
         })
       )
     );
