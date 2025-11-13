@@ -83,7 +83,9 @@
           "type": "array",
           "default": [
             "tsx",
-            "jsx"
+            "jsx",
+            "ts",
+            "js"
           ],
           "description": "File extensions that are allowed to be nested."
         },

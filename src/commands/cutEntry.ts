@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 
 import { Entry } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
-import { fileNestingExplorer } from "../FileNestingExplorer";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
+import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
 // import { fileNestingDecoratorProvider } from "../FileNestingDecoratorProvider";
 
 export const cutEntry =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
-    const selectedEntries = fileNestingExplorer.getSelection();
+    const selectedEntries = fileNestingTreeViewExplorer.getSelection();
     const paths = selectedEntries.map((entry) => entry.path);
 
     /* console.log("fileNestingExplorer.cut", { entry, paths }); */
@@ -21,5 +21,5 @@ export const cutEntry =
       vscode.Uri.file(entry.path),
     ]); */
 
-    fileNestingProvider.refresh();
+    fileNestingDataProvider.refresh();
   };

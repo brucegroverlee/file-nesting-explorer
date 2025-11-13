@@ -2,8 +2,8 @@ import * as vscode from "vscode";
 import { dirname } from "path";
 
 import { Entry } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
-import { fileNestingExplorer } from "../FileNestingExplorer";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
+import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
 import { validateExist } from "../FileSystem";
 
 // TODO make this a utility function
@@ -21,7 +21,7 @@ const getBasepath = (entry?: Entry | null) => {
 };
 
 export const newFile = async (entry: Entry) => {
-  const selectedEntries = fileNestingExplorer.getSelection();
+  const selectedEntries = fileNestingTreeViewExplorer.getSelection();
 
   /* console.log("fileNestingExplorer.newFile", { entry, selectedEntries }); */
 
@@ -48,7 +48,7 @@ export const newFile = async (entry: Entry) => {
 
   await vscode.workspace.fs.writeFile(vscode.Uri.file(path), new Uint8Array(0));
 
-  fileNestingProvider.refresh();
+  fileNestingDataProvider.refresh();
 
   vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
     type: "file",

@@ -2,8 +2,8 @@ import * as vscode from "vscode";
 import { dirname } from "path";
 
 import { Entry } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
-import { fileNestingExplorer } from "../FileNestingExplorer";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
+import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
 import { validateExist } from "../FileSystem";
 
 // TODO make this a utility function
@@ -21,7 +21,7 @@ const getBasepath = (entry?: Entry | null) => {
 };
 
 export const newFolder = async (entry: Entry) => {
-  const selectedEntries = fileNestingExplorer.getSelection();
+  const selectedEntries = fileNestingTreeViewExplorer.getSelection();
 
   /* console.log("fileNestingExplorer.newFolder", { entry, selectedEntries }); */
 
@@ -48,5 +48,5 @@ export const newFolder = async (entry: Entry) => {
 
   await vscode.workspace.fs.createDirectory(vscode.Uri.file(path));
 
-  fileNestingProvider.refresh();
+  fileNestingDataProvider.refresh();
 };

@@ -2,8 +2,8 @@ import * as vscode from "vscode";
 import { basename, dirname, extname, join } from "path";
 
 import { Entry, getName } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
-import { fileNestingExplorer } from "../FileNestingExplorer";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
+import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
 import { validateExist, validateFiles } from "../FileSystem";
 
 const paste = async (
@@ -55,7 +55,7 @@ const paste = async (
 
 export const pasteEntry =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
-    const selectedEntries = fileNestingExplorer.getSelection();
+    const selectedEntries = fileNestingTreeViewExplorer.getSelection();
 
     const cutEntryPaths = context.globalState.get<string[]>("cutEntryPaths");
     const copiedEntryPaths =
@@ -103,5 +103,5 @@ export const pasteEntry =
       );
     }
 
-    fileNestingProvider.refresh();
+    fileNestingDataProvider.refresh();
   };

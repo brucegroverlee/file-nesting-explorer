@@ -2,15 +2,15 @@ import * as vscode from "vscode";
 import { basename } from "path";
 
 import { Entry } from "./Entry";
-import { fileNestingProvider } from "./FileNestingProvider";
+import { fileNestingDataProvider } from "./FileNestingDataProvider";
 import { dragAndDropController } from "./DragAndDropController";
 
-export class FileNestingExplorer {
+export class FileNestingTreeViewExplorer {
   private viewExplorer: vscode.TreeView<Entry>;
 
   constructor() {
     this.viewExplorer = vscode.window.createTreeView("fileNestingExplorer", {
-      treeDataProvider: fileNestingProvider,
+      treeDataProvider: fileNestingDataProvider,
       showCollapseAll: true,
       canSelectMany: true,
       dragAndDropController: dragAndDropController,
@@ -66,4 +66,4 @@ export class FileNestingExplorer {
   }
 }
 
-export const fileNestingExplorer = new FileNestingExplorer();
+export const fileNestingTreeViewExplorer = new FileNestingTreeViewExplorer();

@@ -3,7 +3,7 @@ import { dirname, basename, join } from "path";
 
 import { config } from "./config";
 import { Entry } from "./Entry";
-import { fileNestingProvider } from "./FileNestingProvider";
+import { fileNestingDataProvider } from "./FileNestingDataProvider";
 
 export class DragAndDropController
   implements vscode.TreeDragAndDropController<Entry>
@@ -39,7 +39,7 @@ export class DragAndDropController
 
     // Determine target directory
     let targetPath: string;
-    
+
     if (!target) {
       // Dropped at root level
       const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
@@ -53,7 +53,10 @@ export class DragAndDropController
       targetPath = target.path;
     } else if (target.type === "file" && target.isNesting) {
       // Dropped on a nesting file - move into its container folder
-      const fileName = basename(target.path, target.extension ? `.${target.extension}` : "");
+      const fileName = basename(
+        target.path,
+        target.extension ? `.${target.extension}` : ""
+      );
       targetPath = join(
         dirname(target.path),
         `${config.fileNestingPrefix}${fileName}`
@@ -67,7 +70,10 @@ export class DragAndDropController
     for (const sourceEntry of sourceEntries) {
       try {
         // Prevent moving a folder into itself or its descendants
-        if (sourceEntry.type === "folder" && targetPath.startsWith(sourceEntry.path)) {
+        if (
+          sourceEntry.type === "folder" &&
+          targetPath.startsWith(sourceEntry.path)
+        ) {
           vscode.window.showErrorMessage(
             `Cannot move '${sourceEntry.name}' into itself or its subdirectory`
           );
@@ -103,7 +109,7 @@ export class DragAndDropController
     }
 
     // Refresh the tree view
-    fileNestingProvider.refresh();
+    fileNestingDataProvider.refresh();
   }
 }
 

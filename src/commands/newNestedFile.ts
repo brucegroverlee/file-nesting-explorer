@@ -3,7 +3,7 @@ import { dirname, parse, join } from "path";
 
 import { config } from "../config";
 import { Entry } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { validateExist } from "../FileSystem";
 
 export const newNestedFile = async (entry: Entry) => {
@@ -44,7 +44,7 @@ export const newNestedFile = async (entry: Entry) => {
     new Uint8Array(0)
   );
 
-  fileNestingProvider.refresh();
+  fileNestingDataProvider.refresh();
 
   vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
     type: "file",

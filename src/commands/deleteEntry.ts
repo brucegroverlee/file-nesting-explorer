@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 
 import { Entry } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
-import { fileNestingExplorer } from "../FileNestingExplorer";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
+import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
 
 export const deleteEntry =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
-    const selectedEntries = fileNestingExplorer.getSelection();
+    const selectedEntries = fileNestingTreeViewExplorer.getSelection();
 
     /* console.log("fileNestingExplorer.delete", { entry, selectedEntries }); */
 
@@ -39,5 +39,5 @@ export const deleteEntry =
       )
     );
 
-    fileNestingProvider.refresh();
+    fileNestingDataProvider.refresh();
   };

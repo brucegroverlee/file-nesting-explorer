@@ -5,9 +5,7 @@ import { Entry } from "./Entry";
 import { fileNestingSystem } from "./FileNestingSystem";
 import { getIcon } from "./Icon";
 
-export class FileNestingProvider
-  implements vscode.TreeDataProvider<Entry>
-{
+export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
   private _onDidChangeTreeData: vscode.EventEmitter<Entry | undefined | void> =
     new vscode.EventEmitter<Entry | undefined | void>();
 
@@ -131,4 +129,4 @@ export class FileNestingProvider
   }
 }
 
-export const fileNestingProvider = new FileNestingProvider();
+export const fileNestingDataProvider = new FileNestingDataProvider();

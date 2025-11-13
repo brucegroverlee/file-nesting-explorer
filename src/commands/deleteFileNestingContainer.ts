@@ -3,7 +3,7 @@ import { dirname, parse, join } from "path";
 
 import { config } from "../config";
 import { Entry } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { validateExist } from "../FileSystem";
 
 export const deleteFileNestingContainer = async (entry: Entry) => {
@@ -35,5 +35,5 @@ export const deleteFileNestingContainer = async (entry: Entry) => {
     useTrash: true,
   });
 
-  fileNestingProvider.refresh();
+  fileNestingDataProvider.refresh();
 };

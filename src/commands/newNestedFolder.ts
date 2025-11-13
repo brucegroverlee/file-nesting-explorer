@@ -3,7 +3,7 @@ import { dirname, parse, join } from "path";
 
 import { config } from "../config";
 import { Entry } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { validateExist } from "../FileSystem";
 
 export const newNestedFolder = async (entry: Entry) => {
@@ -41,5 +41,5 @@ export const newNestedFolder = async (entry: Entry) => {
 
   await vscode.workspace.fs.createDirectory(vscode.Uri.file(newPath));
 
-  fileNestingProvider.refresh();
+  fileNestingDataProvider.refresh();
 };

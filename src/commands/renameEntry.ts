@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { dirname, join } from "path";
 
 import { Entry } from "../Entry";
-import { fileNestingProvider } from "../FileNestingProvider";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
 
 export const renameEntry = async (entry: Entry) => {
   /* console.log("fileNestingExplorer.rename", entry); */
@@ -23,5 +23,5 @@ export const renameEntry = async (entry: Entry) => {
   entry.path = newPath;
   entry.name = newName;
 
-  fileNestingProvider.refresh();
+  fileNestingDataProvider.refresh();
 };
