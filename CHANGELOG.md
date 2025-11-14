@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 
 - Drag and drop support.
 - Deleting when using remote file system.
+- Copy or Cut nested files.
 
 ### Added
 

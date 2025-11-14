@@ -215,12 +215,12 @@
         },
         {
           "command": "fileNestingExplorer.newNestedFile",
-          "when": "view == fileNestingExplorer && viewItem == file_with_nesting_extension",
+          "when": "view == fileNestingExplorer && (viewItem == file_with_nesting_extension || viewItem == nesting_file)",
           "group": "group1"
         },
         {
           "command": "fileNestingExplorer.newNestedFolder",
-          "when": "view == fileNestingExplorer && viewItem == file_with_nesting_extension",
+          "when": "view == fileNestingExplorer && (viewItem == file_with_nesting_extension || viewItem == nesting_file)",
           "group": "group1"
         },
         {
