@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 ### Added
 
 - Sorting of files and folders.
+- Create nested file from selection.
 
 ## [0.2.0] - 2025-11-12
 

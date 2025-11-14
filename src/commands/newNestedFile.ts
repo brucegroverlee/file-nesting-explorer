@@ -6,17 +6,7 @@ import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { validateExist } from "../FileSystem";
 
-export const newNestedFile = async (entry: Entry) => {
-  /* console.log("fileNestingExplorer.newNestedFile", entry); */
-
-  const fileName = await vscode.window.showInputBox({
-    placeHolder: "Enter file name",
-  });
-
-  if (!fileName) {
-    return;
-  }
-
+export const createNestedFile = async (entry: Entry, fileName: string) => {
   const basepath = join(
     dirname(entry.path),
     `${config.fileNestingPrefix}${parse(entry.name).name}`
@@ -53,4 +43,18 @@ export const newNestedFile = async (entry: Entry) => {
     path: newPath,
     name: fileName,
   });
+};
+
+export const newNestedFile = async (entry: Entry) => {
+  /* console.log("fileNestingExplorer.newNestedFile", entry); */
+
+  const fileName = await vscode.window.showInputBox({
+    placeHolder: "Enter file name",
+  });
+
+  if (!fileName) {
+    return;
+  }
+
+  await createNestedFile(entry, fileName);
 };

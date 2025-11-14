@@ -5,6 +5,7 @@ import { newFolder } from "./commands/newFolder";
 import { refreshView } from "./commands/refreshView";
 import { newNestedFile } from "./commands/newNestedFile";
 import { newNestedFolder } from "./commands/newNestedFolder";
+import { newNestedFileFromSelection } from "./commands/newNestedFileFromSelection";
 import { copyEntry } from "./commands/copyEntry";
 import { cutEntry } from "./commands/cutEntry";
 import { pasteEntry } from "./commands/pasteEntry";
@@ -38,6 +39,13 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "fileNestingExplorer.newNestedFile",
       newNestedFile
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.newNestedFileFromSelection",
+      newNestedFileFromSelection
     )
   );
 

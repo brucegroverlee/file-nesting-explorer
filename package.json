@@ -118,6 +118,10 @@
         "icon": "$(new-file)"
       },
       {
+        "command": "fileNestingExplorer.newNestedFileFromSelection",
+        "title": "Create Nested File From Selection"
+      },
+      {
         "command": "fileNestingExplorer.newNestedFolder",
         "title": "New Nested Folder...",
         "icon": "$(new-folder)"
@@ -270,6 +274,13 @@
           "command": "fileNestingExplorer.restoreSortingAlphabetically",
           "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == nesting_file)",
           "group": "group4@3"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "fileNestingExplorer.newNestedFileFromSelection",
+          "when": "editorHasSelection",
+          "group": "fileNestingExplorer@9"
         }
       ]
     },
