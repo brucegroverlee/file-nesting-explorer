@@ -26,8 +26,34 @@ export const openEditor = async (element: Entry) => {
 
   /* console.log("fileNestingExplorer.openEditor", { element, uri }); */
 
-  const editor = await vscode.window.showTextDocument(uri, {
-    preserveFocus: true,
-    preview: !isDoubleClick(element),
-  });
+  const maxFileSizeInBytes = 5 * 1024 * 1024; // 5 MB
+
+  try {
+    const stat = await vscode.workspace.fs.stat(uri);
+
+    if (stat.size > maxFileSizeInBytes) {
+      const openAnyway = await vscode.window.showWarningMessage(
+        "This file is large and may be slow to open. Do you want to open it anyway?",
+        { modal: true },
+        "Open Anyway"
+      );
+
+      if (openAnyway !== "Open Anyway") {
+        return;
+      }
+    }
+  } catch (error) {
+    // If we cannot stat the file for some reason, fall back to normal behavior.
+  }
+
+  try {
+    await vscode.window.showTextDocument(uri, {
+      preserveFocus: true,
+      preview: !isDoubleClick(element),
+    });
+  } catch (error) {
+    // If the file cannot be opened as a text document (e.g. binary files like .ico),
+    // fall back to VS Code's default file opener.
+    await vscode.commands.executeCommand("vscode.open", uri);
+  }
 };
