@@ -110,7 +110,11 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
       entry.type === "file" &&
       config.fileNestingExtensions.includes(entry.extension || "")
     ) {
-      treeItem.contextValue = "file_with_nesting_extension";
+      if (entry.isNesting) {
+        treeItem.contextValue = "nesting_file";
+      } else {
+        treeItem.contextValue = "file_with_nesting_extension";
+      }
     }
 
     if (entry.type === "file" && entry.isNesting) {

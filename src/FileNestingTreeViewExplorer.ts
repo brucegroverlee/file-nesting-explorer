@@ -42,9 +42,10 @@ export class FileNestingTreeViewExplorer {
 
     const selection = this.viewExplorer.selection;
 
-    const focus =
+    // My code, my rules. I want to keep these lines
+    /* const focus =
       selection.length > 0 &&
-      selection[0].path === activeTextEditor.document.fileName;
+      selection[0].path === activeTextEditor.document.fileName; */
 
     /* console.log("FileNestingExplorer:onActiveEditorChanged", {
       activeTextEditor,
@@ -52,17 +53,27 @@ export class FileNestingTreeViewExplorer {
       focus,
     }); */
 
-    await this.viewExplorer.reveal(
-      {
-        type: "file",
-        path: activeTextEditor.document.fileName,
-        name: basename(activeTextEditor.document.fileName),
-      },
-      {
-        select: true,
-        expand: false,
-      }
-    );
+    const fileName = basename(activeTextEditor.document.fileName);
+
+    try {
+      await this.viewExplorer.reveal(
+        {
+          type: "file",
+          path: activeTextEditor.document.fileName,
+          name: fileName,
+        },
+        {
+          select: true,
+          expand: false,
+        }
+      );
+    } catch (error) {
+      // Silently ignore errors when trying to reveal files that are filtered out
+      console.log(
+        "FileNestingExplorer: Could not reveal file",
+        activeTextEditor.document.fileName
+      );
+    }
   }
 }
 

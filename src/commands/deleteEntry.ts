@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
+import { dirname } from "path";
 
 import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
+import { SortingManager } from "../SortingManager";
 
 export const deleteEntry =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
@@ -41,6 +43,19 @@ export const deleteEntry =
         })
       )
     );
+
+    // Update sorting files for each parent directory
+    const parentDirs = new Set(
+      selectedEntries.map((entry) => dirname(entry.path))
+    );
+
+    for (const parentPath of parentDirs) {
+      const entriesInParent = selectedEntries
+        .filter((entry) => dirname(entry.path) === parentPath)
+        .map((entry) => entry.path);
+      
+      await SortingManager.removeFromSortingOrder(entriesInParent, parentPath);
+    }
 
     fileNestingDataProvider.refresh();
   };

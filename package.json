@@ -124,7 +124,7 @@
       },
       {
         "command": "fileNestingExplorer.deleteFileNestingContainer",
-        "title": "Delete File Nesting Container",
+        "title": "Delete Nested Files / Remove Expand Icon",
         "icon": "$(trash)"
       },
       {
@@ -158,6 +158,18 @@
       {
         "command": "fileNestingExplorer.openEditor",
         "title": "Open Editor"
+      },
+      {
+        "command": "fileNestingExplorer.moveUp",
+        "title": "Move Up"
+      },
+      {
+        "command": "fileNestingExplorer.moveDown",
+        "title": "Move Down"
+      },
+      {
+        "command": "fileNestingExplorer.restoreSortingAlphabetically",
+        "title": "Restore Sorting Alphabetically"
       }
     ],
     "views": {
@@ -242,7 +254,22 @@
         },
         {
           "command": "fileNestingExplorer.deleteFileNestingContainer",
-          "when": "view == fileNestingExplorer && viewItem == file_with_nesting_extension"
+          "when": "view == fileNestingExplorer && viewItem == nesting_file"
+        },
+        {
+          "command": "fileNestingExplorer.moveUp",
+          "when": "view == fileNestingExplorer",
+          "group": "group4@1"
+        },
+        {
+          "command": "fileNestingExplorer.moveDown",
+          "when": "view == fileNestingExplorer",
+          "group": "group4@2"
+        },
+        {
+          "command": "fileNestingExplorer.restoreSortingAlphabetically",
+          "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == nesting_file)",
+          "group": "group4@3"
         }
       ]
     },

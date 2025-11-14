@@ -5,6 +5,7 @@ import { Entry, getName } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
 import { validateExist, validateFiles } from "../FileSystem";
+import { SortingManager } from "../SortingManager";
 
 const paste = async (
   pathToBePasted: string,
@@ -95,6 +96,17 @@ export const pasteEntry =
 
     if (cutEntryPaths) {
       context.globalState.update("cutEntryPaths", null);
+
+      // Update sorting files for each parent directory of cut entries
+      const parentDirs = new Set(cutEntryPaths.map((path) => dirname(path)));
+
+      for (const parentPath of parentDirs) {
+        const entriesInParent = cutEntryPaths.filter(
+          (path) => dirname(path) === parentPath
+        );
+        
+        await SortingManager.removeFromSortingOrder(entriesInParent, parentPath);
+      }
 
       await Promise.all(
         cutEntryPaths.map((path) =>

@@ -50,6 +50,8 @@ export const newFile = async (entry: Entry) => {
 
   fileNestingDataProvider.refresh();
 
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
   vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
     type: "file",
     path,

@@ -4,6 +4,7 @@ import * as fs from "fs";
 
 import { config } from "./config";
 import { Entry, getName, getExtension } from "./Entry";
+import { SortingManager } from "./SortingManager";
 
 type DirectoryEntry = [string, vscode.FileType];
 
@@ -35,6 +36,10 @@ class FileNestingSystem {
       .filter(([name]) => {
         return !excludedPathPatterns.some((pattern) => pattern === name);
       })
+      .filter(([name]) => {
+        // Filter out .sorting files
+        return name !== ".sorting";
+      })
       .filter(([name, type]) => {
         if (
           type === vscode.FileType.Directory &&
@@ -63,16 +68,24 @@ class FileNestingSystem {
         }
 
         return entry;
-      })
-      .sort((a, b) => {
+      });
+
+    // Check if there's a custom sorting order
+    const sortingOrder = await SortingManager.readSortingOrder(parentPath);
+    
+    if (sortingOrder) {
+      // Apply custom sorting order
+      return SortingManager.applySortingOrder(filteredFiles, sortingOrder);
+    } else {
+      // Apply default sorting (folders first, then alphabetically)
+      return filteredFiles.sort((a, b) => {
         if (a.type === b.type) {
           return a.name.localeCompare(b.name);
         }
 
         return a.type === "folder" ? -1 : 1;
       });
-
-    return filteredFiles;
+    }
   }
 
   public getChildrenFromNestingFile(file: Entry): Thenable<Entry[]> {
