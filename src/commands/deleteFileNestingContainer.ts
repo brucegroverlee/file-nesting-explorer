@@ -30,9 +30,12 @@ export const deleteFileNestingContainer = async (entry: Entry) => {
     return;
   }
 
+  // useTrash is not supported on remote file systems (e.g., WSL, SSH)
+  const isRemote = vscode.env.remoteName !== undefined;
+
   await vscode.workspace.fs.delete(vscode.Uri.file(containerPath), {
     recursive: true,
-    useTrash: true,
+    useTrash: !isRemote,
   });
 
   fileNestingDataProvider.refresh();
