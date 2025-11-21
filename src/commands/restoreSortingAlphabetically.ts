@@ -37,7 +37,7 @@ export const restoreSortingAlphabetically = async (entry: Entry) => {
     await vscode.workspace.fs.delete(sortingFileUri);
 
     // Refresh the view to reflect the updated sorting
-    fileNestingDataProvider.refresh();
+    // fileNestingDataProvider.refresh();
 
     vscode.window.showInformationMessage(
       `Restored alphabetical sorting for "${entry.name}".`

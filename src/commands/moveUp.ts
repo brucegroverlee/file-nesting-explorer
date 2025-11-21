@@ -13,14 +13,16 @@ export const moveUp =
       const parentPath = dirname(entry.path);
 
       // Get all siblings in the parent directory
-      const siblings = await fileNestingSystem.getChildrenFromFolder(parentPath);
-      const siblingNames = siblings.map(s => s.name);
+      const siblings = await fileNestingSystem.getChildrenFromFolder(
+        parentPath
+      );
+      const siblingNames = siblings.map((s) => s.name);
 
       // Move the entry up in the sorting order
       await SortingManager.moveUp(entry.path, parentPath, siblingNames);
 
       // Refresh the view to show the new order
-      fileNestingDataProvider.refresh();
+      // fileNestingDataProvider.refresh();
 
       vscode.window.showInformationMessage(`Moved "${entry.name}" up`);
     } catch (error) {

@@ -48,9 +48,9 @@ export const newFile = async (entry: Entry) => {
 
   await vscode.workspace.fs.writeFile(vscode.Uri.file(path), new Uint8Array(0));
 
-  fileNestingDataProvider.refresh();
+  // fileNestingDataProvider.refresh();
 
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
     type: "file",

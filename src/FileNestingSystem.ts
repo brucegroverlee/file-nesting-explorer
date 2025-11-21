@@ -72,19 +72,26 @@ class FileNestingSystem {
 
     // Check if there's a custom sorting order
     const sortingOrder = await SortingManager.readSortingOrder(parentPath);
-    
+
     if (sortingOrder) {
       // Apply custom sorting order
       return SortingManager.applySortingOrder(filteredFiles, sortingOrder);
     } else {
       // Apply default sorting (folders first, then alphabetically)
-      return filteredFiles.sort((a, b) => {
+      const sortedFiles = filteredFiles.sort((a, b) => {
         if (a.type === b.type) {
           return a.name.localeCompare(b.name);
         }
 
         return a.type === "folder" ? -1 : 1;
       });
+
+      /* console.log("FileNestingSystem:getChildrenFromFolder sortedFiles", {
+        uri: parentPath,
+        files: sortedFiles,
+      }); */
+
+      return sortedFiles;
     }
   }
 

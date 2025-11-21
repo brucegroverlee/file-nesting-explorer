@@ -147,5 +147,5 @@ export const pasteEntry =
       );
     }
 
-    fileNestingDataProvider.refresh();
+    // fileNestingDataProvider.refresh();
   };

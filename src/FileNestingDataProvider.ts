@@ -62,8 +62,18 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
     context.subscriptions.push(this.fileSystemWatcher);
   }
 
-  public refresh(): void {
-    this._onDidChangeTreeData.fire();
+  public async refresh(wait: boolean = false): Promise<void> {
+    return new Promise((resolve) => {
+      if (wait) {
+        setTimeout(() => {
+          this._onDidChangeTreeData.fire();
+          resolve();
+        }, 500);
+      } else {
+        this._onDidChangeTreeData.fire();
+        resolve();
+      }
+    });
   }
 
   getChildren(element?: Entry): Thenable<Entry[]> {
@@ -74,10 +84,20 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
     }
 
     if (element.type === "file" && element.isNesting) {
-      return fileNestingSystem.getChildrenFromNestingFile(element);
+      const children = fileNestingSystem.getChildrenFromNestingFile(element);
+      /* console.log(
+        "FileNestingProvider:getChildren children from nesting file",
+        children
+      ); */
+      return children;
     }
 
-    return fileNestingSystem.getChildrenFromFolder(element.path);
+    const children = fileNestingSystem.getChildrenFromFolder(element.path);
+    /* console.log(
+      "FileNestingProvider:getChildren children from folder",
+      children
+    ); */
+    return children;
   }
 
   getTreeItem(entry: Entry): vscode.TreeItem {

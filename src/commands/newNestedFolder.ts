@@ -37,9 +37,7 @@ export const newNestedFolder = async (entry: Entry) => {
     return;
   }
 
-  entry.isNesting = true;
-
   await vscode.workspace.fs.createDirectory(vscode.Uri.file(newPath));
 
-  fileNestingDataProvider.refresh();
+  // fileNestingDataProvider.refresh();
 };

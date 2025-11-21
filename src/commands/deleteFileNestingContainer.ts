@@ -38,5 +38,5 @@ export const deleteFileNestingContainer = async (entry: Entry) => {
     useTrash: !isRemote,
   });
 
-  fileNestingDataProvider.refresh();
+  // fileNestingDataProvider.refresh();
 };

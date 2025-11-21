@@ -25,7 +25,7 @@ export const renameEntry = async (entry: Entry) => {
 
   // Update the sorting file to reflect the rename
   const sortingOrder = await SortingManager.readSortingOrder(parentPath);
-  
+
   if (sortingOrder) {
     const index = sortingOrder.indexOf(oldName);
     if (index !== -1) {
@@ -37,5 +37,5 @@ export const renameEntry = async (entry: Entry) => {
   entry.path = newPath;
   entry.name = newName;
 
-  fileNestingDataProvider.refresh();
+  // fileNestingDataProvider.refresh();
 };

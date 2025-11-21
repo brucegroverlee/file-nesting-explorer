@@ -38,5 +38,5 @@ export const cutEntry =
       vscode.Uri.file(entry.path),
     ]); */
 
-    fileNestingDataProvider.refresh();
+    // fileNestingDataProvider.refresh();
   };

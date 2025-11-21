@@ -90,5 +90,5 @@ export const deleteEntry =
       await SortingManager.removeFromSortingOrder(entriesInParent, parentPath);
     }
 
-    fileNestingDataProvider.refresh();
+    // fileNestingDataProvider.refresh();
   };

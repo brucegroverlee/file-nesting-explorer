@@ -20,9 +20,11 @@ export class FileNestingTreeViewExplorer {
       this.onActiveEditorChanged()
     );
 
-    vscode.window.tabGroups.onDidChangeTabs(() => {
+    // Disable this for now, it fixes the duplication of files in the explorer
+    // But it brought back the issue when open a binary file doesn't select the file in the explorer
+    /* vscode.window.tabGroups.onDidChangeTabs(() => {
       this.onActiveTabChanged();
-    });
+    }); */
   }
 
   public setContext(context: vscode.ExtensionContext) {
