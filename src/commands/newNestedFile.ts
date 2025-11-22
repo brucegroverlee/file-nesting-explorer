@@ -5,6 +5,7 @@ import { config } from "../config";
 import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { validateExist } from "../FileSystem";
+import { track } from "./analytics";
 
 export const createNestedFile = async (entry: Entry, fileName: string) => {
   const basepath = join(
@@ -53,6 +54,8 @@ export const newNestedFile = async (entry: Entry) => {
   if (!fileName) {
     return;
   }
+
+  track("New Nested File");
 
   await createNestedFile(entry, fileName);
 };

@@ -5,6 +5,7 @@ import { config } from "../config";
 import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { validateExist } from "../FileSystem";
+import { track } from "./analytics";
 
 export const deleteFileNestingContainer = async (entry: Entry) => {
   /* console.log("fileNestingExplorer.deleteFileNestingContainer", entry); */
@@ -29,6 +30,8 @@ export const deleteFileNestingContainer = async (entry: Entry) => {
   if (result !== "Yes") {
     return;
   }
+
+  track("Delete Nested Files / Remove Expand Icon");
 
   // useTrash is not supported on remote file systems (e.g., WSL, SSH)
   const isRemote = vscode.env.remoteName !== undefined;

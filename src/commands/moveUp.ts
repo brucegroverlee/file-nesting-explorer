@@ -5,6 +5,7 @@ import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { SortingManager } from "../SortingManager";
 import { fileNestingSystem } from "../FileNestingSystem";
+import { track } from "./analytics";
 
 export const moveUp =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
@@ -20,6 +21,8 @@ export const moveUp =
 
       // Move the entry up in the sorting order
       await SortingManager.moveUp(entry.path, parentPath, siblingNames);
+
+      track("Move Up");
 
       // Refresh the view to show the new order
       // fileNestingDataProvider.refresh();

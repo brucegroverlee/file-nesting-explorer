@@ -74,9 +74,9 @@ export class DragAndDropController
           sourceEntry.type === "folder" &&
           targetPath.startsWith(sourceEntry.path)
         ) {
-          vscode.window.showErrorMessage(
+          /* vscode.window.showErrorMessage(
             `Cannot move '${sourceEntry.name}' into itself or its subdirectory`
-          );
+          ); */
           continue;
         }
 
@@ -94,9 +94,9 @@ export class DragAndDropController
 
           // Prevent moving the container folder into itself or its descendants
           if (targetPath.startsWith(containerSourcePath)) {
-            vscode.window.showErrorMessage(
+            /* vscode.window.showErrorMessage(
               `Cannot move container folder '${containerFolderName}' into itself or its subdirectory`
-            );
+            ); */
             continue;
           }
 
@@ -115,9 +115,9 @@ export class DragAndDropController
           // Check if destination file already exists
           try {
             await vscode.workspace.fs.stat(fileDestinationUri);
-            vscode.window.showErrorMessage(
+            /* vscode.window.showErrorMessage(
               `A file or folder '${fileDestinationName}' already exists at the destination`
-            );
+            ); */
             continue;
           } catch {
             // Destination file doesn't exist, which is what we want
@@ -129,9 +129,9 @@ export class DragAndDropController
           // Check if destination container folder already exists
           try {
             await vscode.workspace.fs.stat(containerDestinationUri);
-            vscode.window.showErrorMessage(
+            /* vscode.window.showErrorMessage(
               `A file or folder '${containerFolderName}' already exists at the destination`
-            );
+            ); */
             continue;
           } catch {
             // Destination folder doesn't exist, which is what we want
@@ -172,9 +172,9 @@ export class DragAndDropController
         // Check if destination already exists
         try {
           await vscode.workspace.fs.stat(newPathUri);
-          vscode.window.showErrorMessage(
+          /* vscode.window.showErrorMessage(
             `A file or folder '${sourceName}' already exists at the destination`
-          );
+          ); */
           continue;
         } catch {
           // File doesn't exist, which is what we want

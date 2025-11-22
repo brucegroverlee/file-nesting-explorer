@@ -4,6 +4,7 @@ import { dirname, join, parse } from "path";
 import { config } from "../config";
 import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
+import { track } from "./analytics";
 
 export const restoreSortingAlphabetically = async (entry: Entry) => {
   try {
@@ -35,6 +36,8 @@ export const restoreSortingAlphabetically = async (entry: Entry) => {
 
     // Delete the .sorting file to restore default sorting
     await vscode.workspace.fs.delete(sortingFileUri);
+
+    track("Restore Sorting Alphabetically");
 
     // Refresh the view to reflect the updated sorting
     // fileNestingDataProvider.refresh();

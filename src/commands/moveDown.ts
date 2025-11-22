@@ -5,6 +5,7 @@ import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { SortingManager } from "../SortingManager";
 import { fileNestingSystem } from "../FileNestingSystem";
+import { track } from "./analytics";
 
 export const moveDown =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
@@ -20,6 +21,8 @@ export const moveDown =
 
       // Move the entry down in the sorting order
       await SortingManager.moveDown(entry.path, parentPath, siblingNames);
+
+      track("Move Down");
 
       // Refresh the view to show the new order
       // fileNestingDataProvider.refresh();

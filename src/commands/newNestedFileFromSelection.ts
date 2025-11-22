@@ -4,6 +4,7 @@ import { basename } from "path";
 import { config } from "../config";
 import { Entry, getExtension } from "../Entry";
 import { createNestedFile } from "./newNestedFile";
+import { track } from "./analytics";
 
 export const newNestedFileFromSelection = async () => {
   const editor = vscode.window.activeTextEditor;
@@ -39,6 +40,8 @@ export const newNestedFileFromSelection = async () => {
   }
 
   const nestedFileName = `${selectedText}.${extension}`;
+
+  track("Create Nested File From Selection");
 
   const entry: Entry = {
     type: "file",

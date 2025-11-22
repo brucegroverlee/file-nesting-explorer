@@ -5,6 +5,7 @@ import { config } from "../config";
 import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { validateExist } from "../FileSystem";
+import { track } from "./analytics";
 
 export const newNestedFolder = async (entry: Entry) => {
   /* console.log("fileNestingExplorer.newNestedFolder", entry); */
@@ -16,6 +17,8 @@ export const newNestedFolder = async (entry: Entry) => {
   if (!folderName) {
     return;
   }
+
+  track("New Nested Folder");
 
   const basepath = join(
     dirname(entry.path),
