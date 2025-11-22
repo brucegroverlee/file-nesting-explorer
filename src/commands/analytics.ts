@@ -6,6 +6,10 @@ import { os } from "../Os";
 let initialized = false;
 let mixpanel: ReturnType<typeof Mixpanel.init> | null = null;
 const distinctId = vscode?.env?.machineId || "unknown";
+const extension = vscode.extensions.getExtension(
+  "GroverLee.file-nesting-explorer"
+);
+const extensionVersion = extension?.packageJSON?.version || "unknown";
 
 const MIXPANEL_TOKEN = "20e6fc60e1f781ba491213789d2618cf";
 
@@ -18,11 +22,6 @@ export const initMixpanel = () => {
 
   try {
     mixpanel = Mixpanel.init(MIXPANEL_TOKEN);
-
-    const extension = vscode.extensions.getExtension(
-      "GroverLee.file-nesting-explorer"
-    );
-    const extensionVersion = extension?.packageJSON?.version || "unknown";
 
     mixpanel.people.set(distinctId, {
       extension_version: extensionVersion,
@@ -46,6 +45,9 @@ export const track = (event: string, properties?: any) => {
     mixpanel.track(event, {
       ...(properties || {}),
       distinct_id: distinctId,
+      extension_version: extensionVersion,
+      app_id: appId,
+      os,
     });
   } catch (e) {
     console.log("Failed to track event", event, properties);
