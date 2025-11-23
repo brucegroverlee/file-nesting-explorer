@@ -25,7 +25,7 @@ export const moveUp =
       track("Move Up");
 
       // Refresh the view to show the new order
-      // fileNestingDataProvider.refresh();
+      fileNestingDataProvider.refresh();
 
       vscode.window.showInformationMessage(`Moved "${entry.name}" up`);
     } catch (error) {
