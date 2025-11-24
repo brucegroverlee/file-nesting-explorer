@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [0.3.5] - 2025-11-23
+
+### Fixed
+
+- Track when the tree view panel is opened or closed.
+
 ## [0.3.4] - 2025-11-22
 
 ### Fixed

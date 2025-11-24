@@ -4,6 +4,7 @@ import { basename } from "path";
 import { Entry } from "./Entry";
 import { fileNestingDataProvider } from "./FileNestingDataProvider";
 import { dragAndDropController } from "./DragAndDropController";
+import { track } from "./commands/analytics";
 
 export class FileNestingTreeViewExplorer {
   private viewExplorer: vscode.TreeView<Entry>;
@@ -19,6 +20,14 @@ export class FileNestingTreeViewExplorer {
     vscode.window.onDidChangeActiveTextEditor(() =>
       this.onActiveEditorChanged()
     );
+
+    this.viewExplorer.onDidChangeVisibility((e) => {
+      if (e.visible) {
+        track("Open File Nesting Explorer");
+      } else {
+        track("Close File Nesting Explorer");
+      }
+    });
 
     // Disable this for now, it fixes the duplication of files in the explorer
     // But it brought back the issue when open a binary file doesn't select the file in the explorer
