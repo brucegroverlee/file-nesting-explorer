@@ -36,6 +36,13 @@ In the File system, the extension creates a Folder Container with the basename o
 
 ![Virtual File System](./docs/virtual-file-system.gif)
 
+## Testing
+
+- Run `npm test` to compile the extension and execute the VS Code integration tests via `@vscode/test-electron`.
+- Tests open the fixture workspace at `src/test/fixtures/workspace` so they can safely create and delete files during execution.
+- A first proof-of-concept test exercises the `fileNestingExplorer.newFolder` command by stubbing user input and asserting the folder is created.
+- Mixpanel telemetry is disabled under `NODE_ENV=test` to keep the test run offline.
+
 ## Known Issues
 
 Below are the known issues with the extension that are in the process of being fixed. Meantime, if you need any of these functionalities you can still open the default `vscode explorer panel` do what you need to do and go back to the `File nesting explorer`. If you find a bug, please report it [here](https://github.com/brucegroverlee/file-nesting-explorer/issues).

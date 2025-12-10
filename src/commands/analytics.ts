@@ -3,6 +3,8 @@ import Mixpanel from "mixpanel";
 import { appId } from "../AppId";
 import { os } from "../Os";
 
+const isTestEnv = process.env.NODE_ENV === "test"; // Skip Mixpanel during tests to avoid network calls
+
 let initialized = false;
 let mixpanel: ReturnType<typeof Mixpanel.init> | null = null;
 const distinctId = vscode?.env?.machineId || "unknown";
@@ -14,7 +16,7 @@ const extensionVersion = extension?.packageJSON?.version || "unknown";
 const MIXPANEL_TOKEN = "20e6fc60e1f781ba491213789d2618cf";
 
 export const initMixpanel = () => {
-  if (initialized) {
+  if (initialized || isTestEnv) {
     return;
   }
 
