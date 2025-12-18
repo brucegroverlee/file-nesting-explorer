@@ -26,8 +26,6 @@ export const moveUp =
 
       // Refresh the view to show the new order
       fileNestingDataProvider.refresh();
-
-      vscode.window.showInformationMessage(`Moved "${entry.name}" up`);
     } catch (error) {
       vscode.window.showErrorMessage(
         `Failed to move "${entry.name}" up: ${error}`
