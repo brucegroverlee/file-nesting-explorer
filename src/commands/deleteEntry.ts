@@ -20,6 +20,11 @@ import { config } from "../config";
  * @returns The entries to be deleted
  */
 const getTargetEntries = (entry: Entry, selectedEntries: readonly Entry[]) => {
+  if (!entry) {
+    // when the user uses the shotcut (e.g. cmd + delete), the entry is undefined and we should take the selected entries
+    return selectedEntries;
+  }
+
   const isClickInSelectedEntries = selectedEntries
     .map((selectedEntry) => selectedEntry.path)
     .includes(entry.path);
