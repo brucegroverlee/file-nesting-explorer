@@ -20,7 +20,7 @@ const paste = async (
   if (pathToBePasted === targetPath) {
     const newPath = join(
       dirname(targetPath),
-      `${getName(targetPath)}(copy)${extname(targetPath)}`
+      `${getName(targetPath)} copy${extname(targetPath)}`
     );
 
     return await vscode.workspace.fs.copy(
