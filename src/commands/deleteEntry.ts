@@ -7,20 +7,42 @@ import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
 import { SortingManager } from "../SortingManager";
 import { config } from "../config";
 
+/**
+ * There is an issue when the user has selected multiple entries and clicks on one that is not selected,
+ * the action is applied in the selected entries instead of just the clicked entry.
+ *
+ * This function determines which entries should be deleted based on whether the clicked entry is in the selection.
+ * If the clicked entry is in the selection, delete all selected entries.
+ * Otherwise, delete only the clicked entry.
+ *
+ * @param entry The entry that was clicked
+ * @param selectedEntries The currently selected entries
+ * @returns The entries to be deleted
+ */
+const getTargetEntries = (entry: Entry, selectedEntries: readonly Entry[]) => {
+  const isClickInSelectedEntries = selectedEntries
+    .map((selectedEntry) => selectedEntry.path)
+    .includes(entry.path);
+
+  return isClickInSelectedEntries ? selectedEntries : [entry];
+};
+
 export const deleteEntry =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
     const selectedEntries = fileNestingTreeViewExplorer.getSelection();
 
     /* console.log("fileNestingExplorer.delete", { entry, selectedEntries }); */
 
+    const targetEntries = getTargetEntries(entry, selectedEntries);
+
     const message =
-      selectedEntries.length > 1
-        ? `Are you sure you want to delete the following ${selectedEntries.length} entries?`
-        : `Are you sure you want to delete ${selectedEntries[0].name}?`;
+      targetEntries.length > 1
+        ? `Are you sure you want to delete the following ${targetEntries.length} entries?`
+        : `Are you sure you want to delete ${targetEntries[0].name}?`;
 
     const detail =
-      selectedEntries.length > 1
-        ? selectedEntries.map((entry) => entry.name).join("\n")
+      targetEntries.length > 1
+        ? targetEntries.map((entry) => entry.name).join("\n")
         : undefined;
 
     const result = await vscode.window.showInformationMessage(
@@ -39,7 +61,7 @@ export const deleteEntry =
     // Build a list of paths to delete, including container folders for nesting files
     const pathsToDelete: string[] = [];
 
-    for (const selectedEntry of selectedEntries) {
+    for (const selectedEntry of targetEntries) {
       pathsToDelete.push(selectedEntry.path);
 
       if (selectedEntry.type === "file" && selectedEntry.isNesting) {
@@ -79,11 +101,11 @@ export const deleteEntry =
 
     // Update sorting files for each parent directory
     const parentDirs = new Set(
-      selectedEntries.map((entry) => dirname(entry.path))
+      targetEntries.map((entry) => dirname(entry.path))
     );
 
     for (const parentPath of parentDirs) {
-      const entriesInParent = selectedEntries
+      const entriesInParent = targetEntries
         .filter((entry) => dirname(entry.path) === parentPath)
         .map((entry) => entry.path);
 
