@@ -2,15 +2,23 @@
 
 > Note: This extension is not the same as the [VSCode's File Nesting](https://code.visualstudio.com/updates/v1_67#_explorer-file-nesting) and is not integrated with it.
 
-Build large React applications with ease by organizing your files in a minimalistic way. This extension allows you to nest your files in a tree structure, making it easier and more intuitive to compose your components and navigate your project.
+### Understand Your UI as a Tree
 
-![React File Nesting Explorer](./docs/file-nesting-explorer-overview.gif)
+Organize React components in a way that mirrors your UI structure. By nesting files into a visual tree, `React File Nesting Explorer` helps you quickly understand component relationships and navigate large codebases with less effort.
+
+![React File Nesting Explorer](./docs/react-file-nesting-hero.gif)
+
+## Documentation
+
+- [Homepage](https://explorer.groverlee.me?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer)
+- [Get Started: Learn how to use the extension](https://explorer.groverlee.me/get-started?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer)
+- [Features: Explore the complete list of features](https://explorer.groverlee.me/features?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer)
 
 ## Learn more about React File Nesting Design Pattern
 
 Read [React file nesting design pattern](https://medium.com/@brucegroverlee/react-file-nesting-design-pattern-74fe6edba127) on Medium.
 
-## Features
+## Main Features
 
 - **New Nested File**: Create a new file and nest it under the currently selected file.
 
@@ -24,29 +32,7 @@ Read [React file nesting design pattern](https://medium.com/@brucegroverlee/reac
 
 ![Delete File Nesting Container](./docs/file-nesting-explorer-showcase-delete-container.gif)
 
-## Get Started
-
-1. Install the extension.
-2. Open the FILE-NESTING-EXPLORER view.
-3. Right-click on a react file to create a new nested file or folder.
-
-## How does it work?
-
-In the File system, the extension creates a Folder Container with the basename of the React file with the prefix @ (at) every time the user creates a nested file/folder related to the React file. On top of that, the extension creates a Virtual File System that hides the Folder Container and shows the nested files/folders under the React file. In this way, the Explorer Panel shows a more intuitive and organized view of the React file structure.
-
-![Virtual File System](./docs/virtual-file-system.gif)
-
-## Known Issues
-
-Below are the known issues with the extension that are in the process of being fixed. Meantime, if you need any of these functionalities you can still open the default `vscode explorer panel` do what you need to do and go back to the `File nesting explorer`. If you find a bug, please report it [here](https://github.com/brucegroverlee/file-nesting-explorer/issues).
-
-- **Paste file/folder from other vscode project**: When copying a file or folder from another vscode project and pasting it into the current project, the user gets an error message. [Issue #1](https://github.com/brucegroverlee/file-nesting-explorer/issues/1#issue-2716404277)
-
-- **In the Panel's empty space, the Context Menu doesn't open**: This is a limitation of the VSCode API. The context menu only opens when you right-click on a View Item.
-
-- **None of the `File nesting explorer` items can be editable**: Due to the VSCode API limitations, the items in the `File nesting explorer` are not editable. Instead, any time you need to rename a file or folder, or you have to create a new file or folder, you'll see the `InputBox` dialog at the top/center of the screen.
-
-![InputBox Dialog](./docs/file-nesting-explorer-known-issues-rename.gif)
+### Discover the rest of the features in the [Features page](https://explorer.groverlee.me/features?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer).
 
 ## License
 
