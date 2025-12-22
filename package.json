@@ -4,7 +4,7 @@
   "displayName": "React File Nesting Explorer: Make React Projects simple",
   "description": "Create and manage React components with ease. File Nesting Explorer lets your project structure finally reflect how you already visualize your UI.",
   "author": "Grover Lee",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "license": "MIT",
   "galleryBanner": {
     "color": "#100f11",
@@ -32,6 +32,8 @@
     "lint": "eslint src",
     "test": "vscode-test",
     "package": "vsce package",
+    "package:vscode": "node scripts/package-with-platform.js vscode",
+    "package:openvsx": "node scripts/package-with-platform.js openvsx",
     "publish": "vsce publish"
   },
   "dependencies": {
