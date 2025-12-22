@@ -18,6 +18,7 @@ import { openEditor } from "./commands/openEditor";
 import { moveUp } from "./commands/moveUp";
 import { moveDown } from "./commands/moveDown";
 import { restoreSortingAlphabetically } from "./commands/restoreSortingAlphabetically";
+import { createFileNestingContainer } from "./commands/createFileNestingContainer";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -53,6 +54,13 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "fileNestingExplorer.newNestedFolder",
       newNestedFolder
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.createFileNestingContainer",
+      createFileNestingContainer
     )
   );
 

@@ -130,6 +130,10 @@
         "icon": "$(new-folder)"
       },
       {
+        "command": "fileNestingExplorer.createFileNestingContainer",
+        "title": "Enable Nested Files"
+      },
+      {
         "command": "fileNestingExplorer.deleteFileNestingContainer",
         "title": "Delete Nested Files / Remove Expand Icon",
         "icon": "$(trash)"
@@ -227,56 +231,64 @@
           "group": "group1"
         },
         {
+          "command": "fileNestingExplorer.createFileNestingContainer",
+          "when": "view == fileNestingExplorer && viewItem == file_with_nesting_extension",
+          "group": "group2"
+        },
+        {
           "command": "fileNestingExplorer.cut",
           "when": "view == fileNestingExplorer",
-          "group": "group2"
+          "group": "group3"
         },
         {
           "command": "fileNestingExplorer.copy",
           "when": "view == fileNestingExplorer",
-          "group": "group2"
+          "group": "group3"
         },
         {
           "command": "fileNestingExplorer.paste",
           "when": "view == fileNestingExplorer",
-          "group": "group2"
+          "group": "group3"
         },
         {
           "command": "fileNestingExplorer.copyPath",
           "when": "view == fileNestingExplorer",
-          "group": "group3"
+          "group": "group4"
         },
         {
           "command": "fileNestingExplorer.copyRelativePath",
           "when": "view == fileNestingExplorer",
-          "group": "group3"
-        },
-        {
-          "command": "fileNestingExplorer.rename",
-          "when": "view == fileNestingExplorer"
-        },
-        {
-          "command": "fileNestingExplorer.delete",
-          "when": "view == fileNestingExplorer"
-        },
-        {
-          "command": "fileNestingExplorer.deleteFileNestingContainer",
-          "when": "view == fileNestingExplorer && viewItem == nesting_file"
+          "group": "group4"
         },
         {
           "command": "fileNestingExplorer.moveUp",
           "when": "view == fileNestingExplorer",
-          "group": "group4@1"
+          "group": "group5@1"
         },
         {
           "command": "fileNestingExplorer.moveDown",
           "when": "view == fileNestingExplorer",
-          "group": "group4@2"
+          "group": "group5@2"
         },
         {
           "command": "fileNestingExplorer.restoreSortingAlphabetically",
           "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == nesting_file)",
-          "group": "group4@3"
+          "group": "group5@3"
+        },
+        {
+          "command": "fileNestingExplorer.delete",
+          "when": "view == fileNestingExplorer",
+          "group": "group6@1"
+        },
+        {
+          "command": "fileNestingExplorer.deleteFileNestingContainer",
+          "when": "view == fileNestingExplorer && viewItem == nesting_file",
+          "group": "group6@2"
+        },
+        {
+          "command": "fileNestingExplorer.rename",
+          "when": "view == fileNestingExplorer",
+          "group": "group6@3"
         }
       ],
       "editor/context": [
