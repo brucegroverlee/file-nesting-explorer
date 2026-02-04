@@ -11,8 +11,8 @@ Organize React components in a way that mirrors your UI structure. By nesting fi
 ## Documentation
 
 - [Homepage](https://explorer.groverlee.me?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer)
-- [Get Started: Learn how to use the extension](https://explorer.groverlee.me/get-started?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer)
-- [Features: Explore the complete list of features](https://explorer.groverlee.me/features?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer)
+- [Get Started: Learn how to use the extension](https://explorer.groverlee.me/docs/get-started?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer)
+- [Features: Explore the complete list of features](https://explorer.groverlee.me/docs/category/features?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer)
 
 ## Learn more about React File Nesting Design Pattern
 
@@ -32,7 +32,7 @@ Read [React file nesting design pattern](https://medium.com/@brucegroverlee/reac
 
 ![Delete File Nesting Container](./docs/file-nesting-explorer-showcase-delete-container.gif)
 
-### Discover the rest of the features in the [Features page](https://explorer.groverlee.me/features?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer).
+### Discover the rest of the features in the [Features page](https://explorer.groverlee.me/docs/category/features?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer).
 
 ## License
 
