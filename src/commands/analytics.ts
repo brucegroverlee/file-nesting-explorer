@@ -5,20 +5,40 @@ import { os } from "../Os";
 
 let initialized = false;
 let mixpanel: ReturnType<typeof Mixpanel.init> | null = null;
-const distinctId = vscode?.env?.machineId || "unknown";
-const extension = vscode.extensions.getExtension(
-  "GroverLee.file-nesting-explorer"
-);
-const extensionVersion = extension?.packageJSON?.version || "unknown";
 
 const MIXPANEL_TOKEN = "20e6fc60e1f781ba491213789d2618cf";
 
-export const initMixpanel = () => {
+const getDistinctId = () => vscode.env.machineId || "unknown";
+
+const getExtensionVersion = () => {
+  const extension = vscode.extensions.getExtension(
+    "GroverLee.file-nesting-explorer"
+  );
+
+  return extension?.packageJSON?.version || "unknown";
+};
+
+const handleMixpanelError = (error: Error | null | undefined, action: string) => {
+  if (!error) {
+    return;
+  }
+
+  console.log(`Mixpanel ${action} failed`, error);
+};
+
+export const initMixpanel = (context: vscode.ExtensionContext) => {
   if (initialized) {
     return;
   }
 
   initialized = true;
+
+  if (context.extensionMode !== vscode.ExtensionMode.Production) {
+    return;
+  }
+
+  const distinctId = getDistinctId();
+  const extensionVersion = getExtensionVersion();
 
   try {
     mixpanel = Mixpanel.init(MIXPANEL_TOKEN);
@@ -27,7 +47,7 @@ export const initMixpanel = () => {
       extension_version: extensionVersion,
       app_id: appId,
       os,
-    });
+    }, (error) => handleMixpanelError(error, "people.set"));
   } catch (e) {
     // Swallow errors to avoid breaking the extension runtime.
     mixpanel = null;
@@ -38,9 +58,11 @@ export const initMixpanel = () => {
 export const track = (event: string, properties?: any) => {
   try {
     if (!mixpanel) {
-      console.log("Mixpanel client not initialized", event, properties);
       return;
     }
+
+    const distinctId = getDistinctId();
+    const extensionVersion = getExtensionVersion();
 
     mixpanel.track(event, {
       ...(properties || {}),
@@ -48,7 +70,7 @@ export const track = (event: string, properties?: any) => {
       extension_version: extensionVersion,
       app_id: appId,
       os,
-    });
+    }, (error) => handleMixpanelError(error, `track(${event})`));
   } catch (e) {
     console.log("Failed to track event", event, properties);
   }

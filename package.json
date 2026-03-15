@@ -32,6 +32,8 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test",
+    "preui:test": "npm run compile",
+    "ui:test": "env -u ELECTRON_RUN_AS_NODE extest setup-and-run --code_version max out/ui-test/**/*.test.js",
     "package": "vsce package",
     "package:vscode": "node scripts/package-with-platform.js vscode",
     "package:openvsx": "node scripts/package-with-platform.js openvsx",
@@ -41,18 +43,18 @@
     "mixpanel": "^0.19.1"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.8",
     "@types/node": "20.x",
-    "@types/vscode": "^1.94.0",
+    "@types/vscode": "^1.110.0",
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "eslint": "^9.11.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vscode-extension-tester": "^8.23.0"
   },
   "engines": {
-    "vscode": "^1.94.0"
+    "vscode": "^1.111.0"
   },
   "categories": [
     "Visualization",
@@ -77,6 +79,7 @@
     "clean code"
   ],
   "activationEvents": [
+    "onView:fileNestingExplorer",
     "onLanguage:javascriptreact",
     "onLanguage:typescriptreact"
   ],

@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
     'Congratulations, your extension "file-nesting-explorer" is now active!'
   );
 
-  initMixpanel();
+  initMixpanel(context);
   fileNestingDataProvider.setContext(context);
   fileNestingTreeViewExplorer.setContext(context);
 

@@ -5,7 +5,7 @@ import * as fs from "fs";
 import { appId, AppId } from "./AppId";
 
 export type IconPath =
-  | { light: string; dark: string }
+  | { light: vscode.Uri; dark: vscode.Uri }
   | vscode.ThemeIcon
   | vscode.Uri
   | undefined;
@@ -36,23 +36,23 @@ function getIconTheme(iconTheme: string, extension?: string) {
   switch (extension) {
     case "js":
       return {
-        light: path.join(iconThemePath, "javascript.svg"),
-        dark: path.join(iconThemePath, "javascript.svg"),
+        light: vscode.Uri.file(path.join(iconThemePath, "javascript.svg")),
+        dark: vscode.Uri.file(path.join(iconThemePath, "javascript.svg")),
       };
     case "jsx":
       return {
-        light: path.join(iconThemePath, "react.svg"),
-        dark: path.join(iconThemePath, "react.svg"),
+        light: vscode.Uri.file(path.join(iconThemePath, "react.svg")),
+        dark: vscode.Uri.file(path.join(iconThemePath, "react.svg")),
       };
     case "ts":
       return {
-        light: path.join(iconThemePath, "typescript.svg"),
-        dark: path.join(iconThemePath, "typescript.svg"),
+        light: vscode.Uri.file(path.join(iconThemePath, "typescript.svg")),
+        dark: vscode.Uri.file(path.join(iconThemePath, "typescript.svg")),
       };
     case "tsx":
       return {
-        light: path.join(iconThemePath, "react_ts.svg"),
-        dark: path.join(iconThemePath, "react_ts.svg"),
+        light: vscode.Uri.file(path.join(iconThemePath, "react_ts.svg")),
+        dark: vscode.Uri.file(path.join(iconThemePath, "react_ts.svg")),
       };
     default:
       return new vscode.ThemeIcon("file");
