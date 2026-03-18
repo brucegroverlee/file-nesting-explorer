@@ -54,7 +54,7 @@
     "vscode-extension-tester": "^8.23.0"
   },
   "engines": {
-    "vscode": "^1.111.0"
+    "vscode": "^1.108.0"
   },
   "categories": [
     "Visualization",
