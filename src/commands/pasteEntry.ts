@@ -11,7 +11,7 @@ import { SortingManager } from "../SortingManager";
 const paste = async (
   pathToBePasted: string,
   selectedEntries: readonly Entry[],
-  targetEntry?: Entry
+  targetEntry?: Entry,
 ) => {
   const selectedEntry = selectedEntries[0];
   const effectiveTargetEntry = targetEntry ?? selectedEntry;
@@ -20,12 +20,12 @@ const paste = async (
   if (pathToBePasted === targetPath) {
     const newPath = join(
       dirname(targetPath),
-      `${getName(targetPath)} copy${extname(targetPath)}`
+      `${getName(targetPath)} copy${extname(targetPath)}`,
     );
 
     return await vscode.workspace.fs.copy(
       vscode.Uri.file(pathToBePasted),
-      vscode.Uri.file(newPath)
+      vscode.Uri.file(newPath),
     );
   }
 
@@ -39,7 +39,7 @@ const paste = async (
   ) {
     const folderPath = join(
       dirname(effectiveTargetEntry.path),
-      `${config.fileNestingPrefix}${getName(effectiveTargetEntry.path)}`
+      `${config.fileNestingPrefix}${getName(effectiveTargetEntry.path)}`,
     );
     location = folderPath;
   } else {
@@ -58,13 +58,13 @@ const paste = async (
   if (fileExists) {
     newPath = join(
       location,
-      `${getName(pathToBePasted)}(copy)${extname(pathToBePasted)}`
+      `${getName(pathToBePasted)}(copy)${extname(pathToBePasted)}`,
     );
   }
 
   await vscode.workspace.fs.copy(
     vscode.Uri.file(pathToBePasted),
-    vscode.Uri.file(newPath)
+    vscode.Uri.file(newPath),
   );
 };
 
@@ -73,8 +73,6 @@ export const pasteEntry =
     const selectedEntries = fileNestingTreeViewExplorer.getSelection();
 
     const cutEntryPaths = context.globalState.get<string[]>("cutEntryPaths");
-    const copiedEntryPaths =
-      context.globalState.get<string[]>("copiedEntryPaths");
 
     const clipboard = await vscode.env.clipboard.readText();
 
@@ -82,20 +80,26 @@ export const pasteEntry =
       entry,
       selectedEntries,
       cutEntryPaths,
-      copiedEntryPaths,
       clipboard,
     }); */
 
-    let pathsToBePasted = cutEntryPaths || copiedEntryPaths;
+    let pathsToBePasted: string[] | undefined;
+    let isCut = false;
 
-    if (!pathsToBePasted) {
-      const clipboardParts = clipboard.split(" ");
+    if (cutEntryPaths && cutEntryPaths.length > 0) {
+      pathsToBePasted = cutEntryPaths;
+      isCut = true;
+    } else if (clipboard) {
+      const clipboardParts = clipboard
+        .split("\n")
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0);
 
-      if (clipboardParts.length === 0 || clipboardParts.length > 5) {
+      if (clipboardParts.length === 0) {
         return;
       }
 
-      const areFiles = validateFiles(clipboardParts);
+      const areFiles = await validateFiles(clipboardParts);
 
       if (!areFiles) {
         return;
@@ -104,29 +108,33 @@ export const pasteEntry =
       pathsToBePasted = clipboardParts;
     }
 
+    if (!pathsToBePasted) {
+      return;
+    }
+
     await Promise.all(
-      pathsToBePasted.map((path) => paste(path, selectedEntries, entry))
+      pathsToBePasted.map((path) => paste(path, selectedEntries, entry)),
     );
 
-    if (cutEntryPaths) {
+    if (isCut) {
       context.globalState.update("cutEntryPaths", null);
 
       // Update sorting files for each parent directory of cut entries
-      const parentDirs = new Set(cutEntryPaths.map((path) => dirname(path)));
+      const parentDirs = new Set(cutEntryPaths!.map((path) => dirname(path)));
 
       for (const parentPath of parentDirs) {
-        const entriesInParent = cutEntryPaths.filter(
-          (path) => dirname(path) === parentPath
+        const entriesInParent = cutEntryPaths!.filter(
+          (path) => dirname(path) === parentPath,
         );
 
         await SortingManager.removeFromSortingOrder(
           entriesInParent,
-          parentPath
+          parentPath,
         );
       }
 
       await Promise.all(
-        cutEntryPaths.map(async (path) => {
+        cutEntryPaths!.map(async (path) => {
           const uri = vscode.Uri.file(path);
 
           try {
@@ -140,10 +148,10 @@ export const pasteEntry =
           } catch (error) {
             // Best-effort delete; ignore errors to avoid blocking paste completion.
             vscode.window.showInformationMessage(
-              `fileNestingExplorer: failed to delete cut path '${path}': ${error}`
+              `fileNestingExplorer: failed to delete cut path '${path}': ${error}`,
             );
           }
-        })
+        }),
       );
     }
 

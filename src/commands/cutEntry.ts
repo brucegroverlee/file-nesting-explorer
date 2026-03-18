@@ -14,7 +14,7 @@ export const cutEntry =
       if (selectedEntry.type === "file" && selectedEntry.isNesting) {
         const fileNameWithoutExtension = basename(
           selectedEntry.path,
-          selectedEntry.extension ? `.${selectedEntry.extension}` : ""
+          selectedEntry.extension ? `.${selectedEntry.extension}` : "",
         );
 
         const containerFolderName = `${config.fileNestingPrefix}${fileNameWithoutExtension}`;
@@ -32,7 +32,7 @@ export const cutEntry =
     context.globalState.update("cutEntryPaths", paths);
     context.globalState.update("copiedEntryPaths", null);
 
-    vscode.env.clipboard.writeText(paths.join(" "));
+    vscode.env.clipboard.writeText(paths.join("\n"));
 
     /* fileNestingDecoratorProvider.updateDecorations([
       vscode.Uri.file(entry.path),

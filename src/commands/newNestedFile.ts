@@ -10,7 +10,7 @@ import { track } from "./analytics";
 export const createNestedFile = async (entry: Entry, fileName: string) => {
   const basepath = join(
     dirname(entry.path),
-    `${config.fileNestingPrefix}${parse(entry.name).name}`
+    `${config.fileNestingPrefix}${parse(entry.name).name}`,
   );
 
   const folderExists = await validateExist(basepath);
@@ -30,12 +30,12 @@ export const createNestedFile = async (entry: Entry, fileName: string) => {
 
   await vscode.workspace.fs.writeFile(
     vscode.Uri.file(newPath),
-    new Uint8Array(0)
+    new Uint8Array(0),
   );
 
   // fileNestingDataProvider.refresh();
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
     type: "file",
