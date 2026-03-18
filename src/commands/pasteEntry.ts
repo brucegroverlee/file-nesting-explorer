@@ -91,7 +91,7 @@ export const pasteEntry =
       isCut = true;
     } else if (clipboard) {
       const clipboardParts = clipboard
-        .split("\n")
+        .split(" ")
         .map((p) => p.trim())
         .filter((p) => p.length > 0);
 

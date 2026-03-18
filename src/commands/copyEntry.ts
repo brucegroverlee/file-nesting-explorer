@@ -32,7 +32,7 @@ export const copyEntry =
     context.globalState.update("cutEntryPaths", null);
     context.globalState.update("copiedEntryPaths", paths);
 
-    vscode.env.clipboard.writeText(paths.join("\n"));
+    vscode.env.clipboard.writeText(paths.join(" "));
 
     fileNestingDataProvider.refresh();
   };
