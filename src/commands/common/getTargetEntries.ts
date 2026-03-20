@@ -16,6 +16,11 @@ export const getTargetEntries = (
   entry: Entry,
   selectedEntries: readonly Entry[],
 ) => {
+  // On Windows, the entry can be undefined when pressing the delete key
+  if (!entry) {
+    return selectedEntries;
+  }
+
   const isClickInSelectedEntries = selectedEntries
     .map((selectedEntry) => selectedEntry.path)
     .includes(entry.path);
