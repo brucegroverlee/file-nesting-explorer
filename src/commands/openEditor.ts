@@ -35,7 +35,7 @@ export const openEditor = async (element: Entry) => {
       const openAnyway = await vscode.window.showWarningMessage(
         "This file is large and may be slow to open. Do you want to open it anyway?",
         { modal: true },
-        "Open Anyway"
+        "Open Anyway",
       );
 
       if (openAnyway !== "Open Anyway") {
@@ -44,6 +44,7 @@ export const openEditor = async (element: Entry) => {
     }
   } catch (error) {
     // If we cannot stat the file for some reason, fall back to normal behavior.
+    console.error("[openEditor] Error checking file size:", error);
   }
 
   try {

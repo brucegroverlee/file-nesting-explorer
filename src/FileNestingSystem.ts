@@ -21,138 +21,169 @@ class FileNestingSystem {
   }
 
   public async getChildrenFromFolder(parentPath: string): Promise<Entry[]> {
-    const excludedPathPatterns = this.getExcludedPathPatterns();
+    try {
+      const excludedPathPatterns = this.getExcludedPathPatterns();
 
-    const files = await vscode.workspace.fs.readDirectory(
-      vscode.Uri.file(parentPath)
-    );
+      const files = await vscode.workspace.fs.readDirectory(
+        vscode.Uri.file(parentPath),
+      );
 
-    /* console.log("FileNestingSystem:getChildren files", {
-      uri: parentPath,
-      files,
-    }); */
-
-    const filteredFiles = files
-      .filter(([name]) => {
-        return !excludedPathPatterns.some((pattern) => pattern === name);
-      })
-      .filter(([name]) => {
-        // Filter out .sorting files
-        return name !== ".sorting";
-      })
-      .filter(([name, type]) => {
-        if (
-          type === vscode.FileType.Directory &&
-          name.startsWith(config.fileNestingPrefix) &&
-          this.isFileContainerFolder(name, files)
-        ) {
-          // do not show the folder if it is a file container folder
-          return false;
-        }
-
-        return true;
-      })
-      .map(([name, type]) => {
-        const entry: Entry = {
-          type: type === vscode.FileType.Directory ? "folder" : "file",
-          path: join(parentPath, name),
-          name,
-        };
-
-        if (entry.type === "file") {
-          entry.extension = getExtension(entry.name);
-        }
-
-        if (entry.type === "file" && this.isNestingFile(entry.name, files)) {
-          entry.isNesting = true;
-        }
-
-        return entry;
-      });
-
-    // Check if there's a custom sorting order
-    const sortingOrder = await SortingManager.readSortingOrder(parentPath);
-
-    if (sortingOrder) {
-      // Apply custom sorting order
-      return SortingManager.applySortingOrder(filteredFiles, sortingOrder);
-    } else {
-      // Apply default sorting (folders first, then alphabetically)
-      const sortedFiles = filteredFiles.sort((a, b) => {
-        if (a.type === b.type) {
-          return a.name.localeCompare(b.name);
-        }
-
-        return a.type === "folder" ? -1 : 1;
-      });
-
-      /* console.log("FileNestingSystem:getChildrenFromFolder sortedFiles", {
+      /* console.log("FileNestingSystem:getChildren files", {
         uri: parentPath,
-        files: sortedFiles,
+        files,
       }); */
 
-      return sortedFiles;
+      const filteredFiles = files
+        .filter(([name]) => {
+          return !excludedPathPatterns.some((pattern) => pattern === name);
+        })
+        .filter(([name]) => {
+          // Filter out .sorting files
+          return name !== ".sorting";
+        })
+        .filter(([name, type]) => {
+          if (
+            type === vscode.FileType.Directory &&
+            name.startsWith(config.fileNestingPrefix) &&
+            this.isFileContainerFolder(name, files)
+          ) {
+            // do not show the folder if it is a file container folder
+            return false;
+          }
+
+          return true;
+        })
+        .map(([name, type]) => {
+          const entry: Entry = {
+            type: type === vscode.FileType.Directory ? "folder" : "file",
+            path: join(parentPath, name),
+            name,
+          };
+
+          if (entry.type === "file") {
+            entry.extension = getExtension(entry.name);
+          }
+
+          if (entry.type === "file" && this.isNestingFile(entry.name, files)) {
+            entry.isNesting = true;
+          }
+
+          return entry;
+        });
+
+      // Check if there's a custom sorting order
+      const sortingOrder = await SortingManager.readSortingOrder(parentPath);
+
+      if (sortingOrder) {
+        // Apply custom sorting order
+        return SortingManager.applySortingOrder(filteredFiles, sortingOrder);
+      } else {
+        // Apply default sorting (folders first, then alphabetically)
+        const sortedFiles = filteredFiles.sort((a, b) => {
+          if (a.type === b.type) {
+            return a.name.localeCompare(b.name);
+          }
+
+          return a.type === "folder" ? -1 : 1;
+        });
+
+        /* console.log("FileNestingSystem:getChildrenFromFolder sortedFiles", {
+          uri: parentPath,
+          files: sortedFiles,
+        }); */
+
+        return sortedFiles;
+      }
+    } catch (error) {
+      vscode.window.showErrorMessage(
+        "Error getting children from folder " + parentPath,
+      );
+      console.error("[FileNestingSystem:getChildrenFromFolder] Error:", error);
+      return [];
     }
   }
 
   public getChildrenFromNestingFile(file: Entry): Thenable<Entry[]> {
-    const fileName = getName(file.name);
-    const folderPath = join(
-      dirname(file.path),
-      `${config.fileNestingPrefix}${fileName}`
-    );
+    try {
+      const fileName = getName(file.name);
+      const folderPath = join(
+        dirname(file.path),
+        `${config.fileNestingPrefix}${fileName}`,
+      );
 
-    return this.getChildrenFromFolder(folderPath);
+      return this.getChildrenFromFolder(folderPath);
+    } catch (error) {
+      vscode.window.showErrorMessage(
+        "Error getting children from nesting file " + file.name,
+      );
+      console.error(
+        "[FileNestingSystem:getChildrenFromNestingFile] Error:",
+        error,
+      );
+      return Promise.resolve([]);
+    }
   }
 
   public get roots(): Thenable<Entry[]> {
-    if (!this.workspaceRoot) {
+    try {
+      if (!this.workspaceRoot) {
+        return Promise.resolve([]);
+      }
+
+      return this.getChildrenFromFolder(this.workspaceRoot);
+    } catch (error) {
+      vscode.window.showErrorMessage("Error getting workspace roots");
+      console.error("[FileNestingSystem:roots] Error:", error);
       return Promise.resolve([]);
     }
-
-    return this.getChildrenFromFolder(this.workspaceRoot);
   }
 
   public async getParent(entry: Entry): Promise<Entry | null> {
-    /* console.log("FileNestingSystem:getParent entry", entry); */
+    try {
+      /* console.log("FileNestingSystem:getParent entry", entry); */
 
-    const parentPath = dirname(entry.path);
+      const parentPath = dirname(entry.path);
 
-    if (parentPath === this.workspaceRoot) {
-      /* console.log("FileNestingSystem:getParent is root"); */
+      if (parentPath === this.workspaceRoot) {
+        /* console.log("FileNestingSystem:getParent is root"); */
+        return null;
+      }
+
+      const parentName = basename(parentPath);
+
+      let parent: Entry = {
+        type: "folder",
+        path: parentPath,
+        name: parentName,
+      };
+
+      if (parentName.startsWith(config.fileNestingPrefix)) {
+        const parentSiblingFiles = await vscode.workspace.fs.readDirectory(
+          vscode.Uri.file(dirname(parentPath)),
+        );
+
+        const parentNestingFile = this.isFileContainerFolder(
+          parentName,
+          parentSiblingFiles,
+        );
+
+        if (parentNestingFile) {
+          parent.type = "file";
+          parent.path = join(dirname(parentPath), parentNestingFile);
+          parent.name = parentNestingFile;
+          parent.extension = getExtension(parentNestingFile);
+          parent.isNesting = true;
+        }
+      }
+
+      /* console.log("FileNestingSystem:getParent parent", parent); */
+
+      return parent;
+    } catch (error) {
+      vscode.window.showErrorMessage("Error getting parent for " + entry.name);
+      console.error("[FileNestingSystem:getParent] Error:", error);
       return null;
     }
-
-    const parentName = basename(parentPath);
-
-    let parent: Entry = {
-      type: "folder",
-      path: parentPath,
-      name: parentName,
-    };
-
-    if (parentName.startsWith(config.fileNestingPrefix)) {
-      const parentSiblingFiles = await vscode.workspace.fs.readDirectory(
-        vscode.Uri.file(dirname(parentPath))
-      );
-
-      const parentNestingFile = this.isFileContainerFolder(
-        parentName,
-        parentSiblingFiles
-      );
-
-      if (parentNestingFile) {
-        parent.type = "file";
-        parent.path = join(dirname(parentPath), parentNestingFile);
-        parent.name = parentNestingFile;
-        parent.extension = getExtension(parentNestingFile);
-        parent.isNesting = true;
-      }
-    }
-
-    /* console.log("FileNestingSystem:getParent parent", parent); */
-
-    return parent;
   }
 
   private getExcludedPathPatterns(): string[] {
@@ -161,7 +192,7 @@ class FileNestingSystem {
       .get<{ [pattern: string]: boolean }>("exclude", {});
 
     const excludedPatterns = Object.keys(excludeConfig).filter(
-      (pattern) => excludeConfig[pattern]
+      (pattern) => excludeConfig[pattern],
     );
 
     // TODO: it has a bug. for the pattern **/.git, it should only exclude the .git folder. but it is excluding all folders that start with .git for example .gitignore
@@ -170,7 +201,7 @@ class FileNestingSystem {
     //    new RegExp(pattern.replace(/\*\*/g, ".*").replace(/\*/g, "[^/]*"))
     //);
     const excludedPathPatterns = excludedPatterns.map((pattern) =>
-      pattern.replace("**/", "")
+      pattern.replace("**/", ""),
     );
 
     return excludedPathPatterns;
@@ -181,7 +212,7 @@ class FileNestingSystem {
   // for example: /src/@App and there is a file /src/App.tsx, it returns App.tsx
   private isFileContainerFolder(
     folderName: string,
-    files: DirectoryEntry[]
+    files: DirectoryEntry[],
   ): string | null {
     // remove the @ symbol
     const parsedFolderName = folderName.slice(1);
@@ -210,7 +241,7 @@ class FileNestingSystem {
       ([filename, type]) =>
         type === vscode.FileType.Directory &&
         filename.startsWith(config.fileNestingPrefix) &&
-        filename.slice(1) === name
+        filename.slice(1) === name,
     );
   }
 }

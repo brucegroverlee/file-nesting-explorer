@@ -21,40 +21,47 @@ const getBasepath = (entry?: Entry | null) => {
 };
 
 export const newFile = async (entry: Entry) => {
-  const selectedEntries = fileNestingTreeViewExplorer.getSelection();
+  try {
+    const selectedEntries = fileNestingTreeViewExplorer.getSelection();
 
-  /* console.log("fileNestingExplorer.newFile", { entry, selectedEntries }); */
+    /* console.log("fileNestingExplorer.newFile", { entry, selectedEntries }); */
 
-  const fileName = await vscode.window.showInputBox({
-    placeHolder: "Enter file name",
-  });
+    const fileName = await vscode.window.showInputBox({
+      placeHolder: "Enter file name",
+    });
 
-  if (!fileName) {
-    return;
+    if (!fileName) {
+      return;
+    }
+
+    const targetEntry = selectedEntries.length === 0 ? null : entry;
+
+    const basepath = getBasepath(targetEntry);
+
+    const path = `${basepath}/${fileName}`;
+
+    const fileExists = await validateExist(path);
+
+    if (fileExists) {
+      vscode.window.showErrorMessage("File already exists!");
+      return;
+    }
+
+    await vscode.workspace.fs.writeFile(
+      vscode.Uri.file(path),
+      new Uint8Array(0),
+    );
+
+    // fileNestingDataProvider.refresh();
+
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
+      type: "file",
+      path,
+      name: fileName,
+    });
+  } catch (error) {
+    console.error("[newFile] Error:", error);
   }
-
-  const targetEntry = selectedEntries.length === 0 ? null : entry;
-
-  const basepath = getBasepath(targetEntry);
-
-  const path = `${basepath}/${fileName}`;
-
-  const fileExists = await validateExist(path);
-
-  if (fileExists) {
-    vscode.window.showErrorMessage("File already exists!");
-    return;
-  }
-
-  await vscode.workspace.fs.writeFile(vscode.Uri.file(path), new Uint8Array(0));
-
-  // fileNestingDataProvider.refresh();
-
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
-    type: "file",
-    path,
-    name: fileName,
-  });
 };

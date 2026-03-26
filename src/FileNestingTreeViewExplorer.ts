@@ -18,7 +18,7 @@ export class FileNestingTreeViewExplorer {
     });
 
     vscode.window.onDidChangeActiveTextEditor(() =>
-      this.onActiveEditorChanged()
+      this.onActiveEditorChanged(),
     );
 
     this.viewExplorer.onDidChangeVisibility((e) => {
@@ -45,48 +45,59 @@ export class FileNestingTreeViewExplorer {
   }
 
   private async onActiveEditorChanged(): Promise<void> {
-    if (!this.viewExplorer.visible) {
-      return;
-    }
+    try {
+      if (!this.viewExplorer.visible) {
+        return;
+      }
 
-    const { activeTextEditor } = vscode.window;
+      const { activeTextEditor } = vscode.window;
 
-    if (!activeTextEditor || activeTextEditor.document.uri.scheme !== "file") {
-      return;
-    }
+      if (
+        !activeTextEditor ||
+        activeTextEditor.document.uri.scheme !== "file"
+      ) {
+        return;
+      }
 
-    const selection = this.viewExplorer.selection;
+      const selection = this.viewExplorer.selection;
 
-    // My code, my rules. I want to keep these lines
-    /* const focus =
+      // My code, my rules. I want to keep these lines
+      /* const focus =
       selection.length > 0 &&
       selection[0].path === activeTextEditor.document.fileName; */
 
-    /* console.log("FileNestingExplorer:onActiveEditorChanged", {
+      /* console.log("FileNestingExplorer:onActiveEditorChanged", {
       activeTextEditor,
       selection,
       focus,
     }); */
 
-    const fileName = basename(activeTextEditor.document.fileName);
+      const fileName = basename(activeTextEditor.document.fileName);
 
-    try {
-      await this.viewExplorer.reveal(
-        {
-          type: "file",
-          path: activeTextEditor.document.fileName,
-          name: fileName,
-        },
-        {
-          select: true,
-          expand: false,
-        }
-      );
+      try {
+        await this.viewExplorer.reveal(
+          {
+            type: "file",
+            path: activeTextEditor.document.fileName,
+            name: fileName,
+          },
+          {
+            select: true,
+            expand: false,
+          },
+        );
+      } catch (error) {
+        // Silently ignore errors when trying to reveal files that are filtered out
+        console.log(
+          "FileNestingExplorer: Could not reveal file",
+          activeTextEditor.document.fileName,
+        );
+      }
     } catch (error) {
-      // Silently ignore errors when trying to reveal files that are filtered out
-      console.log(
-        "FileNestingExplorer: Could not reveal file",
-        activeTextEditor.document.fileName
+      vscode.window.showErrorMessage("Error revealing file in explorer");
+      console.error(
+        "[FileNestingTreeViewExplorer:onActiveEditorChanged] Error:",
+        error,
       );
     }
   }
@@ -131,13 +142,13 @@ export class FileNestingTreeViewExplorer {
         {
           select: true,
           expand: false,
-        }
+        },
       );
     } catch (error) {
       // Silently ignore errors when trying to reveal files that are filtered out
       console.log(
         "FileNestingExplorer: Could not reveal file from active tab",
-        filePath
+        filePath,
       );
     }
   }
