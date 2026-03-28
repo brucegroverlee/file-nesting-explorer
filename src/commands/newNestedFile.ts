@@ -7,7 +7,7 @@ import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { validateExist } from "../FileSystem";
 import { track } from "./analytics";
 
-export const createNestedFile = async (entry: Entry, fileName: string) => {
+export const createNestedFile = async (entry: Entry, fileName: string, content?: string) => {
   const basepath = join(
     dirname(entry.path),
     `${config.fileNestingPrefix}${parse(entry.name).name}`,
@@ -28,9 +28,13 @@ export const createNestedFile = async (entry: Entry, fileName: string) => {
     return;
   }
 
+  const fileContent = content
+    ? new TextEncoder().encode(content)
+    : new Uint8Array(0);
+
   await vscode.workspace.fs.writeFile(
     vscode.Uri.file(newPath),
-    new Uint8Array(0),
+    fileContent,
   );
 
   // fileNestingDataProvider.refresh();
