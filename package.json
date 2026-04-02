@@ -191,6 +191,14 @@
       {
         "command": "fileNestingExplorer.editSortingFile",
         "title": "Edit Sorting File"
+      },
+      {
+        "command": "fileNestingExplorer.newNestedFileHint",
+        "title": "New Nested File..."
+      },
+      {
+        "command": "fileNestingExplorer.newNestedFolderHint",
+        "title": "New Nested Folder..."
       }
     ],
     "views": {
@@ -304,6 +312,18 @@
           "command": "fileNestingExplorer.rename",
           "when": "view == fileNestingExplorer",
           "group": "group6@3"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "fileNestingExplorer.newNestedFileHint",
+          "when": "!explorerResourceIsFolder && resourceExtname =~ /\\.(tsx|jsx|ts|js)$/",
+          "group": "navigation@0"
+        },
+        {
+          "command": "fileNestingExplorer.newNestedFolderHint",
+          "when": "!explorerResourceIsFolder && resourceExtname =~ /\\.(tsx|jsx|ts|js)$/",
+          "group": "navigation@1"
         }
       ],
       "editor/context": [

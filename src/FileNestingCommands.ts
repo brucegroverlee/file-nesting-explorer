@@ -20,6 +20,8 @@ import { moveDown } from "./commands/moveDown";
 import { restoreSortingAlphabetically } from "./commands/restoreSortingAlphabetically";
 import { editSortingFile } from "./commands/editSortingFile";
 import { createFileNestingContainer } from "./commands/createFileNestingContainer";
+import { newNestedFileHint } from "./commands/newNestedFileHint";
+import { newNestedFolderHint } from "./commands/newNestedFolderHint";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -150,6 +152,20 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "fileNestingExplorer.editSortingFile",
       editSortingFile,
+    ),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.newNestedFileHint",
+      newNestedFileHint,
+    ),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.newNestedFolderHint",
+      newNestedFolderHint,
     ),
   );
 }
