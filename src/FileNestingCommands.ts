@@ -18,130 +18,138 @@ import { openEditor } from "./commands/openEditor";
 import { moveUp } from "./commands/moveUp";
 import { moveDown } from "./commands/moveDown";
 import { restoreSortingAlphabetically } from "./commands/restoreSortingAlphabetically";
+import { editSortingFile } from "./commands/editSortingFile";
 import { createFileNestingContainer } from "./commands/createFileNestingContainer";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.newFile", newFile)
+    vscode.commands.registerCommand("fileNestingExplorer.newFile", newFile),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.newFolder", newFolder)
+    vscode.commands.registerCommand("fileNestingExplorer.newFolder", newFolder),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.refresh",
-      refreshView(context)
-    )
+      refreshView(context),
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.newNestedFile",
-      newNestedFile
-    )
+      newNestedFile,
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.newNestedFileFromSelection",
-      newNestedFileFromSelection
-    )
+      newNestedFileFromSelection,
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.newNestedFolder",
-      newNestedFolder
-    )
+      newNestedFolder,
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.createFileNestingContainer",
-      createFileNestingContainer
-    )
+      createFileNestingContainer,
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.deleteFileNestingContainer",
-      deleteFileNestingContainer
-    )
+      deleteFileNestingContainer,
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.cut",
-      cutEntry(context)
-    )
+      cutEntry(context),
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.copy",
-      copyEntry(context)
-    )
+      copyEntry(context),
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.paste",
-      pasteEntry(context)
-    )
+      pasteEntry(context),
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.copyPath",
-      copyEntryPath(context)
-    )
+      copyEntryPath(context),
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.copyRelativePath",
-      copyEntryRelativePath(context)
-    )
+      copyEntryRelativePath(context),
+    ),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("fileNestingExplorer.rename", renameEntry)
+    vscode.commands.registerCommand("fileNestingExplorer.rename", renameEntry),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.delete",
-      deleteEntry(context)
-    )
+      deleteEntry(context),
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.openEditor",
-      openEditor
-    )
+      openEditor,
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.moveUp",
-      moveUp(context)
-    )
+      moveUp(context),
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.moveDown",
-      moveDown(context)
-    )
+      moveDown(context),
+    ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "fileNestingExplorer.restoreSortingAlphabetically",
-      restoreSortingAlphabetically
-    )
+      restoreSortingAlphabetically,
+    ),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.editSortingFile",
+      editSortingFile,
+    ),
   );
 }

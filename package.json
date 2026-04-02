@@ -187,6 +187,10 @@
       {
         "command": "fileNestingExplorer.restoreSortingAlphabetically",
         "title": "Restore Sorting Alphabetically"
+      },
+      {
+        "command": "fileNestingExplorer.editSortingFile",
+        "title": "Edit Sorting File"
       }
     ],
     "views": {
@@ -280,6 +284,11 @@
           "command": "fileNestingExplorer.restoreSortingAlphabetically",
           "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == nesting_file)",
           "group": "group5@3"
+        },
+        {
+          "command": "fileNestingExplorer.editSortingFile",
+          "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == nesting_file)",
+          "group": "group5@4"
         },
         {
           "command": "fileNestingExplorer.delete",
