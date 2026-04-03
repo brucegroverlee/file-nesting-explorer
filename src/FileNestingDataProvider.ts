@@ -14,13 +14,27 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
 
   private context: vscode.ExtensionContext | null = null;
   private fileSystemWatcher: vscode.FileSystemWatcher | null = null;
+  private outputChannel: vscode.OutputChannel | undefined;
+
+  public setOutputChannel(
+    outputChannel: vscode.OutputChannel | undefined,
+  ): void {
+    this.outputChannel = outputChannel;
+    this.outputChannel?.appendLine("FileNestingDataProvider:setOutputChannel");
+  }
 
   public setContext(context: vscode.ExtensionContext) {
+    this.outputChannel?.appendLine("FileNestingDataProvider:setContext");
+
     this.context = context;
     this.setupFileSystemWatcher(context);
   }
 
   private setupFileSystemWatcher(context: vscode.ExtensionContext) {
+    this.outputChannel?.appendLine(
+      "FileNestingDataProvider:setupFileSystemWatcher",
+    );
+
     // Create a file system watcher for all files and directories in the workspace
     this.fileSystemWatcher = vscode.workspace.createFileSystemWatcher(
       "**/*",
@@ -31,19 +45,25 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
 
     // Listen for file/folder creation
     this.fileSystemWatcher.onDidCreate((uri) => {
-      /* console.log("FileNestingProvider: File created", uri.fsPath); */
+      this.outputChannel?.appendLine(
+        `FileNestingDataProvider:onDidCreate ${uri.fsPath}`,
+      );
       this.refresh();
     });
 
     // Listen for file/folder deletion
     this.fileSystemWatcher.onDidDelete((uri) => {
-      /* console.log("FileNestingProvider: File deleted", uri.fsPath); */
+      this.outputChannel?.appendLine(
+        `FileNestingDataProvider:onDidDelete ${uri.fsPath}`,
+      );
       this.refresh();
     });
 
     // Listen for file/folder changes (like renames)
     this.fileSystemWatcher.onDidChange((uri) => {
-      /* console.log("FileNestingProvider: File changed", uri.fsPath); */
+      this.outputChannel?.appendLine(
+        `FileNestingDataProvider:onDidChange ${uri.fsPath}`,
+      );
       // Only refresh on directory changes to avoid excessive refreshes on file content changes
       vscode.workspace.fs.stat(uri).then(
         (stat) => {
@@ -72,6 +92,10 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
   } */
 
   public async refresh(wait: boolean = false): Promise<void> {
+    this.outputChannel?.appendLine(
+      `FileNestingDataProvider:refresh wait ${wait}`,
+    );
+
     return new Promise((resolve) => {
       try {
         if (wait) {
@@ -91,6 +115,10 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
   }
 
   getChildren(element?: Entry): vscode.ProviderResult<Entry[]> {
+    this.outputChannel?.appendLine(
+      `FileNestingDataProvider:getChildren element ${JSON.stringify(element)}`,
+    );
+
     try {
       /* console.log("FileNestingProvider:getChildren", element); */
 
@@ -123,6 +151,10 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
   }
 
   getTreeItem(entry: Entry): vscode.TreeItem {
+    this.outputChannel?.appendLine(
+      `FileNestingDataProvider:getTreeItem entry ${JSON.stringify(entry)}`,
+    );
+
     try {
       /* console.log("FileNestingProvider:getTreeItem entry", entry); */
 
@@ -177,6 +209,10 @@ export class FileNestingDataProvider implements vscode.TreeDataProvider<Entry> {
   }
 
   public async getParent(entry: Entry): Promise<Entry | null> {
+    this.outputChannel?.appendLine(
+      `FileNestingDataProvider:getParent entry ${JSON.stringify(entry)}`,
+    );
+
     try {
       /* console.log("FileNestingProvider:getParent entry", entry); */
 

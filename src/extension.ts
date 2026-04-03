@@ -2,14 +2,34 @@ import * as vscode from "vscode";
 
 import { fileNestingDataProvider } from "./FileNestingDataProvider";
 import { fileNestingTreeViewExplorer } from "./FileNestingTreeViewExplorer";
+import { fileNestingSystem } from "./FileNestingSystem";
 // import { fileNestingDecoratorProvider } from "./FileNestingDecoratorProvider";
 import { createFileNestingCommands } from "./FileNestingCommands";
+import { setNewFileOutputChannel } from "./commands/newFile";
+import { setNewNestedFileOutputChannel } from "./commands/newNestedFile";
+import { setOpenEditorOutputChannel } from "./commands/openEditor";
 import { initMixpanel, track } from "./commands/analytics";
 
 export function activate(context: vscode.ExtensionContext) {
   console.log(
     'Congratulations, your extension "file-nesting-explorer" is now active!',
   );
+
+  const outputChannel =
+    context.extensionMode === vscode.ExtensionMode.Development
+      ? vscode.window.createOutputChannel("File Nesting Explorer")
+      : undefined;
+
+  if (outputChannel) {
+    context.subscriptions.push(outputChannel);
+  }
+
+  fileNestingSystem.setOutputChannel(outputChannel);
+  fileNestingDataProvider.setOutputChannel(outputChannel);
+  fileNestingTreeViewExplorer.setOutputChannel(outputChannel);
+  setNewFileOutputChannel(outputChannel);
+  setNewNestedFileOutputChannel(outputChannel);
+  setOpenEditorOutputChannel(outputChannel);
 
   initMixpanel(context);
   fileNestingDataProvider.setContext(context);

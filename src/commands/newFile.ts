@@ -6,6 +6,15 @@ import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
 import { validateExist } from "../FileSystem";
 
+let outputChannel: vscode.OutputChannel | undefined;
+
+export const setNewFileOutputChannel = (
+  newOutputChannel: vscode.OutputChannel | undefined,
+): void => {
+  outputChannel = newOutputChannel;
+  outputChannel?.appendLine("newFile:setOutputChannel");
+};
+
 // TODO make this a utility function
 const getBasepath = (entry?: Entry | null) => {
   if (entry) {
@@ -22,7 +31,15 @@ const getBasepath = (entry?: Entry | null) => {
 
 export const newFile = async (entry: Entry) => {
   try {
+    outputChannel?.appendLine(
+      `newFile entry ${entry?.path ?? "undefined"} type ${entry?.type ?? "undefined"}`,
+    );
+
     const selectedEntries = fileNestingTreeViewExplorer.getSelection();
+
+    outputChannel?.appendLine(
+      `newFile selectedEntries ${selectedEntries.length}`,
+    );
 
     /* console.log("fileNestingExplorer.newFile", { entry, selectedEntries }); */
 
@@ -31,6 +48,7 @@ export const newFile = async (entry: Entry) => {
     });
 
     if (!fileName) {
+      outputChannel?.appendLine("newFile canceled by user");
       return;
     }
 
@@ -43,6 +61,7 @@ export const newFile = async (entry: Entry) => {
     const fileExists = await validateExist(path);
 
     if (fileExists) {
+      outputChannel?.appendLine(`newFile already exists ${path}`);
       vscode.window.showErrorMessage("File already exists!");
       return;
     }
@@ -52,16 +71,21 @@ export const newFile = async (entry: Entry) => {
       new Uint8Array(0),
     );
 
+    outputChannel?.appendLine(`newFile created ${path}`);
+
     // fileNestingDataProvider.refresh();
 
     // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
+    await vscode.commands.executeCommand("fileNestingExplorer.openEditor", {
       type: "file",
       path,
       name: fileName,
     });
+
+    outputChannel?.appendLine(`newFile opened ${path}`);
   } catch (error) {
+    outputChannel?.appendLine("newFile error");
     console.error("[newFile] Error:", error);
   }
 };

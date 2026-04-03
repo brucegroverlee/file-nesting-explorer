@@ -5,9 +5,11 @@ import { Entry } from "./Entry";
 import { fileNestingDataProvider } from "./FileNestingDataProvider";
 import { dragAndDropController } from "./DragAndDropController";
 import { track } from "./commands/analytics";
+import { validateExist } from "./FileSystem";
 
 export class FileNestingTreeViewExplorer {
   private viewExplorer: vscode.TreeView<Entry>;
+  private outputChannel: vscode.OutputChannel | undefined;
 
   constructor() {
     this.viewExplorer = vscode.window.createTreeView("fileNestingExplorer", {
@@ -17,9 +19,17 @@ export class FileNestingTreeViewExplorer {
       dragAndDropController: dragAndDropController,
     });
 
-    vscode.window.onDidChangeActiveTextEditor(() =>
-      this.onActiveEditorChanged(),
-    );
+    vscode.window.onDidChangeActiveTextEditor((editor) => {
+      this.outputChannel?.appendLine(
+        `FileNestingTreeViewExplorer:onDidChangeActiveTextEditor editor ${JSON.stringify(editor)}`,
+      );
+
+      if (!editor) {
+        return;
+      }
+
+      this.onActiveEditorChanged();
+    });
 
     this.viewExplorer.onDidChangeVisibility((e) => {
       if (e.visible) {
@@ -37,16 +47,37 @@ export class FileNestingTreeViewExplorer {
   }
 
   public setContext(context: vscode.ExtensionContext) {
+    this.outputChannel?.appendLine("FileNestingTreeViewExplorer:setContext");
     context.subscriptions.push(this.viewExplorer);
   }
 
+  public setOutputChannel(
+    outputChannel: vscode.OutputChannel | undefined,
+  ): void {
+    this.outputChannel = outputChannel;
+    this.outputChannel?.appendLine(
+      "FileNestingTreeViewExplorer:setOutputChannel",
+    );
+  }
+
   public getSelection(): readonly Entry[] {
-    return this.viewExplorer.selection;
+    const selection = this.viewExplorer.selection;
+    this.outputChannel?.appendLine(
+      `FileNestingTreeViewExplorer:getSelection ${JSON.stringify(selection)}`,
+    );
+    return selection;
   }
 
   private async onActiveEditorChanged(): Promise<void> {
+    this.outputChannel?.appendLine(
+      "FileNestingTreeViewExplorer:onActiveEditorChanged",
+    );
+
     try {
       if (!this.viewExplorer.visible) {
+        this.outputChannel?.appendLine(
+          "FileNestingTreeViewExplorer:onActiveEditorChanged skip because explorer is not visible",
+        );
         return;
       }
 
@@ -56,10 +87,17 @@ export class FileNestingTreeViewExplorer {
         !activeTextEditor ||
         activeTextEditor.document.uri.scheme !== "file"
       ) {
+        this.outputChannel?.appendLine(
+          `FileNestingTreeViewExplorer:onActiveEditorChanged skip because active editor is ${JSON.stringify(activeTextEditor ?? {})}`,
+        );
         return;
       }
 
       const selection = this.viewExplorer.selection;
+
+      this.outputChannel?.appendLine(
+        `FileNestingTreeViewExplorer:onActiveEditorChanged selection ${JSON.stringify(selection)}`,
+      );
 
       // My code, my rules. I want to keep these lines
       /* const focus =
@@ -74,6 +112,21 @@ export class FileNestingTreeViewExplorer {
 
       const fileName = basename(activeTextEditor.document.fileName);
 
+      this.outputChannel?.appendLine(
+        `FileNestingTreeViewExplorer:onActiveEditorChanged reveal target ${activeTextEditor.document.fileName}`,
+      );
+
+      const fileExists = await validateExist(
+        activeTextEditor.document.fileName,
+      );
+
+      if (!fileExists) {
+        this.outputChannel?.appendLine(
+          `FileNestingTreeViewExplorer:onActiveEditorChanged skip because file does not exist ${activeTextEditor.document.fileName}`,
+        );
+        return;
+      }
+
       try {
         await this.viewExplorer.reveal(
           {
@@ -86,11 +139,14 @@ export class FileNestingTreeViewExplorer {
             expand: false,
           },
         );
+
+        this.outputChannel?.appendLine(
+          `FileNestingTreeViewExplorer:onActiveEditorChanged reveal success ${activeTextEditor.document.fileName}`,
+        );
       } catch (error) {
         // Silently ignore errors when trying to reveal files that are filtered out
-        console.log(
-          "FileNestingExplorer: Could not reveal file",
-          activeTextEditor.document.fileName,
+        this.outputChannel?.appendLine(
+          `FileNestingTreeViewExplorer: Could not reveal file ${activeTextEditor.document.fileName}`,
         );
       }
     } catch (error) {
@@ -99,10 +155,17 @@ export class FileNestingTreeViewExplorer {
         "[FileNestingTreeViewExplorer:onActiveEditorChanged] Error:",
         error,
       );
+      this.outputChannel?.appendLine(
+        `FileNestingTreeViewExplorer:onActiveEditorChanged error ${JSON.stringify(error)}`,
+      );
     }
   }
 
   private async onActiveTabChanged(): Promise<void> {
+    this.outputChannel?.appendLine(
+      "FileNestingTreeViewExplorer:onActiveTabChanged",
+    );
+
     if (!this.viewExplorer.visible) {
       return;
     }
@@ -146,9 +209,8 @@ export class FileNestingTreeViewExplorer {
       );
     } catch (error) {
       // Silently ignore errors when trying to reveal files that are filtered out
-      console.log(
-        "FileNestingExplorer: Could not reveal file from active tab",
-        filePath,
+      this.outputChannel?.appendLine(
+        `FileNestingTreeViewExplorer: Could not reveal file from active tab ${filePath}`,
       );
     }
   }

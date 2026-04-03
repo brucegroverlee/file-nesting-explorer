@@ -10,6 +10,7 @@ type DirectoryEntry = [string, vscode.FileType];
 
 class FileNestingSystem {
   private workspaceRoot: string | undefined;
+  private outputChannel: vscode.OutputChannel | undefined;
 
   constructor() {
     if (
@@ -20,7 +21,18 @@ class FileNestingSystem {
     }
   }
 
+  public setOutputChannel(
+    outputChannel: vscode.OutputChannel | undefined,
+  ): void {
+    this.outputChannel = outputChannel;
+    this.outputChannel?.appendLine("FileNestingSystem:setOutputChannel");
+  }
+
   public async getChildrenFromFolder(parentPath: string): Promise<Entry[]> {
+    this.outputChannel?.appendLine(
+      `FileNestingSystem:getChildrenFromFolder parentPath ${parentPath}`,
+    );
+
     try {
       const excludedPathPatterns = this.getExcludedPathPatterns();
 
@@ -104,6 +116,10 @@ class FileNestingSystem {
   }
 
   public getChildrenFromNestingFile(file: Entry): Thenable<Entry[]> {
+    this.outputChannel?.appendLine(
+      `FileNestingSystem:getChildrenFromNestingFile file ${JSON.stringify(file)}`,
+    );
+
     try {
       const fileName = getName(file.name);
       const folderPath = join(
@@ -125,6 +141,8 @@ class FileNestingSystem {
   }
 
   public get roots(): Thenable<Entry[]> {
+    this.outputChannel?.appendLine("FileNestingSystem:roots");
+
     try {
       if (!this.workspaceRoot) {
         return Promise.resolve([]);
@@ -139,6 +157,10 @@ class FileNestingSystem {
   }
 
   public async getParent(entry: Entry): Promise<Entry | null> {
+    this.outputChannel?.appendLine(
+      `FileNestingSystem:getParent entry ${JSON.stringify(entry)}`,
+    );
+
     try {
       /* console.log("FileNestingSystem:getParent entry", entry); */
 
@@ -187,6 +209,8 @@ class FileNestingSystem {
   }
 
   private getExcludedPathPatterns(): string[] {
+    this.outputChannel?.appendLine("FileNestingSystem:getExcludedPathPatterns");
+
     const excludeConfig = vscode.workspace
       .getConfiguration("files")
       .get<{ [pattern: string]: boolean }>("exclude", {});
@@ -214,6 +238,10 @@ class FileNestingSystem {
     folderName: string,
     files: DirectoryEntry[],
   ): string | null {
+    this.outputChannel?.appendLine(
+      `FileNestingSystem:isFileContainerFolder folderName ${folderName}`,
+    );
+
     // remove the @ symbol
     const parsedFolderName = folderName.slice(1);
 
@@ -235,6 +263,10 @@ class FileNestingSystem {
   }
 
   private isNestingFile(fileName: string, files: DirectoryEntry[]): boolean {
+    this.outputChannel?.appendLine(
+      `FileNestingSystem:isNestingFile fileName ${fileName}`,
+    );
+
     const name = getName(fileName);
 
     return files.some(

@@ -4,6 +4,14 @@ import { Entry } from "../Entry";
 
 let lastClickTime = 0;
 let lastClickedPath: string | undefined;
+let outputChannel: vscode.OutputChannel | undefined;
+
+export const setOpenEditorOutputChannel = (
+  newOutputChannel: vscode.OutputChannel | undefined,
+): void => {
+  outputChannel = newOutputChannel;
+  outputChannel?.appendLine("openEditor:setOutputChannel");
+};
 
 function isDoubleClick(element: Entry) {
   const currentTime = new Date().getTime();
@@ -24,7 +32,9 @@ function isDoubleClick(element: Entry) {
 export const openEditor = async (element: Entry) => {
   const uri = vscode.Uri.file(element.path);
 
-  /* console.log("fileNestingExplorer.openEditor", { element, uri }); */
+  outputChannel?.appendLine(
+    `openEditor file ${element.path} uri ${uri.fsPath}`,
+  );
 
   const maxFileSizeInBytes = 5 * 1024 * 1024; // 5 MB
 
@@ -44,6 +54,9 @@ export const openEditor = async (element: Entry) => {
     }
   } catch (error) {
     // If we cannot stat the file for some reason, fall back to normal behavior.
+    outputChannel?.appendLine(
+      `openEditor error checking file size for ${element.path}`,
+    );
     console.error("[openEditor] Error checking file size:", error);
   }
 
@@ -55,6 +68,9 @@ export const openEditor = async (element: Entry) => {
   } catch (error) {
     // If the file cannot be opened as a text document (e.g. binary files like .ico),
     // fall back to VS Code's default file opener.
+    outputChannel?.appendLine(
+      `openEditor fallback vscode.open for ${element.path}`,
+    );
     await vscode.commands.executeCommand("vscode.open", uri);
   }
 };
