@@ -199,6 +199,10 @@
       {
         "command": "fileNestingExplorer.newNestedFolderHint",
         "title": "New Nested Folder..."
+      },
+      {
+        "command": "fileNestingExplorer.openDocumentation",
+        "title": "See React File Nesting Documentation"
       }
     ],
     "views": {
@@ -254,64 +258,69 @@
           "group": "group2"
         },
         {
-          "command": "fileNestingExplorer.cut",
+          "command": "fileNestingExplorer.openDocumentation",
           "when": "view == fileNestingExplorer",
           "group": "group3"
+        },
+        {
+          "command": "fileNestingExplorer.cut",
+          "when": "view == fileNestingExplorer",
+          "group": "group4"
         },
         {
           "command": "fileNestingExplorer.copy",
           "when": "view == fileNestingExplorer",
-          "group": "group3"
+          "group": "group4"
         },
         {
           "command": "fileNestingExplorer.paste",
           "when": "view == fileNestingExplorer",
-          "group": "group3"
+          "group": "group4"
         },
         {
           "command": "fileNestingExplorer.copyPath",
           "when": "view == fileNestingExplorer",
-          "group": "group4"
+          "group": "group5"
         },
         {
           "command": "fileNestingExplorer.copyRelativePath",
           "when": "view == fileNestingExplorer",
-          "group": "group4"
+          "group": "group5"
         },
         {
           "command": "fileNestingExplorer.moveUp",
           "when": "view == fileNestingExplorer",
-          "group": "group5@1"
+          "group": "group6@1"
         },
         {
           "command": "fileNestingExplorer.moveDown",
           "when": "view == fileNestingExplorer",
-          "group": "group5@2"
+          "group": "group6@2"
         },
         {
           "command": "fileNestingExplorer.restoreSortingAlphabetically",
           "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == nesting_file)",
-          "group": "group5@3"
+          "group": "group6@3"
         },
         {
           "command": "fileNestingExplorer.editSortingFile",
           "when": "view == fileNestingExplorer && (viewItem == folder || viewItem == nesting_file)",
-          "group": "group5@4"
+          "group": "group6@4"
         },
         {
           "command": "fileNestingExplorer.delete",
           "when": "view == fileNestingExplorer",
-          "group": "group6@1"
+          "group": "group7@1"
         },
         {
           "command": "fileNestingExplorer.deleteFileNestingContainer",
           "when": "view == fileNestingExplorer && viewItem == nesting_file",
-          "group": "group6@2"
+          "group": "group7@2"
         },
         {
           "command": "fileNestingExplorer.rename",
           "when": "view == fileNestingExplorer",
-          "group": "group6@3"
+          "group": "group7@3"
         }
       ],
       "explorer/context": [

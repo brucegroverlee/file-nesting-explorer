@@ -22,6 +22,7 @@ import { editSortingFile } from "./commands/editSortingFile";
 import { createFileNestingContainer } from "./commands/createFileNestingContainer";
 import { newNestedFileHint } from "./commands/newNestedFileHint";
 import { newNestedFolderHint } from "./commands/newNestedFolderHint";
+import { track } from "./commands/analytics";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -166,6 +167,21 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "fileNestingExplorer.newNestedFolderHint",
       newNestedFolderHint,
+    ),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.openDocumentation",
+      () => {
+        track("Open Official Documentation");
+
+        return vscode.env.openExternal(
+          vscode.Uri.parse(
+            "https://explorer.groverlee.me/?utm_source=vscode_extension&utm_medium=context_menu&utm_campaign=file_nesting_explorer",
+          ),
+        );
+      },
     ),
   );
 }
