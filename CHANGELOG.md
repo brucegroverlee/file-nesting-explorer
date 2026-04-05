@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [0.5.0] - 2026-04-04
+
+### Added
+
+- Add "See Documentation" menu item to the context menu.
+- Add a welcome hint to guide users toward creating nested files.
+- Add an `Edit Sorting` command for file nesting behavior.
+
+### Changed
+
+- Improve nested-file creation from selection by adding content support and auto-imports.
+- Update VS Code engine compatibility for Windsurf users.
+
+### Fixed
+
+- Fix deleting with the Delete key on Windows.
+- Fix copy/paste behavior for files coming from other projects.
+- Fix copy-path behavior when file paths contain spaces.
+
 ## [0.4.2] - 2026-02-03
 
 ### Changed

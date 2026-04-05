@@ -5,7 +5,7 @@
   "description": "Create and manage React components with ease. File Nesting Explorer lets your project structure finally reflect how you already visualize your UI.",
   "icon": "logo.png",
   "author": "Grover Lee",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "license": "MIT",
   "galleryBanner": {
     "color": "#100f11",
