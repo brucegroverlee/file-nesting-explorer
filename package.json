@@ -5,7 +5,7 @@
   "description": "Create and manage React components with ease. File Nesting Explorer lets your project structure finally reflect how you already visualize your UI.",
   "icon": "logo.png",
   "author": "Grover Lee",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "license": "MIT",
   "galleryBanner": {
     "color": "#100f11",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@types/node": "20.x",
-    "@types/vscode": "^1.108.0",
+    "@types/vscode": "^1.105.0",
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
     "@vscode/test-cli": "^0.0.12",
@@ -54,7 +54,7 @@
     "vscode-extension-tester": "^8.23.0"
   },
   "engines": {
-    "vscode": "^1.108.0"
+    "vscode": "^1.105.0"
   },
   "categories": [
     "Visualization",
