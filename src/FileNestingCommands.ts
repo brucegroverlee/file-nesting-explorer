@@ -22,6 +22,7 @@ import { editSortingFile } from "./commands/editSortingFile";
 import { createFileNestingContainer } from "./commands/createFileNestingContainer";
 import { newNestedFileHint } from "./commands/newNestedFileHint";
 import { newNestedFolderHint } from "./commands/newNestedFolderHint";
+import { findInFolder } from "./commands/findInFolder";
 import { track } from "./commands/analytics";
 
 export function createFileNestingCommands(context: vscode.ExtensionContext) {
@@ -167,6 +168,13 @@ export function createFileNestingCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "fileNestingExplorer.newNestedFolderHint",
       newNestedFolderHint,
+    ),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "fileNestingExplorer.findInFolder",
+      findInFolder,
     ),
   );
 
