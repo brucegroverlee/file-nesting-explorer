@@ -3,11 +3,14 @@ import * as vscode from "vscode";
 import { Entry } from "../Entry";
 import { fileNestingDataProvider } from "../FileNestingDataProvider";
 import { fileNestingTreeViewExplorer } from "../FileNestingTreeViewExplorer";
+import { getTargetEntries } from "./common/getTargetEntries";
 
 export const copyEntryPath =
   (context: vscode.ExtensionContext) => async (entry: Entry) => {
     const selectedEntries = fileNestingTreeViewExplorer.getSelection();
-    const paths = selectedEntries.map((entry) => entry.path);
+    const targetEntries = getTargetEntries(entry, selectedEntries);
+
+    const paths = targetEntries.map((entry) => entry.path);
 
     /* console.log("fileNestingExplorer.copyEntryPath", { entry, paths }); */
 
