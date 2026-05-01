@@ -9,6 +9,7 @@ import { setNewFileOutputChannel } from "./commands/newFile";
 import { setNewNestedFileOutputChannel } from "./commands/newNestedFile";
 import { setOpenEditorOutputChannel } from "./commands/openEditor";
 import { initMixpanel, track } from "./commands/analytics";
+import { ReactExplorerViewProvider } from "./ReactExplorerViewProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   console.log(
@@ -39,6 +40,14 @@ export function activate(context: vscode.ExtensionContext) {
   // fileNestingDecoratorProvider.setContext(context);
 
   createFileNestingCommands(context);
+
+  const reactExplorerProvider = new ReactExplorerViewProvider(context);
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(
+      ReactExplorerViewProvider.viewType,
+      reactExplorerProvider,
+    ),
+  );
 
   showWelcomeHint(context);
 }

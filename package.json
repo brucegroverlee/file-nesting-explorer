@@ -27,10 +27,15 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
+    "compile": "npm run build:webview && tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "build:webview": "npm --prefix src/react-explorer run build",
+    "watch:webview": "npm --prefix src/react-explorer run watch",
+    "dev:webview": "npm --prefix src/react-explorer run dev",
+    "install:webview": "npm --prefix src/react-explorer install",
+    "postinstall": "npm run install:webview",
     "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src",
+    "lint": "eslint src --ignore-pattern 'src/react-explorer/**'",
     "test": "vscode-test",
     "preui:test": "npm run compile",
     "ui:test": "env -u ELECTRON_RUN_AS_NODE extest setup-and-run --code_version max out/ui-test/**/*.test.js",
@@ -80,6 +85,7 @@
   ],
   "activationEvents": [
     "onView:fileNestingExplorer",
+    "onView:reactExplorer",
     "onLanguage:javascriptreact",
     "onLanguage:typescriptreact"
   ],
@@ -214,6 +220,11 @@
         {
           "id": "fileNestingExplorer",
           "name": "File Nesting Explorer"
+        },
+        {
+          "id": "reactExplorer",
+          "name": "React Explorer",
+          "type": "webview"
         }
       ]
     },

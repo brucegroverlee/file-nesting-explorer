@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * shadcn theme tokens are expressed as HSL components (H S% L%) so Tailwind
+ * can wrap them in `hsl(var(--token))`. We can't directly reference VS Code
+ * colors (they are full CSS color strings, not HSL components), so we pick
+ * neutral defaults here and then *override* the chrome at the `body` level
+ * using VS Code CSS variables. This gives shadcn components a consistent
+ * baseline while letting the overall surface follow the editor theme.
+ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --radius: 0.5rem;
+  }
+
+  /*
+   * VS Code adds a class to <body> describing the active theme:
+   * `vscode-light`, `vscode-dark`, `vscode-high-contrast`, or
+   * `vscode-high-contrast-light`. We switch the shadcn tokens off the dark
+   * variants so the panel follows the IDE without extra JS.
+   */
+  .vscode-dark,
+  .vscode-high-contrast {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  /*
+   * Chrome-level overrides: let the webview body inherit the actual VS Code
+   * surface/text colors so the panel blends into whatever theme the user has
+   * active (including custom themes and high-contrast).
+   */
+  body {
+    /*
+     * VS Code injects a default stylesheet into every webview that sets
+     * `body { padding: 0 10px; }`. For a WebviewView that takes the full
+     * width of the sidebar panel, we want to reclaim that space.
+     *
+     * `!important` is needed because Radix (via react-remove-scroll-bar)
+     * writes an inline `padding-right: <scrollbar>px` on <body> while a
+     * ContextMenu / DropdownMenu is open. Since our body never scrolls
+     * (the ScrollArea handles it), that compensation shift is unwanted —
+     * and the only way to beat the inline style short of patching Radix
+     * is to mark our rule important.
+     */
+    margin: 0 !important;
+    padding: 0 !important;
+    color: var(--vscode-foreground);
+    background: transparent;
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+  }
+}
