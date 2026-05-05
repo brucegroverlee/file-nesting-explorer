@@ -7,6 +7,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { cn, indentFor } from "@/lib/utils";
+import { requestChildren } from "@/lib/fs-bridge";
 
 import { EntryNode } from "./EntryNode";
 import { EntryContextMenu } from "./EntryContextMenu";
@@ -22,27 +23,97 @@ interface CollapsibleEntryProps {
 // This component represents Folder or a Nesting File
 export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
   const [open, setOpen] = useState(false);
-  const [children, setChildren] = useState<Entry[]>(null);
+  const [children, setChildren] = useState<Entry[] | null>(null);
 
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
 
     if (open && children === null) {
-      // Load children when opening for the first time
-      // TODO: Implement actual loading logic
-      setChildren([]);
+      // Load children lazily on first open.
+      requestChildren(entry)
+        .then(setChildren)
+        .catch((error) => {
+          console.error(
+            `[CollapsibleEntry] failed to load children of ${entry.path}:`,
+            error,
+          );
+          setChildren([]);
+        });
     }
   };
 
   return (
     <Collapsible open={open} onOpenChange={handleOpenChange}>
       <EntryContextMenu entry={entry}>
-        <CollapsibleTrigger asChild>
+        <div
+          role="button"
+          className={cn(
+            "flex w-full items-center gap-1 rounded-sm px-1 outline-none",
+            "hover:bg-accent/10  focus-visible:bg-accent",
+          )}
+          style={{
+            paddingLeft: indentFor(depth),
+          }}
+        >
+          {entry.type === "folder" ? (
+            <CollapsibleTrigger asChild>
+              <button className="flex items-center gap-1">
+                <ChevronRight
+                  className={cn(
+                    "size-3.5 shrink-0 text-muted-foreground transition-transform",
+                    open && "rotate-90",
+                  )}
+                  aria-hidden
+                />
+
+                <Icon
+                  open={open}
+                  type={entry.type}
+                  extension={entry.extension}
+                />
+
+                <span className="truncate">{entry.name}</span>
+              </button>
+            </CollapsibleTrigger>
+          ) : (
+            <button className="flex items-center gap-1">
+              <CollapsibleTrigger asChild>
+                <ChevronRight
+                  className={cn(
+                    "size-3.5 shrink-0 text-muted-foreground transition-transform",
+                    open && "rotate-90",
+                  )}
+                  aria-hidden
+                />
+              </CollapsibleTrigger>
+              <Icon open={open} type={entry.type} extension={entry.extension} />
+
+              <span className="truncate">{entry.name}</span>
+            </button>
+          )}
+        </div>
+      </EntryContextMenu>
+
+      <CollapsibleContent>
+        {children?.map((entry) => (
+          <EntryNode key={entry.name} entry={entry} depth={depth + 1} />
+        ))}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
+
+/**
+ * Other alternatives
+ * 
+ * 
+ * Option 1:
+ *      <CollapsibleTrigger asChild>
           <button
             type="button"
             className={cn(
               "group flex w-full items-center gap-1 rounded-sm px-1 text-left",
-              "hover:bg-accent hover:text-accent-foreground focus:outline-none focus-visible:bg-accent",
+              "hover:bg-accent/10 focus:outline-none focus-visible:bg-accent",
             )}
             style={{ paddingLeft: indentFor(depth) }}
           >
@@ -59,13 +130,54 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
             <span className="truncate">{entry.name}</span>
           </button>
         </CollapsibleTrigger>
-      </EntryContextMenu>
+ * 
+ * Option 2:
+ * 
+ *      <div
+          role="button"
+          className={cn(
+            "flex w-full items-center gap-1 rounded-sm px-1 outline-none",
+            "hover:bg-accent/10  focus-visible:bg-accent",
+          )}
+          style={{
+            paddingLeft: indentFor(depth),
+          }}
+        >
+          {entry.type === "folder" ? (
+            <CollapsibleTrigger asChild>
+              <button className="flex items-center gap-1">
+                <ChevronRight
+                  className={cn(
+                    "size-3.5 shrink-0 text-muted-foreground transition-transform",
+                    open && "rotate-90",
+                  )}
+                  aria-hidden
+                />
 
-      <CollapsibleContent>
-        {children?.map((entry) => (
-          <EntryNode key={entry.name} entry={entry} depth={depth + 1} />
-        ))}
-      </CollapsibleContent>
-    </Collapsible>
-  );
-};
+                <Icon
+                  open={open}
+                  type={entry.type}
+                  extension={entry.extension}
+                />
+
+                <span className="truncate">{entry.name}</span>
+              </button>
+            </CollapsibleTrigger>
+          ) : (
+            <button className="flex items-center gap-1">
+              <CollapsibleTrigger asChild>
+                <ChevronRight
+                  className={cn(
+                    "size-3.5 shrink-0 text-muted-foreground transition-transform",
+                    open && "rotate-90",
+                  )}
+                  aria-hidden
+                />
+              </CollapsibleTrigger>
+              <Icon open={open} type={entry.type} extension={entry.extension} />
+
+              <span className="truncate">{entry.name}</span>
+            </button>
+          )}
+        </div>
+ */

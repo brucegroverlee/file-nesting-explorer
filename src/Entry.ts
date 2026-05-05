@@ -1,5 +1,4 @@
-import * as vscode from "vscode";
-import { dirname, basename, extname, parse, join } from "path";
+import { extname, parse } from "path";
 
 export interface Entry {
   type: "file" | "folder";

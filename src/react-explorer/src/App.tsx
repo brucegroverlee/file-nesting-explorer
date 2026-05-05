@@ -1,11 +1,39 @@
+import { useEffect, useState } from "react";
+
 import { FileSystem } from "@/components/FileSystem";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { requestRoots } from "@/lib/fs-bridge";
+
+import type { Entry } from "../../Entry";
 
 function App() {
+  const [roots, setRoots] = useState<Entry[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    requestRoots()
+      .then((entries) => {
+        if (!cancelled) {
+          setRoots(entries);
+        }
+      })
+      .catch((error) => {
+        console.error("[App] failed to load workspace roots:", error);
+        if (!cancelled) {
+          setRoots([]);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="flex h-full flex-col">
       <ScrollArea className="flex-1">
-        <FileSystem children={[]} />
+        <FileSystem children={roots ?? []} />
       </ScrollArea>
     </div>
   );

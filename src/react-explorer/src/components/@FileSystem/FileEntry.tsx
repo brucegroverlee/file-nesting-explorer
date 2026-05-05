@@ -1,6 +1,8 @@
+import type { KeyboardEvent } from "react";
 import { File } from "lucide-react";
 
 import { cn, indentFor } from "@/lib/utils";
+import { requestOpenEditor } from "@/lib/fs-bridge";
 
 import { EntryContextMenu } from "./EntryContextMenu";
 
@@ -12,14 +14,27 @@ interface FileEntryProps {
 }
 
 export const FileEntry = ({ entry, depth }: FileEntryProps) => {
+  const handleOpen = () => {
+    requestOpenEditor(entry);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      requestOpenEditor(entry);
+    }
+  };
+
   return (
     <EntryContextMenu entry={entry}>
       <div
         role="button"
         tabIndex={0}
+        onClick={handleOpen}
+        onKeyDown={handleKeyDown}
         className={cn(
           "flex w-full items-center gap-1 rounded-sm px-1 outline-none",
-          "hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent",
+          "hover:bg-accent/10  focus-visible:bg-accent",
         )}
         style={{
           paddingLeft: indentFor(depth) + 18 /* align past chevron */,

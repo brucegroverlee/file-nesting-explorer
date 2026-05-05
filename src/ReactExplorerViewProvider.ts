@@ -2,6 +2,14 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
+import { Entry } from "./Entry";
+import { fileNestingSystem } from "./FileNestingSystem";
+
+type IncomingMessage =
+  | { id: number; type: "getRoots" }
+  | { id: number; type: "getChildren"; entry: Entry }
+  | { id: number; type: "openEditor"; entry: Entry };
+
 /**
  * WebviewView provider for the "React Explorer" panel. Loads the Vite-built
  * bundle from `dist/react-explorer/` and rewrites its asset URLs through
@@ -36,6 +44,49 @@ export class ReactExplorerViewProvider implements vscode.WebviewViewProvider {
     };
 
     render();
+
+    webviewView.webview.onDidReceiveMessage(
+      async (message: IncomingMessage) => {
+        if (!message || typeof message.id !== "number") {
+          return;
+        }
+
+        try {
+          let entries: Entry[] = [];
+
+          if (message.type === "getRoots") {
+            entries = await fileNestingSystem.roots;
+          } else if (message.type === "getChildren") {
+            const entry = message.entry;
+            if (entry.type === "file" && entry.isNesting) {
+              entries =
+                await fileNestingSystem.getChildrenFromNestingFile(entry);
+            } else {
+              entries = await fileNestingSystem.getChildrenFromFolder(
+                entry.path,
+              );
+            }
+          } else if (message.type === "openEditor") {
+            await vscode.commands.executeCommand(
+              "fileNestingExplorer.openEditor",
+              message.entry,
+            );
+          }
+
+          webviewView.webview.postMessage({
+            id: message.id,
+            ok: true,
+            entries,
+          });
+        } catch (error) {
+          webviewView.webview.postMessage({
+            id: message.id,
+            ok: false,
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+      },
+    );
 
     // In development, watch the built bundle so saving a source file in
     // src/react-explorer/ (with `npm run watch:webview` running) triggers a

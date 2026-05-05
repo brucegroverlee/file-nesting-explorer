@@ -18,5 +18,7 @@ export const Icon = ({ open, type /*, extension*/ }: IconProps) => {
     );
   }
 
-  return <File />;
+  return (
+    <File className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+  );
 };
