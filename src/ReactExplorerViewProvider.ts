@@ -5,10 +5,32 @@ import * as vscode from "vscode";
 import { Entry } from "./Entry";
 import { fileNestingSystem } from "./FileNestingSystem";
 
+async function computeAncestorPaths(filePath: string): Promise<string[]> {
+  const ancestors: string[] = [];
+  let current: Entry | null = {
+    type: "file",
+    path: filePath,
+    name: path.basename(filePath),
+  };
+
+  // Guard against pathological cycles.
+  for (let i = 0; i < 64 && current; i++) {
+    const parent = await fileNestingSystem.getParent(current);
+    if (!parent) {
+      break;
+    }
+    ancestors.push(parent.path);
+    current = parent;
+  }
+
+  return ancestors;
+}
+
 type IncomingMessage =
   | { id: number; type: "getRoots" }
   | { id: number; type: "getChildren"; entry: Entry }
-  | { id: number; type: "openEditor"; entry: Entry };
+  | { id: number; type: "openEditor"; entry: Entry }
+  | { id: number; type: "getActiveEditor" };
 
 /**
  * WebviewView provider for the "React Explorer" panel. Loads the Vite-built
@@ -45,6 +67,45 @@ export class ReactExplorerViewProvider implements vscode.WebviewViewProvider {
 
     render();
 
+    const postActiveEditor = async () => {
+      const editor = vscode.window.activeTextEditor;
+      const activePath =
+        editor && editor.document.uri.scheme === "file"
+          ? editor.document.uri.fsPath
+          : null;
+
+      const ancestors = activePath
+        ? await computeAncestorPaths(activePath)
+        : [];
+
+      webviewView.webview.postMessage({
+        type: "activeEditorChanged",
+        path: activePath,
+        ancestors,
+      });
+    };
+
+    // Push the current state once and then on every active-editor change.
+    postActiveEditor();
+
+    const activeEditorSub = vscode.window.onDidChangeActiveTextEditor(() => {
+      // Always push; webview filters when it's not interested. We don't gate
+      // on visibility because tab switches still happen while the panel is
+      // visible elsewhere in the layout.
+      postActiveEditor();
+    });
+
+    const visibilitySub = webviewView.onDidChangeVisibility(() => {
+      if (webviewView.visible) {
+        postActiveEditor();
+      }
+    });
+
+    webviewView.onDidDispose(() => {
+      activeEditorSub.dispose();
+      visibilitySub.dispose();
+    });
+
     webviewView.webview.onDidReceiveMessage(
       async (message: IncomingMessage) => {
         if (!message || typeof message.id !== "number") {
@@ -71,6 +132,11 @@ export class ReactExplorerViewProvider implements vscode.WebviewViewProvider {
               "fileNestingExplorer.openEditor",
               message.entry,
             );
+          } else if (message.type === "getActiveEditor") {
+            // Synchronous reply via the standard response channel (also
+            // pushes the dedicated `activeEditorChanged` so any subscriber
+            // updates regardless of which path is in use).
+            postActiveEditor();
           }
 
           webviewView.webview.postMessage({

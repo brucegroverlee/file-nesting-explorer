@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 
 import {
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/collapsible";
 import { cn, indentFor } from "@/lib/utils";
 import { requestChildren } from "@/lib/fs-bridge";
+import { subscribeToActiveAncestors } from "@/lib/active-editor";
 
 import { EntryNode } from "./EntryNode";
 import { EntryContextMenu } from "./EntryContextMenu";
@@ -22,14 +23,18 @@ interface CollapsibleEntryProps {
 
 // This component represents Folder or a Nesting File
 export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
+  // Once a branch has been opened (by the user or by the active-editor
+  // reveal), keep it open until the user explicitly collapses it. This
+  // mirrors VS Code's tree-view, where switching to another file does not
+  // collapse previously-revealed ancestors.
   const [open, setOpen] = useState(false);
   const [children, setChildren] = useState<Entry[] | null>(null);
 
-  const handleOpenChange = (open: boolean) => {
-    setOpen(open);
-
-    if (open && children === null) {
-      // Load children lazily on first open.
+  const loadChildrenIfNeeded = () => {
+    setChildren((current) => {
+      if (current !== null) {
+        return current;
+      }
       requestChildren(entry)
         .then(setChildren)
         .catch((error) => {
@@ -39,8 +44,30 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
           );
           setChildren([]);
         });
+      return current;
+    });
+  };
+
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next);
+    if (next) {
+      loadChildrenIfNeeded();
     }
   };
+
+  // Subscribe to the active-editor ancestor set. When this entry becomes an
+  // ancestor of the active file, open it persistently and load its children.
+  // setState here is inside the subscription callback (the lint-approved
+  // pattern for syncing external state into React state).
+  useEffect(() => {
+    return subscribeToActiveAncestors((ancestors) => {
+      if (ancestors.has(entry.path)) {
+        setOpen(true);
+        loadChildrenIfNeeded();
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entry.path]);
 
   return (
     <Collapsible open={open} onOpenChange={handleOpenChange}>

@@ -1,8 +1,9 @@
-import type { KeyboardEvent } from "react";
+import { useEffect, useRef, type KeyboardEvent } from "react";
 import { File } from "lucide-react";
 
 import { cn, indentFor } from "@/lib/utils";
 import { requestOpenEditor } from "@/lib/fs-bridge";
+import { useActiveEditorPath } from "@/lib/active-editor";
 
 import { EntryContextMenu } from "./EntryContextMenu";
 
@@ -14,6 +15,10 @@ interface FileEntryProps {
 }
 
 export const FileEntry = ({ entry, depth }: FileEntryProps) => {
+  const activePath = useActiveEditorPath();
+  const isActive = activePath === entry.path;
+  const ref = useRef<HTMLDivElement>(null);
+
   const handleOpen = () => {
     requestOpenEditor(entry);
   };
@@ -25,16 +30,24 @@ export const FileEntry = ({ entry, depth }: FileEntryProps) => {
     }
   };
 
+  useEffect(() => {
+    if (isActive) {
+      ref.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+  }, [isActive]);
+
   return (
     <EntryContextMenu entry={entry}>
       <div
+        ref={ref}
         role="button"
         tabIndex={0}
         onClick={handleOpen}
         onKeyDown={handleKeyDown}
         className={cn(
           "flex w-full items-center gap-1 rounded-sm px-1 outline-none",
-          "hover:bg-accent/10  focus-visible:bg-accent",
+          "hover:bg-accent/10 focus-visible:bg-accent",
+          isActive && "bg-accent/20",
         )}
         style={{
           paddingLeft: indentFor(depth) + 18 /* align past chevron */,
