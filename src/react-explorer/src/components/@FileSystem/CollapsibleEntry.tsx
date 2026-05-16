@@ -9,6 +9,7 @@ import {
 import { cn, indentFor } from "@/lib/utils";
 import { requestChildren } from "@/lib/fs-bridge";
 import { subscribeToActiveAncestors } from "@/lib/active-editor";
+import { subscribeToFsChanged } from "@/lib/fs-events";
 
 import { EntryNode } from "./EntryNode";
 import { EntryContextMenu } from "./EntryContextMenu";
@@ -48,6 +49,17 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
     });
   };
 
+  const reloadChildren = () => {
+    requestChildren(entry)
+      .then(setChildren)
+      .catch((error) => {
+        console.error(
+          `[CollapsibleEntry] failed to reload children of ${entry.path}:`,
+          error,
+        );
+      });
+  };
+
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
     if (next) {
@@ -65,6 +77,22 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
         setOpen(true);
         loadChildrenIfNeeded();
       }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entry.path]);
+
+  // Refresh already-loaded children whenever the workspace filesystem
+  // changes, so create/rename/delete events are reflected without the user
+  // having to collapse and re-expand the branch.
+  useEffect(() => {
+    return subscribeToFsChanged(() => {
+      setChildren((current) => {
+        if (current === null) {
+          return current;
+        }
+        reloadChildren();
+        return current;
+      });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry.path]);

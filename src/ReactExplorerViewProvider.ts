@@ -3,6 +3,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 
 import { Entry } from "./Entry";
+import { fileNestingDataProvider } from "./FileNestingDataProvider";
 import { fileNestingSystem } from "./FileNestingSystem";
 
 async function computeAncestorPaths(filePath: string): Promise<string[]> {
@@ -108,9 +109,18 @@ export class ReactExplorerViewProvider implements vscode.WebviewViewProvider {
       }
     });
 
+    // Forward filesystem changes (already debounced upstream by the
+    // FileNestingDataProvider's watcher) to the webview so it can refresh
+    // its cached roots/children — same trigger that updates the native
+    // TreeView.
+    const fsChangeSub = fileNestingDataProvider.onDidChangeTreeData(() => {
+      webviewView.webview.postMessage({ type: "fsChanged" });
+    });
+
     webviewView.onDidDispose(() => {
       activeEditorSub.dispose();
       visibilitySub.dispose();
+      fsChangeSub.dispose();
     });
 
     webviewView.webview.onDidReceiveMessage(

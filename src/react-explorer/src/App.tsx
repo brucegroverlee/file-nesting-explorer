@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FileSystem } from "@/components/FileSystem";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { requestRoots } from "@/lib/fs-bridge";
+import { subscribeToFsChanged } from "@/lib/fs-events";
 
 import type { Entry } from "../../Entry";
 
@@ -12,21 +13,27 @@ function App() {
   useEffect(() => {
     let cancelled = false;
 
-    requestRoots()
-      .then((entries) => {
-        if (!cancelled) {
-          setRoots(entries);
-        }
-      })
-      .catch((error) => {
-        console.error("[App] failed to load workspace roots:", error);
-        if (!cancelled) {
-          setRoots([]);
-        }
-      });
+    const loadRoots = () => {
+      requestRoots()
+        .then((entries) => {
+          if (!cancelled) {
+            setRoots(entries);
+          }
+        })
+        .catch((error) => {
+          console.error("[App] failed to load workspace roots:", error);
+          if (!cancelled) {
+            setRoots([]);
+          }
+        });
+    };
+
+    loadRoots();
+    const unsubscribe = subscribeToFsChanged(loadRoots);
 
     return () => {
       cancelled = true;
+      unsubscribe();
     };
   }, []);
 
