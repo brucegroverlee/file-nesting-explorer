@@ -4,13 +4,45 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "npm",
-			"script": "watch",
+			"label": "watch:extension",
+			"type": "shell",
+			"command": ". \"$HOME/.nvm/nvm.sh\" && nvm use --silent && npm run watch",
 			"problemMatcher": "$tsc-watch",
 			"isBackground": true,
 			"presentation": {
 				"reveal": "never"
+			}
+		},
+		{
+			"label": "watch:webview",
+			"type": "shell",
+			"command": ". \"$HOME/.nvm/nvm.sh\" && nvm use --silent && npm run watch:webview",
+			"isBackground": true,
+			"presentation": {
+				"reveal": "never"
 			},
+			"problemMatcher": {
+				"owner": "vite",
+				"fileLocation": "absolute",
+				"pattern": {
+					"regexp": "^\\s*(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"message": 5
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "(building for|build started)",
+					"endsPattern": "(built in|watching for file changes)"
+				}
+			}
+		},
+		{
+			"label": "watch:all",
+			"dependsOn": ["watch:extension", "watch:webview"],
+			"dependsOrder": "parallel",
 			"group": {
 				"kind": "build",
 				"isDefault": true
