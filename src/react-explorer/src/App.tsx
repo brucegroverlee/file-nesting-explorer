@@ -40,7 +40,7 @@ function App() {
   return (
     <div id="react-explorer-root" className="flex h-full flex-col">
       <ScrollArea className="flex-1">
-        <FileSystem children={roots ?? []} />
+        <FileSystem entries={roots ?? []} />
       </ScrollArea>
     </div>
   );

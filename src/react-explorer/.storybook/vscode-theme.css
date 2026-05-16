@@ -1,0 +1,90 @@
+/*
+ * Storybook-only stylesheet that mirrors the CSS custom properties VS Code
+ * injects into a webview iframe. Captured from the Dark Modern theme so the
+ * panel renders the same as it does inside the IDE.
+ *
+ * The matching `.vscode-dark` class is added to <body> via a decorator in
+ * `preview.tsx`, which also flips the shadcn tokens defined in `index.css`.
+ */
+:root {
+  --vscode-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  --vscode-font-weight: normal;
+  --vscode-font-size: 13px;
+  --vscode-editor-font-family: Menlo, Monaco, "Courier New", monospace;
+  --vscode-editor-font-weight: normal;
+  --vscode-editor-font-size: 12px;
+
+  --vscode-foreground: #cccccc;
+  --vscode-disabledForeground: rgba(204, 204, 204, 0.5);
+  --vscode-errorForeground: #f85149;
+  --vscode-descriptionForeground: #9d9d9d;
+  --vscode-icon-foreground: #cccccc;
+  --vscode-focusBorder: #0078d4;
+  --vscode-textLink-foreground: #4daafc;
+
+  --vscode-editor-background: #1f1f1f;
+  --vscode-editor-foreground: #cccccc;
+  --vscode-editorWidget-background: #202020;
+  --vscode-editorWidget-foreground: #cccccc;
+  --vscode-editorWidget-border: #454545;
+
+  --vscode-sideBar-background: #181818;
+  --vscode-sideBar-foreground: #cccccc;
+  --vscode-sideBar-border: #2b2b2b;
+  --vscode-sideBarSectionHeader-background: #181818;
+  --vscode-sideBarSectionHeader-foreground: #cccccc;
+  --vscode-sideBarSectionHeader-border: #2b2b2b;
+
+  --vscode-list-activeSelectionBackground: #04395e;
+  --vscode-list-activeSelectionForeground: #ffffff;
+  --vscode-list-inactiveSelectionBackground: #37373d;
+  --vscode-list-hoverBackground: #2a2d2e;
+  --vscode-list-dropBackground: #383b3d;
+  --vscode-list-highlightForeground: #2aaaff;
+  --vscode-list-focusOutline: #0078d4;
+
+  --vscode-tree-indentGuidesStroke: #585858;
+  --vscode-tree-inactiveIndentGuidesStroke: rgba(88, 88, 88, 0.4);
+
+  --vscode-input-background: #313131;
+  --vscode-input-foreground: #cccccc;
+  --vscode-input-border: #3c3c3c;
+  --vscode-input-placeholderForeground: #989898;
+
+  --vscode-button-foreground: #ffffff;
+  --vscode-button-background: #0078d4;
+  --vscode-button-hoverBackground: #026ec1;
+  --vscode-button-border: rgba(255, 255, 255, 0.1);
+  --vscode-button-secondaryForeground: #cccccc;
+  --vscode-button-secondaryBackground: rgba(0, 0, 0, 0);
+  --vscode-button-secondaryHoverBackground: #2b2b2b;
+
+  --vscode-menu-border: #454545;
+  --vscode-menu-foreground: #cccccc;
+  --vscode-menu-background: #1f1f1f;
+  --vscode-menu-selectionForeground: #ffffff;
+  --vscode-menu-selectionBackground: #0078d4;
+  --vscode-menu-separatorBackground: #454545;
+
+  --vscode-scrollbar-shadow: #000000;
+  --vscode-scrollbarSlider-background: rgba(121, 121, 121, 0.4);
+  --vscode-scrollbarSlider-hoverBackground: rgba(100, 100, 100, 0.7);
+  --vscode-scrollbarSlider-activeBackground: rgba(191, 191, 191, 0.4);
+
+  --vscode-widget-shadow: rgba(0, 0, 0, 0.36);
+  --vscode-widget-border: #313131;
+  --vscode-toolbar-hoverBackground: rgba(90, 93, 94, 0.31);
+  --vscode-toolbar-activeBackground: rgba(99, 102, 103, 0.31);
+}
+
+/*
+ * VS Code's webview host normally paints the iframe with the editor color.
+ * Storybook's default canvas is white, so paint it ourselves to match.
+ */
+html,
+body {
+  background: var(--vscode-sideBar-background);
+  color: var(--vscode-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+}
