@@ -41,12 +41,18 @@ export class ReactExplorerViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "reactExplorer";
 
   private readonly distUri: vscode.Uri;
+  private readonly materialIconsUri: vscode.Uri;
 
   constructor(private readonly context: vscode.ExtensionContext) {
     this.distUri = vscode.Uri.joinPath(
       context.extensionUri,
       "dist",
       "react-explorer",
+    );
+    this.materialIconsUri = vscode.Uri.joinPath(
+      context.extensionUri,
+      "icons",
+      "material-icon-theme",
     );
   }
 
@@ -57,8 +63,9 @@ export class ReactExplorerViewProvider implements vscode.WebviewViewProvider {
   ): void | Thenable<void> {
     webviewView.webview.options = {
       enableScripts: true,
-      // Restrict what the webview can load to the built bundle only.
-      localResourceRoots: [this.distUri],
+      // Restrict what the webview can load to the built bundle and the
+      // bundled material-icon-theme SVGs.
+      localResourceRoots: [this.distUri, this.materialIconsUri],
     };
 
     const render = () => {
@@ -225,9 +232,13 @@ export class ReactExplorerViewProvider implements vscode.WebviewViewProvider {
       `connect-src ${cspSource}`,
     ].join("; ");
 
+    const materialIconsBaseUri = webview
+      .asWebviewUri(this.materialIconsUri)
+      .toString();
+
     html = html.replace(
       /<head>/,
-      `<head>\n    <meta http-equiv="Content-Security-Policy" content="${csp}">`,
+      `<head>\n    <meta http-equiv="Content-Security-Policy" content="${csp}">\n    <script nonce="${nonce}">window.__materialIconBaseUri=${JSON.stringify(materialIconsBaseUri)};</script>`,
     );
 
     return html;

@@ -34,6 +34,16 @@ Read [React file nesting design pattern](https://medium.com/@brucegroverlee/reac
 
 ### Discover the rest of the features in the [Features page](https://explorer.groverlee.me/docs/category/features?utm_source=github&utm_medium=readme&utm_campaign=file-nesting-explorer).
 
+## Credits
+
+The file and folder icons displayed in the React Explorer panel are provided
+by the [Material Icon Theme](https://github.com/material-extensions/vscode-material-icon-theme)
+project by **Philipp Kief** and the **Material Extensions** contributors,
+redistributed under the MIT license. See
+[`icons/material-icon-theme/LICENSE`](icons/material-icon-theme/LICENSE) and
+[`icons/material-icon-theme/NOTICE.md`](icons/material-icon-theme/NOTICE.md)
+for the full notice.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

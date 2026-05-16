@@ -93,11 +93,7 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
                   aria-hidden
                 />
 
-                <Icon
-                  open={open}
-                  type={entry.type}
-                  extension={entry.extension}
-                />
+                <Icon open={open} type={entry.type} name={entry.name} />
 
                 <span className="truncate">{entry.name}</span>
               </button>
@@ -113,7 +109,7 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
                   aria-hidden
                 />
               </CollapsibleTrigger>
-              <Icon open={open} type={entry.type} extension={entry.extension} />
+              <Icon open={open} type={entry.type} name={entry.name} />
 
               <span className="truncate">{entry.name}</span>
             </button>
@@ -152,7 +148,7 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
               aria-hidden
             />
 
-            <Icon open={open} type={entry.type} extension={entry.extension} />
+            <Icon open={open} type={entry.type} name={entry.name} />
 
             <span className="truncate">{entry.name}</span>
           </button>
@@ -184,7 +180,7 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
                 <Icon
                   open={open}
                   type={entry.type}
-                  extension={entry.extension}
+                  name={entry.name}
                 />
 
                 <span className="truncate">{entry.name}</span>
@@ -201,7 +197,7 @@ export const CollapsibleEntry = ({ entry, depth }: CollapsibleEntryProps) => {
                   aria-hidden
                 />
               </CollapsibleTrigger>
-              <Icon open={open} type={entry.type} extension={entry.extension} />
+              <Icon open={open} type={entry.type} name={entry.name} />
 
               <span className="truncate">{entry.name}</span>
             </button>

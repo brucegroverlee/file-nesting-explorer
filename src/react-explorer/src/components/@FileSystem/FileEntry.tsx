@@ -1,9 +1,9 @@
 import { useEffect, useRef, type KeyboardEvent } from "react";
-import { File } from "lucide-react";
 
 import { cn, indentFor } from "@/lib/utils";
 import { requestOpenEditor } from "@/lib/fs-bridge";
 import { useActiveEditorPath } from "@/lib/active-editor";
+import { MaterialIcon } from "@/components/MaterialIcon";
 
 import { EntryContextMenu } from "./EntryContextMenu";
 
@@ -53,7 +53,7 @@ export const FileEntry = ({ entry, depth }: FileEntryProps) => {
           paddingLeft: indentFor(depth) + 18 /* align past chevron */,
         }}
       >
-        <File className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+        <MaterialIcon name={entry.name} type="file" />
         <span className="truncate">{entry.name}</span>
       </div>
     </EntryContextMenu>
