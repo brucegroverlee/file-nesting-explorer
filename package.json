@@ -232,17 +232,17 @@
       "view/title": [
         {
           "command": "fileNestingExplorer.newFile",
-          "when": "view == fileNestingExplorer",
+          "when": "view == fileNestingExplorer || view == reactExplorer",
           "group": "navigation@1"
         },
         {
           "command": "fileNestingExplorer.newFolder",
-          "when": "view == fileNestingExplorer",
+          "when": "view == fileNestingExplorer || view == reactExplorer",
           "group": "navigation@1"
         },
         {
           "command": "fileNestingExplorer.refresh",
-          "when": "view == fileNestingExplorer",
+          "when": "view == fileNestingExplorer || view == reactExplorer",
           "group": "navigation@1"
         }
       ],
