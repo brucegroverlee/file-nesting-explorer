@@ -38,7 +38,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex h-full flex-col">
+    <div id="react-explorer-root" className="flex h-full flex-col">
       <ScrollArea className="flex-1">
         <FileSystem children={roots ?? []} />
       </ScrollArea>
