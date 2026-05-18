@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type MouseEvent,
-} from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
 import { cn, indentFor } from "@/lib/utils";
 import { requestOpenEditor } from "@/lib/fs-bridge";
@@ -73,8 +67,7 @@ export const FileEntry = ({
   const isContextTarget = isContextTargetProp ?? contextOpen;
   const isActiveEditor = isActiveEditorProp ?? activePath === entry.path;
 
-  const handleSelect = (event?: MouseEvent<HTMLDivElement>) => {
-    event?.stopPropagation();
+  const handleSelect = () => {
     setSelectedPath(entry.path);
     // Mirror VS Code's explorer: single click opens the file in preview
     // mode. The extension-side `openEditor` command decides preview vs
