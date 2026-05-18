@@ -16,6 +16,7 @@ interface ManifestShape {
   iconDefinitions: IconDefinitions;
   fileExtensions?: Record<string, string>;
   fileNames?: Record<string, string>;
+  languageIds?: Record<string, string>;
   folderNames?: Record<string, string>;
   folderNamesExpanded?: Record<string, string>;
   file?: string;
@@ -24,6 +25,84 @@ interface ManifestShape {
 }
 
 const m = manifest as unknown as ManifestShape;
+
+/**
+ * Material Icon Theme registers some icons via VS Code's `languageIds` instead
+ * of `fileExtensions` (e.g. `.ts` → `typescript`, `.js` → `javascript`). When
+ * running outside VS Code we don't have a language service, so we map common
+ * extensions to their language id manually and then look them up in
+ * `manifest.languageIds`.
+ */
+const EXTENSION_TO_LANGUAGE_ID: Record<string, string> = {
+  ts: "typescript",
+  mts: "typescript",
+  cts: "typescript",
+  js: "javascript",
+  mjs: "javascript",
+  cjs: "javascript",
+  html: "html",
+  htm: "html",
+  xhtml: "html",
+  yml: "yaml",
+  yaml: "yaml",
+  toml: "toml",
+  ini: "ini",
+  bat: "bat",
+  cmd: "bat",
+  ps1: "powershell",
+  psm1: "powershell",
+  psd1: "powershell",
+  swift: "swift",
+  kt: "kotlin",
+  dart: "dart",
+  r: "r",
+  pl: "perl",
+  pm: "perl",
+  lua: "lua",
+  php: "php",
+  vb: "vb",
+  fs: "fsharp",
+  fsi: "fsharp",
+  fsx: "fsharp",
+  clj: "clojure",
+  cljs: "clojure",
+  cljc: "clojure",
+  ex: "elixir",
+  exs: "elixir",
+  erl: "erlang",
+  hrl: "erlang",
+  hs: "haskell",
+  lhs: "haskell",
+  jl: "julia",
+  nim: "nim",
+  nix: "nix",
+  ml: "ocaml",
+  mli: "ocaml",
+  pas: "pascal",
+  rkt: "racket",
+  scala: "scala",
+  sc: "scala",
+  tcl: "tcl",
+  zig: "zig",
+  groovy: "groovy",
+  coffee: "coffeescript",
+  mm: "objective-cpp",
+  proto: "proto",
+  sol: "solidity",
+  tf: "terraform",
+  twig: "twig",
+  pug: "jade",
+  jade: "jade",
+  styl: "stylus",
+  astro: "astro",
+  ipynb: "jupyter",
+  mdx: "mdx",
+  rst: "restructuredtext",
+  tex: "latex",
+  ltx: "latex",
+  bib: "bibtex",
+  adoc: "asciidoc",
+};
 
 /**
  * Material-icon-theme stores `iconPath` like `./../icons/react_ts.svg`.
@@ -60,6 +139,19 @@ function resolveFileIconName(name: string): string {
     const byExt = m.fileExtensions?.[ext];
     if (byExt) {
       return byExt;
+    }
+  }
+
+  // 3) Fall back to VS Code language id resolution for extensions Material
+  //    Icon Theme registers via `languageIds` (e.g. `.ts`, `.js`, `.html`).
+  for (let i = 1; i < parts.length; i++) {
+    const ext = parts.slice(i).join(".");
+    const languageId = EXTENSION_TO_LANGUAGE_ID[ext];
+    if (languageId) {
+      const byLang = m.languageIds?.[languageId];
+      if (byLang) {
+        return byLang;
+      }
     }
   }
 
