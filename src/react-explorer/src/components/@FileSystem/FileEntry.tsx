@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 
 import { cn, indentFor } from "@/lib/utils";
 import { requestOpenEditor } from "@/lib/fs-bridge";
@@ -55,19 +61,20 @@ export const FileEntry = ({
   isActiveEditor: isActiveEditorProp,
 }: FileEntryProps) => {
   const activePath = useActiveEditorPath();
-  const isSelectedFromStore = useIsSelected(entry.path);
+  const isSelected = useIsSelected(entry.path);
   const explorerFocused = useExplorerFocused();
   const [contextOpen, setContextOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const selectionState: SelectionState =
-    selectionStateProp ?? (isSelectedFromStore ? "selected" : "unselected");
+    selectionStateProp ?? (isSelected ? "selected" : "unselected");
   const focusState: FocusState =
     focusStateProp ?? (explorerFocused ? "focused" : "inactive");
   const isContextTarget = isContextTargetProp ?? contextOpen;
   const isActiveEditor = isActiveEditorProp ?? activePath === entry.path;
 
-  const handleSelect = () => {
+  const handleSelect = (event?: MouseEvent<HTMLDivElement>) => {
+    event?.stopPropagation();
     setSelectedPath(entry.path);
     // Mirror VS Code's explorer: single click opens the file in preview
     // mode. The extension-side `openEditor` command decides preview vs
@@ -85,6 +92,7 @@ export const FileEntry = ({
 
   useEffect(() => {
     if (isActiveEditor) {
+      setSelectedPath(entry.path);
       ref.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
   }, [isActiveEditor]);

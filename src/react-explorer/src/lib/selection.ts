@@ -21,20 +21,16 @@ function subscribe(listener: () => void): () => void {
   };
 }
 
-function getSnapshot(): string | null {
-  return selectedPath;
-}
-
 export function setSelectedPath(path: string | null): void {
+  console.log("setSelectedPath", {
+    current: selectedPath,
+    next: path,
+  });
   if (selectedPath === path) {
     return;
   }
   selectedPath = path;
   emit();
-}
-
-export function useSelectedPath(): string | null {
-  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
 export function useIsSelected(path: string): boolean {

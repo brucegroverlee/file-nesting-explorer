@@ -47,8 +47,7 @@ export const EntryContextMenu = ({
   onOpenChange,
 }: EntryContextMenuProps) => {
   const log = (action: string) =>
-    // eslint-disable-next-line no-console
-    console.log(`[react-explorer] ${action}: ${entry.name}`);
+    console.log(`[EntryContextMenu] ${action}: ${entry.name}`);
 
   return (
     <UIContextMenu onOpenChange={onOpenChange}>

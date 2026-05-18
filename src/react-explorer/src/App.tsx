@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 
 import { FileSystem } from "@/components/FileSystem";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FileSystemContextMenu } from "@/components/@FileSystem/FileSystemContextMenu";
 import { requestRoots } from "@/lib/fs-bridge";
 import { subscribeToFsChanged } from "@/lib/fs-events";
+import { setSelectedPath } from "@/lib/selection";
 
 import type { Entry } from "../../Entry";
 
@@ -39,9 +41,17 @@ function App() {
 
   return (
     <div id="react-explorer-root" className="flex h-full flex-col">
-      <ScrollArea className="flex-1">
-        <FileSystem entries={roots ?? []} />
-      </ScrollArea>
+      <FileSystemContextMenu>
+        <ScrollArea
+          className="flex-1"
+          onClick={() => {
+            console.log("ScrollArea clicked");
+            setSelectedPath(null);
+          }}
+        >
+          <FileSystem entries={roots ?? []} />
+        </ScrollArea>
+      </FileSystemContextMenu>
     </div>
   );
 }
