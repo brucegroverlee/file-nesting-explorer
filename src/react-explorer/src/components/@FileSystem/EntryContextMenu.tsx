@@ -38,18 +38,20 @@ const menuSeparatorClass =
 
 type EntryContextMenuProps = PropsWithChildren & {
   entry: Entry;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export const EntryContextMenu = ({
   entry,
   children,
+  onOpenChange,
 }: EntryContextMenuProps) => {
   const log = (action: string) =>
     // eslint-disable-next-line no-console
     console.log(`[react-explorer] ${action}: ${entry.name}`);
 
   return (
-    <UIContextMenu>
+    <UIContextMenu onOpenChange={onOpenChange}>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
 
       <ContextMenuContent className={menuContentClass}>

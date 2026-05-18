@@ -1,6 +1,9 @@
 [
   "EntryNode.tsx",
+  "EntryNode.stories.tsx",
   "EntryContextMenu.tsx",
   "CollapsibleEntry.tsx",
-  "FileEntry.tsx"
+  "CollapsibleEntry.stories.tsx",
+  "FileEntry.tsx",
+  "FileEntry.stories.tsx"
 ]

@@ -117,7 +117,7 @@ export const MaterialIcon = ({
     return (
       <span
         aria-hidden
-        className={cn("inline-block size-3.5 shrink-0", className)}
+        className={cn("inline-block size-[16px] shrink-0", className)}
       />
     );
   }
@@ -128,7 +128,7 @@ export const MaterialIcon = ({
       alt=""
       aria-hidden
       draggable={false}
-      className={cn("size-3.5 shrink-0", className)}
+      className={cn("size-[16px] shrink-0", className)}
     />
   );
 };
