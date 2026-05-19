@@ -10,7 +10,8 @@ import { getVsCodeApi } from "./vscode";
 type Request =
   | { id: number; type: "getRoots" }
   | { id: number; type: "getChildren"; entry: Entry }
-  | { id: number; type: "openEditor"; entry: Entry };
+  | { id: number; type: "openEditor"; entry: Entry }
+  | { id: number; type: "executeCommand"; command: string; entry?: Entry };
 
 type Response = {
   id: number;
@@ -84,4 +85,14 @@ export function requestOpenEditor(entry: Entry): void {
   // `fileNestingExplorer.openEditor` command, which handles preview vs
   // permanent editor based on its own click-timing logic.
   void send({ id: nextId++, type: "openEditor", entry });
+}
+
+/**
+ * Fire-and-forget request to run one of the `fileNestingExplorer.*` commands
+ * registered by the extension (see `FileNestingCommands.ts`). The host is
+ * responsible for validating the command name against an allow-list before
+ * dispatching it through `vscode.commands.executeCommand`.
+ */
+export function requestExecuteCommand(command: string, entry?: Entry): void {
+  void send({ id: nextId++, type: "executeCommand", command, entry });
 }

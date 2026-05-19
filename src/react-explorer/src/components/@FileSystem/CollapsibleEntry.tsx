@@ -1,4 +1,9 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import {
+  useEffect,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 import { ChevronRight } from "lucide-react";
 
 import {
@@ -7,7 +12,12 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
-import { requestChildren, requestOpenEditor } from "@/lib/fs-bridge";
+import {
+  requestChildren,
+  requestExecuteCommand,
+  requestOpenEditor,
+} from "@/lib/fs-bridge";
+import { ENTRY_BINDINGS, matchShortcut } from "@/lib/shortcuts";
 import { subscribeToActiveAncestors } from "@/lib/active-editor";
 import { subscribeToFsChanged } from "@/lib/fs-events";
 
@@ -138,6 +148,19 @@ export const CollapsibleEntry = ({
     event.stopPropagation();
   };
 
+  // Row-scoped shortcuts (only fire while this row owns keyboard focus).
+  // We `preventDefault` + `stopPropagation` so the App-level window listener
+  // doesn't double-dispatch.
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const command = matchShortcut(event, ENTRY_BINDINGS);
+    if (!command) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    requestExecuteCommand(command, entry);
+  };
+
   const chevron = (
     <ChevronRight
       className={cn(
@@ -167,6 +190,7 @@ export const CollapsibleEntry = ({
           isContextTarget={isContextTarget}
           isActiveEditor={isActiveEditorProp}
           onSelect={handleSelect}
+          onKeyDown={handleKeyDown}
         >
           {entry.type === "folder" ? (
             <>

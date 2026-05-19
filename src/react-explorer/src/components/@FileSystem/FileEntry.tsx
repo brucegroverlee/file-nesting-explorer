@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 
-import { requestOpenEditor } from "@/lib/fs-bridge";
+import { requestExecuteCommand, requestOpenEditor } from "@/lib/fs-bridge";
+import { ENTRY_BINDINGS, matchShortcut } from "@/lib/shortcuts";
 import { MaterialIcon } from "@/components/MaterialIcon";
 
 import { EntryContextMenu } from "./EntryContextMenu";
@@ -46,6 +47,19 @@ export const FileEntry = ({
     requestOpenEditor(entry);
   };
 
+  // Row-scoped shortcuts (only fire while this row owns keyboard focus).
+  // We `preventDefault` + `stopPropagation` so the App-level window listener
+  // doesn't double-dispatch.
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const command = matchShortcut(event, ENTRY_BINDINGS);
+    if (!command) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    requestExecuteCommand(command, entry);
+  };
+
   return (
     <EntryContextMenu
       entry={entry}
@@ -65,6 +79,7 @@ export const FileEntry = ({
         isContextTarget={isContextTarget}
         isActiveEditor={isActiveEditorProp}
         onSelect={handleSelect}
+        onKeyDown={handleKeyDown}
       >
         <MaterialIcon name={entry.name} type="file" />
         <span className="truncate">{entry.name}</span>

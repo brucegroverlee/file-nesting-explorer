@@ -31,7 +31,37 @@ type IncomingMessage =
   | { id: number; type: "getRoots" }
   | { id: number; type: "getChildren"; entry: Entry }
   | { id: number; type: "openEditor"; entry: Entry }
-  | { id: number; type: "getActiveEditor" };
+  | { id: number; type: "getActiveEditor" }
+  | { id: number; type: "executeCommand"; command: string; entry?: Entry };
+
+/**
+ * Commands the React webview is allowed to invoke through the
+ * `executeCommand` message. Mirrors `EntryCommand` in
+ * `react-explorer/src/components/@FileSystem/EntryContextMenu.tsx`. Kept as an
+ * explicit allow-list so the webview can't trigger arbitrary commands.
+ */
+const ALLOWED_WEBVIEW_COMMANDS: ReadonlySet<string> = new Set([
+  "fileNestingExplorer.newFile",
+  "fileNestingExplorer.newFolder",
+  "fileNestingExplorer.newNestedFile",
+  "fileNestingExplorer.newNestedFolder",
+  "fileNestingExplorer.createFileNestingContainer",
+  "fileNestingExplorer.openDocumentation",
+  "fileNestingExplorer.findInFolder",
+  "fileNestingExplorer.cut",
+  "fileNestingExplorer.copy",
+  "fileNestingExplorer.paste",
+  "fileNestingExplorer.copyPath",
+  "fileNestingExplorer.copyRelativePath",
+  "fileNestingExplorer.moveUp",
+  "fileNestingExplorer.moveDown",
+  "fileNestingExplorer.restoreSortingAlphabetically",
+  "fileNestingExplorer.editSortingFile",
+  "fileNestingExplorer.delete",
+  "fileNestingExplorer.deleteFileNestingContainer",
+  "fileNestingExplorer.rename",
+  "fileNestingExplorer.refresh",
+]);
 
 /**
  * WebviewView provider for the "React Explorer" panel. Loads the Vite-built
@@ -154,6 +184,19 @@ export class ReactExplorerViewProvider implements vscode.WebviewViewProvider {
             // pushes the dedicated `activeEditorChanged` so any subscriber
             // updates regardless of which path is in use).
             postActiveEditor();
+          } else if (message.type === "executeCommand") {
+            if (!ALLOWED_WEBVIEW_COMMANDS.has(message.command)) {
+              throw new Error(
+                `Command not allowed from webview: ${message.command}`,
+              );
+            }
+            // Existing `fileNestingExplorer.*` commands expect an `Entry` as
+            // their first argument (see `src/commands/*.ts`), so we forward
+            // it verbatim.
+            await vscode.commands.executeCommand(
+              message.command,
+              message.entry,
+            );
           }
 
           webviewView.webview.postMessage({
