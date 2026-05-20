@@ -1,0 +1,13 @@
+{
+  "name": "@file-nesting/shared",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared types and constants between the VS Code extension host and the React Explorer webview.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b --watch",
+    "clean": "rm -rf dist"
+  }
+}

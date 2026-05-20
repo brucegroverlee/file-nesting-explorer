@@ -1,0 +1,20 @@
+.vscode/**
+.vscode-test/**
+src/**
+node_modules/**
+.gitignore
+.yarnrc
+vsc-extension-quickstart.md
+esbuild.config.js
+**/tsconfig.json
+**/tsconfig.tsbuildinfo
+**/eslint.config.mjs
+**/*.map
+**/*.ts
+**/.vscode-test.*
+# out/ contains tsc-emitted JS used by the test runner only. The actual
+# extension entry is the bundled out/extension.js produced by esbuild
+# (included implicitly because it is referenced by `main`).
+out/**
+!out/extension.js
+dist/react-explorer/**/*.map

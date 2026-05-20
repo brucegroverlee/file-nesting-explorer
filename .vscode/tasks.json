@@ -4,11 +4,21 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "build:shared",
+			"type": "shell",
+			"command": ". \"$HOME/.nvm/nvm.sh\" && nvm use --silent && npm run build:shared",
+			"problemMatcher": "$tsc",
+			"presentation": {
+				"reveal": "never"
+			}
+		},
+		{
 			"label": "watch:extension",
 			"type": "shell",
-			"command": ". \"$HOME/.nvm/nvm.sh\" && nvm use --silent && npm run watch",
+			"command": ". \"$HOME/.nvm/nvm.sh\" && nvm use --silent && npm run watch:extension",
 			"problemMatcher": "$tsc-watch",
 			"isBackground": true,
+			"dependsOn": ["build:shared"],
 			"presentation": {
 				"reveal": "never"
 			}

@@ -1,0 +1,34 @@
+import * as vscode from "vscode";
+import { dirname } from "path";
+
+import { Entry } from "@file-nesting/shared";
+import { fileNestingDataProvider } from "../FileNestingDataProvider";
+import { SortingManager } from "../SortingManager";
+import { fileNestingSystem } from "../FileNestingSystem";
+import { track } from "./analytics";
+
+export const moveUp =
+  (context: vscode.ExtensionContext) => async (entry: Entry) => {
+    try {
+      // Get the parent directory path
+      const parentPath = dirname(entry.path);
+
+      // Get all siblings in the parent directory
+      const siblings = await fileNestingSystem.getChildrenFromFolder(
+        parentPath
+      );
+      const siblingNames = siblings.map((s) => s.name);
+
+      // Move the entry up in the sorting order
+      await SortingManager.moveUp(entry.path, parentPath, siblingNames);
+
+      track("Move Up");
+
+      // Refresh the view to show the new order
+      fileNestingDataProvider.refresh();
+    } catch (error) {
+      vscode.window.showErrorMessage(
+        `Failed to move "${entry.name}" up: ${error}`
+      );
+    }
+  };

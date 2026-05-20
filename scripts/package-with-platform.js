@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
-const repoRoot = path.resolve(__dirname, "..");
-const readmePath = path.join(repoRoot, "README.md");
+const extensionDir = path.resolve(__dirname, "..", "packages", "extension");
+const readmePath = path.join(extensionDir, "README.md");
 
 function assertPlatform(platform) {
   const allowed = new Set(["vscode", "openvsx"]);
@@ -47,8 +47,11 @@ function main() {
   try {
     originalReadme = setReadmeUtmSource(platform);
 
+    // Run vsce inside the extension workspace. vsce strictly packages files
+    // under the directory containing its package.json, which is why we cd
+    // here rather than passing flags from the repo root.
     const result = spawnSync("vsce", ["package"], {
-      cwd: repoRoot,
+      cwd: extensionDir,
       stdio: "inherit",
       shell: process.platform === "win32",
     });
